@@ -1,0 +1,16 @@
+standard_featureserver_query: "f=json&returnGeometry=true&spatialRel=esriSpatialRelIntersects&\
+                              geometry={%22xmin%22:0,%22ymin%22:0,%22xmax%22:500000,%22ymax%\
+                              22:800000,%22spatialReference%22:{%22wkid%22:28992}}&\
+                              geometryType=esriGeometryEnvelope&inSR=28992&outFields=*\
+                              &outSR=28992"
+crs: "epsg:28992"
+
+spoor_url: "https://mapservices.prorail.nl/arcgis/rest/services/Geleidingssysteem_007/FeatureServer/13/"
+wisselkruisingbeen_url: "https://mapservices.prorail.nl/arcgis/rest/services/Geleidingssysteem_007/FeatureServer/12/"
+xy_to_geocode_url: "https://mapservices.prorail.nl/geocoderen/api_v2.ashx/GEO_PuntXY_naar_GEOCODE_en_KM_RD"
+mapservices_url: 'https://mapservices.prorail.nl/geocoderen/api_v2.ashx/GetXY_GeocodePunten_v2'
+
+spoordata_columns: ['SPOOR_ID', 'SPOOR_PUIC', 'PRORAIL_GEBIED', 'GEOCODE_NR',
+                    'GEOSUBCODE', 'KM_GEOCODE_TOT',
+                    'KM_GEOCODE_VAN', 'Type', 'X_BEGIN',
+                    'Y_BEGIN', 'geometry']
