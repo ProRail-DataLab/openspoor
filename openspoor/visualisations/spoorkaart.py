@@ -71,7 +71,7 @@ class SpoorKaart(folium.Map):
 
 # TODO: Support for hyperlinks?
 class PlottingDataFrame(pd.DataFrame, PlotObject):
-    def __init__(self, df, lat_column='lat', lon_column='lng', popup=None, markertype=None, colors=None,
+    def __init__(self, df, lat_column='lat', lon_column='lon', popup=None, markertype=None, colors=None,
                  marker_column=None, color_column=None, rotation_column=None, radius_column=None):
         super().__init__(df)
         # Set these to circumvent userwarnings
@@ -85,7 +85,7 @@ class PlottingDataFrame(pd.DataFrame, PlotObject):
         self._plot_settings(lat_column, lon_column, popup, markertype, colors, marker_column, color_column,
                             rotation_column, radius_column)
 
-    def _plot_settings(self, lat_column='lat', lon_column='lng', popup=None, markertype=None, colors=None,
+    def _plot_settings(self, lat_column='lat', lon_column='lon', popup=None, markertype=None, colors=None,
                        marker_column=None, color_column=None, rotation_column=None, radius_column=None):
         self.lat_column = lat_column
         self.lon_column = lon_column
