@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(name='openspoor',
-      version='0.1.4',
+      version='0.1.5',
       description='Open source project to allow translations between different spoor referential systems',
       install_requires=[
             "geopandas",
@@ -9,7 +9,8 @@ setup(name='openspoor',
             "loguru",
             "requests",
             "rtree",
-            "pyproj==2.4.1"],
+            "pyproj==2.4.1",
+            "folium"],
       packages=find_packages(),
       package_data={'openspoor': ['config.yaml']},
       include_package_data=True,
