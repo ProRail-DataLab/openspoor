@@ -1,4 +1,4 @@
-from openspoor import TransformerGeocodeToCoordinates
+from openspoor.transformers import TransformerGeocodeToCoordinates
 import pandas as pd
 
 

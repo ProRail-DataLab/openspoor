@@ -1,9 +1,8 @@
-import yaml
 import pandas as pd
 import geopandas as gpd
 from loguru import logger
-from openspoor.utils.map_services_requests import secure_map_services_request
-from openspoor.utils.common import read_config
+from ..utils.map_services_requests import secure_map_services_request
+from ..utils.common import read_config
 
 config = read_config()
 

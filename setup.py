@@ -1,6 +1,7 @@
 from setuptools import setup, find_packages
 
 requirements = [
+      "importlib_metadata",
       "geopandas",
       "pyyaml",
       "loguru",

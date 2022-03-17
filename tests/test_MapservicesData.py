@@ -1,6 +1,6 @@
 import geopandas as gpd
 import pandas as pd
-from openspoor import MapservicesData
+from openspoor.mapservices import MapservicesData
 from shapely.geometry import Point, LineString, Polygon
 
 class Test:
