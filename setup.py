@@ -6,7 +6,7 @@ requirements = [
       "loguru",
       "requests",
       "rtree",
-      "pyproj==2.4.1",
+      "pyproj<3",
 ]
 
 dev_packages = [
