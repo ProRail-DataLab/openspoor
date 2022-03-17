@@ -1,6 +1,6 @@
 from loguru import logger
-from .MapservicesData import MapservicesData
-from ..utils.common import read_config
+from openspoor.mapservices.MapservicesData import MapservicesData
+from openspoor.utils.common import read_config
 
 config = read_config()
 

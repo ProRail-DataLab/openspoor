@@ -1,7 +1,7 @@
 import yaml
 import pandas as pd
-from ..utils.map_services_requests import secure_map_services_request
-from ..utils.common import read_config
+from openspoor.utils.map_services_requests import secure_map_services_request
+from openspoor.utils.common import read_config
 
 config = read_config()
 
