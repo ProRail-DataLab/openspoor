@@ -31,7 +31,6 @@ class PlotObject:
             expected_crs = 'EPSG:28992'
         else:
             expected_crs = 'EPSG:4326'
-        print(expected_crs)
         return (
             df
                 .assign(geometry=lambda d: d.geometry.apply(wkt.loads))
