@@ -1,10 +1,11 @@
 import os
 import pathlib
 import unittest
+from unittest import skip
 from unittest.mock import patch
 from pprint import pprint
 
-from openspoor.spoortakmodel import SpoortakModelInspector
+from openspoor.spoortakmodel import SpoortakModelInspector, SpoortakModelsData
 
 MODELS_DATA_DIR = str(pathlib.Path(__file__).parent.resolve().joinpath('..', '..', 'data'))
 
@@ -18,7 +19,7 @@ class TestSpoortakModelInspector(unittest.TestCase):
         # For development and debugging we still want to see the prints
         mock_pprint.side_effect = pprint
 
-        sut = SpoortakModelInspector(MODELS_DATA_DIR)
+        sut = SpoortakModelInspector(SpoortakModelsData(MODELS_DATA_DIR))
         sut.inspect('603_89R_2.6')
         mock_pprint.assert_called()
         self.assertEqual(expected_spoortak_model_rows, len(mock_pprint.call_args_list[0][0][0]), )
@@ -32,7 +33,7 @@ class TestSpoortakModelInspector(unittest.TestCase):
         # For development and debugging we still want to see the prints
         mock_pprint.side_effect = pprint
 
-        sut = SpoortakModelInspector(MODELS_DATA_DIR)
+        sut = SpoortakModelInspector(SpoortakModelsData(MODELS_DATA_DIR))
         sut.inspect('087_1321R_24.1')
         mock_pprint.assert_called()
         self.assertEqual(expected_spoortak_model_rows, len(mock_pprint.call_args_list[0][0][0]), )
@@ -46,17 +47,14 @@ class TestSpoortakModelInspector(unittest.TestCase):
         # For development and debugging we still want to see the prints
         mock_pprint.side_effect = pprint
 
-        sut = SpoortakModelInspector(MODELS_DATA_DIR)
+        sut = SpoortakModelInspector(SpoortakModelsData(MODELS_DATA_DIR))
         sut.inspect('927_3325R_904.6')
         mock_pprint.assert_called()
         self.assertEqual(expected_spoortak_model_rows, len(mock_pprint.call_args_list[0][0][0]), )
         self.assertEqual(expected_bericht_rows, len(mock_pprint.call_args_list[1][0][0]))
 
-    # @patch('openspoor.spoortakmodel.spoortak_model_inspector.pprint')
-    # def test_develop(self, mock_pprint):
-    #     # For development and debugging we still want to see the prints
-    #     mock_pprint.side_effect = pprint
-    #
-    #     sut = SpoortakModelInspector(MODELS_DATA_DIR)
-    #     sut.inspect('478_1201V_0.6')
-    #     mock_pprint.assert_called()
+    @skip('Development only test, comment this skip to enable it')
+    def test_develop(self):
+        """ quickly inspect the data of a spoortak"""
+        sut = SpoortakModelInspector(SpoortakModelsData(MODELS_DATA_DIR))
+        sut.inspect('518_107BL_63.5')

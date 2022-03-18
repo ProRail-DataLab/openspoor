@@ -1,9 +1,9 @@
 import os
+from glob import glob
 
 import numpy as np
 from typing import Optional
 import logging
-
 import pandas as pd
 
 from ..spoortakmodel.singleton import Singleton
@@ -15,7 +15,6 @@ class SpoortakModelsData(Singleton):
     """ Helper class that loads spoortak model data (only once)
 
     Improvement backlog:
-    - Auto scan for available model version
     - Support V18 (spoortak 2.0)
     """
 
@@ -40,55 +39,65 @@ class SpoortakModelsData(Singleton):
         """ implace correction of the km columns and renaming them to avoid confusion """
         df['kilometrering_start'] = df[['KM_BEGIN', 'KM_EIND']].values.min(1)
         df['kilometrering_end'] = df[['KM_BEGIN', 'KM_EIND']].values.max(1)
+
+        df_changed = df[df['kilometrering_start'] != df['KM_BEGIN']]
+        df_changed_geo = df_changed[df_changed['GEOCODE_BEGIN'] != df_changed['GEOCODE_EIND']]
+
+        for spoortak, row in df_changed_geo.iterrows():
+            log.warning(
+                f'Swapped begin & eind km for {spoortak} met verschillende geocode begin & eind mogenlijk was dit een ander kilometerlint')
+
         df.drop(columns=['KM_BEGIN', 'KM_EIND'], inplace=True)
+
+    @staticmethod
+    def _get_model_numbers(data_path: str) -> [int]:
+        """ Return the available model numbers """
+        dirs = glob(os.path.join(data_path, 'Versie_*'))
+
+        # return [int(os.path.basename(directory).removeprefix('Version_')) for directory in dirs] # python 3.9 feature
+        return [int(os.path.basename(directory).split('_')[1]) for directory in dirs]
 
     def __init__(self, data_path: str):
         # we've applied the singleton pattern here so we can check if the data is already there.
         if not self.models:
-            print('loading data...')
+            log.info('loading data...')
 
             self.models = dict()
 
-            # supported models
-            self.model_start = 3
-            self.model_end = 17
-            self.model_version_numbers = tuple(range(self.model_start, self.model_end + 1))
+            self.model_version_numbers = self._get_model_numbers(data_path)
+            unsupported_version_start = 18
+            self.model_version_numbers = [version for version in self.model_version_numbers if
+                                          version < unsupported_version_start]
 
             try:
-                for i in range(self.model_start, self.model_end + 1):
-                    self.models[i] = pd.read_csv(os.path.join(data_path,
-                                                              f'Versie_{i:02d}/SPOORTAK_{i}.csv'),
-                                                 delimiter=';',
-                                                 header=0,
-                                                 converters={
-                                                     'KM_BEGIN': lambda km: self._km_to_meters(
-                                                         self._convert_dutch_number(km)),
-                                                     'KM_EIND': lambda km: self._km_to_meters(
-                                                         self._convert_dutch_number(km)),
-                                                     'LENGTE': lambda km: self._km_to_meters(
-                                                         self._convert_dutch_number(km))
-                                                 },
-                                                 index_col='SPOORTAK_IDENTIFICATIE',
-                                                 encoding='latin1'
-                                                 )
+                for model_version in self.model_version_numbers:
+                    self.models[model_version] = pd.read_csv(os.path.join(data_path,
+                                                                          f'Versie_{model_version:02d}/SPOORTAK_{model_version}.csv'),
+                                                             delimiter=';',
+                                                             header=0,
+                                                             converters={
+                                                                 'KM_BEGIN': lambda km: self._km_to_meters(
+                                                                     self._convert_dutch_number(km)),
+                                                                 'KM_EIND': lambda km: self._km_to_meters(
+                                                                     self._convert_dutch_number(km)),
+                                                                 'LENGTE': lambda km: self._km_to_meters(
+                                                                     self._convert_dutch_number(km))
+                                                             },
+                                                             index_col='SPOORTAK_IDENTIFICATIE',
+                                                             encoding='latin1'
+                                                             )
 
-                    self._replace_km_columns(self.models[i])
+                    self._replace_km_columns(self.models[model_version])
             except ValueError:
-                log.error(f'Failed to read model {i}')
+                log.error(f'Failed to read model {model_version}')
                 raise
 
-            # might have been an issue with dutch numbers, and perhaps we dont need to make this consistant
-            #       for model_version, model in self.models.items():
-            #         # to avoid problems where the KM_EIND < KM_BEGIN we sort them
-            #         model['kilometrering_from'] = model[['KM_BEGIN','KM_EIND']].min(axis=1)
-            #         model['kilometrering_to'] = model[['KM_BEGIN','KM_EIND']].max(axis=1)
-
-            # missing bericht data were supplied by Maaike Geurts
             self.model_changes = {
-                i: pd.read_csv(os.path.join(data_path, f'Versie_{i:02d}/BBMS_BERICHT_{i}.csv'),
-                               delimiter=';',
-                               header=0,
-                               encoding='latin1'
-                               )
-                for i in range(self.model_start, self.model_end + 1)
+                model_version: pd.read_csv(
+                    os.path.join(data_path, f'Versie_{model_version:02d}/BBMS_BERICHT_{model_version}.csv'),
+                    delimiter=';',
+                    header=0,
+                    encoding='latin1'
+                )
+                for model_version in self.model_version_numbers
             }

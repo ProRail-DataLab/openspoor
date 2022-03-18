@@ -1,16 +1,15 @@
 from pprint import pprint
-
 import pandas as pd
 
 from ..spoortakmodel import SpoortakModelsData
 
 
 class SpoortakModelInspector:
-    def __init__(self, data_path: str):
-        self.data = SpoortakModelsData(data_path)
+    def __init__(self, spoortak_model_data: SpoortakModelsData):
+        self.data = spoortak_model_data
         self.old_pd_option_values = dict()
 
-    def set_pd_options(self):
+    def _set_pd_options(self):
 
         self.old_pd_option_values['display.max_columns'] = pd.get_option('display.max_columns')
         self.old_pd_option_values['display.max_rows'] = pd.get_option('display.max_rows')
@@ -22,13 +21,13 @@ class SpoortakModelInspector:
         pd.set_option('display.expand_frame_repr', False)
         pd.set_option('mode.chained_assignment', None)
 
-    def reset_pd_options(self):
+    def _reset_pd_options(self):
         for key, value in self.old_pd_option_values.items():
             pd.set_option(key, value)
 
     def inspect(self, spoortak_identifier: str):
         """ Scan's the spoortak model data (including change data) and returns everything related to the given spoortak """
-        self.set_pd_options()
+        self._set_pd_options()
 
         print(f'--- {spoortak_identifier} spoortakmodel data ---')
 
@@ -59,4 +58,4 @@ class SpoortakModelInspector:
                 change_data = pd.concat([change_data, df], axis=0)
         pprint(change_data)
 
-        self.reset_pd_options()
+        self._reset_pd_options()

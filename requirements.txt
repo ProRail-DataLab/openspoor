@@ -1,9 +1,10 @@
 geopandas==0.6.1
-loguru==0.4.0
-numpy==1.18.1
+loguru==0.4.1
+numpy==1.21.5
+pandas==1.4.1
 pytest==5.4.1
 requests==2.22.0
-rtree==0.8.3
+rtree==0.9.7
 pyproj==2.4.1
 pyyaml==5.4.1
 

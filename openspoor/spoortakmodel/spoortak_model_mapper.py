@@ -12,8 +12,31 @@ log = logging.getLogger(__name__)
 
 
 class SpoortakModelMapper:
-    def __init__(self, data_path: str):
-        self._data = SpoortakModelsData(data_path)
+    """ Limitations:
+          - RENAME keyword not supported
+          - can't map if there is no overlapping geocode
+          - assumes singular kilometer lint if geocodes match with older segments
+          - does not support spoortak 2.0 model (v18) yet
+          - unkown what happens if geocode_begin and geocode_end differ and do not share a km lint
+
+     TODO:
+        - now assume the input exists in 17 and we are searching backward... Make this more flexible to search forward from 'midway'
+        - Probably should have a validation that we have the same 'length' for all spoortak models in our output
+
+        changes as described in BBMS_BERICHT_xx.csv
+        ASSIGN - implemented
+        NEWTOP - implemented
+        EDITCORR - Don't need (?)
+        EDITREAL - Don't need (?)
+        RENAME - TODO
+          rename is often use to swap two names. If we want to support rename we need to keep track of both else we'll
+          report back on both the spoortakken that swapped the names
+
+    """
+
+    def __init__(self, spoortak_model_data: SpoortakModelsData):
+        self._data = spoortak_model_data
+        log.warning("SpoortakModelMapper is a best effort mapper to older/newer models, it is far from perfect.")
 
     def _is_new_spoortak(self, spoortak_identifier, spoortak_model: int):
         changes = self._data.model_changes[spoortak_model]
@@ -39,6 +62,10 @@ class SpoortakModelMapper:
                     | (model_changes['DASSIGNNAME'] == spoortak_identifier)
                     | (model_changes['FWENAME'] == spoortak_identifier)
             )
+
+            # not implemented
+            mask = mask & (model_changes['ACTION'] != 'RENAME')
+
             changes = model_changes[mask]
             if len(changes) > 0:
                 temp_related_spoortakken.update(changes['MODFWE'].unique())
@@ -76,17 +103,6 @@ class SpoortakModelMapper:
 
     def map(self, spoortak_subsection: SpoortakSubsection, _ignore_list: [str] = None) -> [SpoortakSubsection]:
         """ Maps a spoortak subsection to all other spoortak models
-
-        TODO:
-        - now assume the input exists in 17 and we are searching backward... Make this more flexible to search forward from 'midway'
-        - Probably should have a validation that we have the same 'length' for all spoortak models in our output
-
-        changes as described in BBMS_BERICHT_xx.csv
-        ASSIGN - TODO (form of delete, but also a section of track is reassigned to an ohter spoortak. We don't understand the format yet)
-        NEWTOP - implemented
-        EDITCORR - Don't need (?)
-        EDITREAL - Don't need (?)
-        RENAME - TODO (it is wierd, one example has a rename, but still the old and new new were present in the new spoortak_xx.csv)
 
         :param spoortak_subsection: subsection to map
         :param _ignore_list: list of spoortak identifiers to ignore (need this to avoid infinite loops)
@@ -127,8 +143,7 @@ class SpoortakModelMapper:
                 log.info(f'Spoortak was new, not searching further back in the model history')
                 break
 
-        # find anything that is related, assume same km lint and just add them all to the list
-        # todo: we can limit this by comparing the geocode (start and ends) at least 1 of them should match
+        # find anything that is related, assume same km lint if one of the geocodes matches and just add them all to the list
         related_spoortakken = self._related_spoortakken(spoortak_subsection.identification, geocodes)
         for related_spoortak, related_model_version in related_spoortakken:
             if related_spoortak in _ignore_list:
@@ -144,7 +159,7 @@ class SpoortakModelMapper:
                                         spoortak_subsection.kilometrering_end)
         cleaned = self._remove_duplicates(limited)
 
-        ordered = sorted(cleaned, key=lambda x: x.spoortak_model_version)
+        ordered = sorted(cleaned, key=lambda x: (x.spoortak_model_version, x.kilometrering_start))
 
         return ordered
 

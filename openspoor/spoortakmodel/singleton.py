@@ -1,4 +1,5 @@
 class Singleton(object):
+    """ helper class to implement the singleton pattern """
     _instances = {}
 
     def __new__(class_, *args, **kwargs):
