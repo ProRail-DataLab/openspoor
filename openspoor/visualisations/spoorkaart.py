@@ -3,6 +3,7 @@ import folium
 from shapely.geometry import point
 from typing import List, Optional, Dict, Tuple
 from pathlib import Path
+from urllib.parse import quote
 from ..utils.common import read_config
 
 config = read_config()
@@ -109,7 +110,6 @@ class SpoorKaart(folium.Map):
             return self
 
 
-# TODO: Support for hyperlinks?
 class PlottingDataFrame(pd.DataFrame, PlotObject):
     """
     Add functionalities to a Pandas DataFrame so it can be plotted in a nice manner.
@@ -119,7 +119,7 @@ class PlottingDataFrame(pd.DataFrame, PlotObject):
     def __init__(self, df, lat_column: str = 'lat', lon_column: str = 'lon', popup: List[str] = None,
                  colors: Dict[str, Dict[Tuple[float, float], str]] = None,
                  markertype: Optional[str] = None, marker_column: str = None, color_column: str = None,
-                 rotation_column: str = None, radius_column: str = None):
+                 rotation_column: str = None, radius_column: str = None, url_column: str=None):
         """
         Initialize a PlottingDataFrame.
 
@@ -135,6 +135,7 @@ class PlottingDataFrame(pd.DataFrame, PlotObject):
         :param color_column: A column that can be  used for the colors of the markers
         :param rotation_column: A column noting the degrees of rotation in the range (0,360)
         :param radius_column: A column noting the radius of the circles to plot (if markertype=='circle')
+        :param url_column: A column including an url that is displayed in the popup
         """
         super().__init__(df)
         self.attrs['lat'] = lat_column
@@ -157,6 +158,7 @@ class PlottingDataFrame(pd.DataFrame, PlotObject):
         self.attrs['marker'] = marker_column
         self.attrs['rotation'] = rotation_column
         self.attrs['radius'] = radius_column
+        self.attrs['url_column'] = url_column
 
     def add_to(self, folium_map):
         for i, row in self.iterrows():
@@ -164,9 +166,9 @@ class PlottingDataFrame(pd.DataFrame, PlotObject):
             if self.attrs['popup']:
                 popup_text = ''
                 for col in self.attrs['popup']:
-                    if col == "batch_url":
-                        url = row[col].replace(' ', '%20')
-                        popup_text = popup_text + f"<a href={url}>Dashboard URL</a><br>",
+                    if col == self.attrs['url_column']:
+                        url = quote(row[col], safe='/:?=&') # Replaces characters unsuitable for URL's
+                        popup_text = popup_text + f"{col}: <a href={url}>Hyperlink</a><br>",
                     else:
                         popup_text = popup_text + f'{col}: {row[col]}<br>'
             else:
