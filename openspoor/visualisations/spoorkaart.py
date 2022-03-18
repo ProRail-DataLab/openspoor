@@ -234,10 +234,12 @@ class PlottingDataFrame(pd.DataFrame, PlotObject):
 
 class PlottingLineStrings(PlotObject):
     def _get_all_linestrings(self, file):
-        df = pd.read_csv(file, index_col=0)
-        df['geometry'] = df['geometry'].apply(wkt.loads)
-        geodf = gpd.GeoDataFrame(df, geometry='geometry', crs='EPSG:28992')
-        return geodf.set_index(self.name_column)
+        return (
+            pd.read_csv(file, index_col=0)
+            .assign(geometry=lambda d: d.geometry.apply(wkt.loads))
+            .set_index(self.name_column)
+            .pipe(gpd.GeoDataFrame, geometry='geometry', crs='EPSG:28992')
+        )
 
     def __init__(self, file, name_column, subset=None, color='blue', topn=None):
         self.subset = subset
