@@ -24,6 +24,21 @@ class PlotObject:
         """
         raise NotImplementedError('This needs to be set in implementation classes')
 
+    def _convert_pandas_to_geopandas(self, df):
+        # If this is a pandas dataframe with Rijksdriehoek in it, convert it to GPS
+        first_coord = df.geometry.values[0].split('(')[1].split(' ')[0]
+        if float(first_coord) > 180:
+            expected_crs = 'EPSG:28992'
+        else:
+            expected_crs = 'EPSG:4326'
+        print(expected_crs)
+        return (
+            df
+                .assign(geometry=lambda d: d.geometry.apply(wkt.loads))
+                .pipe(gpd.GeoDataFrame, geometry='geometry', crs=expected_crs)
+                .assign(geometry=lambda d: d.geometry.to_crs('EPSG:4326'))
+        )
+
 
 class SpoorKaart(folium.Map):
     """
@@ -147,19 +162,23 @@ class PlottingDataFrame(pd.DataFrame, PlotObject):
         :param radius_column: A column noting the radius of the circles to plot (if markertype=='circle')
         :param url_column: A column including an url that is displayed in the popup
         """
+
+        # TODO: Make this a helper function? Also required for linestring dataframe parsing
+        if 'geometry' in df.columns and isinstance(df, pd.DataFrame):
+            df = self._convert_pandas_to_geopandas(df)
         super().__init__(df)
         self.attrs['lat'] = lat_column
         self.attrs['lon'] = lon_column
-        if 'geometry' in self.columns:
-            if isinstance(self.geometry[0], point.Point):
+        if isinstance(df, gpd.GeoDataFrame):
+            if isinstance(self.geometry.iloc[0], point.Point):
                 self[self.attrs['lat']] = self.geometry.apply(lambda d: d.y)
                 self[self.attrs['lon']] = self.geometry.apply(lambda d: d.x)
             else:
-                NotImplementedError(f"Unimplemented geometry: {self.geometry[0]}")
+                NotImplementedError(f"Unimplemented geometry: {self.geometry.iloc[0]}")
 
         self.color_column = color_column
         if self.color_column is not None:
-            self[self.color_column] = pd.factorize(self[self.color_column])[0]
+            self[self.color_column+"_factorized"] = pd.factorize(self[self.color_column])[0]
 
         # TODO: Automatically do this by looping through args?
         self.attrs['popup'] = popup
@@ -200,7 +219,7 @@ class PlottingDataFrame(pd.DataFrame, PlotObject):
                 colorset = ['purple', 'lightblue', 'darkgreen', 'blue', 'darkred', 'black',
                             'pink', 'cadetblue', 'lightgray', 'lightred', 'green',
                             'beige', 'darkblue', 'darkpurple', 'orange', 'lightgreen', 'red']
-                marker_color = colorset[int(row[self.color_column]) % len(colorset)]
+                marker_color = colorset[int(row[self.color_column+"_factorized"]) % len(colorset)]
             elif self.attrs['colors'] is not None:
                 if isinstance(self.attrs['colors'], str):
                     marker_color = self.attrs['colors']
@@ -234,6 +253,7 @@ class PlottingDataFrame(pd.DataFrame, PlotObject):
 
 class PlottingLineStrings(PlotObject):
     def _get_all_linestrings(self, file):
+        # TODO Use the pandas to geopandas functionality?
         return (
             pd.read_csv(file, index_col=0)
             .assign(geometry=lambda d: d.geometry.apply(wkt.loads))
