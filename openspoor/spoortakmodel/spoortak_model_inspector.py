@@ -37,10 +37,11 @@ class SpoortakModelInspector:
         model_data = pd.DataFrame(columns=list(self.data.models[baseline_model].columns) + ['spoortakmodel'])
 
         for spoortakmodel_version, model in self.data.models.items():
-            df = model[model['SPOORTAK_IDENTIFICATIE'] == spoortak_identifier]
-            if len(df) > 0:
+            if spoortak_identifier in model.index:
+                df = model.loc[spoortak_identifier]
                 df['spoortakmodel'] = spoortakmodel_version
-                model_data = pd.concat([model_data, df], axis=0)
+                # model_data = pd.concat([model_data, df], axis=1)
+                model_data = model_data.append(df)
         pprint(model_data)
 
         print(f'--- {spoortak_identifier} spoortakmodel changes ---')

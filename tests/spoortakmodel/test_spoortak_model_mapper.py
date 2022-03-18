@@ -13,3 +13,4 @@ class TestSpoortakModelMapper(unittest.TestCase):
         sut = SpoortakModelMapper(MODELS_DATA_DIR)
         result = sut.map(subsection)
         self.assertIsNotNone(result)
+        self.assertEqual(4, len(result))

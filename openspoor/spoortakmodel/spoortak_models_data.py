@@ -35,6 +35,13 @@ class SpoortakModelsData(Singleton):
             return None
         return int(km * 1000)
 
+    @staticmethod
+    def _replace_km_columns(df: pd.DataFrame) -> None:
+        """ implace correction of the km columns and renaming them to avoid confusion """
+        df['kilometrering_start'] = df[['KM_BEGIN', 'KM_EIND']].values.min(1)
+        df['kilometrering_end'] = df[['KM_BEGIN', 'KM_EIND']].values.max(1)
+        df.drop(columns=['KM_BEGIN', 'KM_EIND'], inplace=True)
+
     def __init__(self, data_path: str):
         # we've applied the singleton pattern here so we can check if the data is already there.
         if not self.models:
@@ -45,6 +52,7 @@ class SpoortakModelsData(Singleton):
             # supported models
             self.model_start = 3
             self.model_end = 17
+            self.model_version_numbers = tuple(range(self.model_start, self.model_end + 1))
 
             try:
                 for i in range(self.model_start, self.model_end + 1):
@@ -60,8 +68,11 @@ class SpoortakModelsData(Singleton):
                                                      'LENGTE': lambda km: self._km_to_meters(
                                                          self._convert_dutch_number(km))
                                                  },
+                                                 index_col='SPOORTAK_IDENTIFICATIE',
                                                  encoding='latin1'
                                                  )
+
+                    self._replace_km_columns(self.models[i])
             except ValueError:
                 log.error(f'Failed to read model {i}')
                 raise
