@@ -1,3 +1,5 @@
+from typing import Optional
+
 import numpy as np
 import pandas as pd
 
@@ -18,9 +20,12 @@ class SpoortakModelMapper:
         action_new = changes[(changes['FWENAME'] == spoortak_identifier) & (changes['ACTION'] == 'NEWTOP')]
         return len(action_new) > 0
 
-    def _retrieve_spoortak(self, spoortak_identifier: str, model_version: int) -> pd.Series:
+    def _retrieve_spoortak(self, spoortak_identifier: str, model_version: int) -> Optional[pd.Series]:
         """ Retrieve the spoortak data for a specific model version """
-        return self._data.spoortakken[model_version][spoortak_identifier]
+        if spoortak_identifier not in self._data.models[model_version].index:
+            return None
+
+        return self._data.models[model_version].loc[spoortak_identifier]
 
     def _related_spoortakken(self, spoortak_identifier: str, geocodes: [int]) -> [(str, int)]:
 
@@ -46,7 +51,16 @@ class SpoortakModelMapper:
                 temp_related_spoortakken.remove(spoortak_identifier)
 
             for entry in temp_related_spoortakken:
-                related_spoortakken.append((entry, model_version))
+                # if there is no geocode overlap we can't assume the kilometrering uses the same 'kilometer lint'
+                spoortak = self._retrieve_spoortak(entry, model_version)
+                if spoortak is None:
+                    spoortak = self._retrieve_spoortak(entry, model_version - 1)
+                if spoortak is None:
+                    raise ValueError(
+                        f"Could not find spoortak {entry} in model {model_version} and {model_version - 1}")
+
+                if spoortak['GEOCODE_BEGIN'] in geocodes or spoortak['GEOCODE_EIND'] in geocodes:
+                    related_spoortakken.append((entry, model_version))
 
         return related_spoortakken
 
@@ -60,7 +74,7 @@ class SpoortakModelMapper:
         deduped = set(subsections)
         return list(deduped)
 
-    def map(self, spoortak_subsection: SpoortakSubsection) -> [SpoortakSubsection]:
+    def map(self, spoortak_subsection: SpoortakSubsection, _ignore_list: [str] = None) -> [SpoortakSubsection]:
         """ Maps a spoortak subsection to all other spoortak models
 
         TODO:
@@ -74,7 +88,13 @@ class SpoortakModelMapper:
         EDITREAL - Don't need (?)
         RENAME - TODO (it is wierd, one example has a rename, but still the old and new new were present in the new spoortak_xx.csv)
 
+        :param spoortak_subsection: subsection to map
+        :param _ignore_list: list of spoortak identifiers to ignore (need this to avoid infinite loops)
+
         """
+
+        if not _ignore_list:
+            _ignore_list = []
 
         found_subsections = []
         spoortak_found = False
@@ -83,30 +103,25 @@ class SpoortakModelMapper:
         for model_version in self._data.model_version_numbers[::-1]:
             model = self._data.models[model_version]
 
-            # step 1: if it still exists under the same name
-            mask = (
-                    (model['SPOORTAK_IDENTIFICATIE'] == spoortak_subsection.identification) &
-                    # overlap
-                    (model['kilometrering_start'] <= spoortak_subsection.kilometrering_end) &
-                    (model['kilometrering_end'] >= spoortak_subsection.kilometrering_start)
-            )
+            # step 1: Scan the model data for all references
+            spoortak_data = self._retrieve_spoortak(spoortak_subsection.identification, model_version)
 
-            subsections = model[mask]
-
-            if spoortak_found and len(subsections) == 0:
+            if spoortak_found and spoortak_data is None:
                 raise ValueError(f'The spoortak was not new, but could not find it in version {model_version}.')
 
-            if len(subsections) > 0:
-                spoortak_found = True
-                assert len(subsections) == 1, f'Expected only one entry, but found {len(subsections)}'
-                geocodes = [subsections.iloc[0]['GEOCODE_BEGIN'], subsections.iloc[0]['GEOCODE_EIND']]
+            if spoortak_data is None:
+                continue
 
-            for _, row in subsections.iterrows():
-                found_subsections.append(
-                    SpoortakSubsection(row['SPOORTAK_IDENTIFICATIE'],
-                                       max(spoortak_subsection.kilometrering_start, row['kilometrering_start']),
-                                       min(spoortak_subsection.kilometrering_end, row['kilometrering_end']),
-                                       model_version))
+            spoortak_found = True
+
+            # make this nicer, dont need to grab them every time and overwriting them with the oldest?
+            geocodes = [spoortak_data['GEOCODE_BEGIN'], spoortak_data['GEOCODE_EIND']]
+
+            found_subsections.append(
+                SpoortakSubsection(spoortak_data.name,
+                                   max(spoortak_subsection.kilometrering_start, spoortak_data['kilometrering_start']),
+                                   min(spoortak_subsection.kilometrering_end, spoortak_data['kilometrering_end']),
+                                   model_version))
 
             if self._is_new_spoortak(spoortak_subsection.identification, model_version):
                 log.info(f'Spoortak was new, not searching further back in the model history')
@@ -116,18 +131,24 @@ class SpoortakModelMapper:
         # todo: we can limit this by comparing the geocode (start and ends) at least 1 of them should match
         related_spoortakken = self._related_spoortakken(spoortak_subsection.identification, geocodes)
         for related_spoortak, related_model_version in related_spoortakken:
-            related_segments = self.map(SpoortakSubsection(related_spoortak, spoortak_subsection.kilometrering_start,
-                                                           spoortak_subsection.kilometrering_end,
-                                                           related_model_version))
+            if related_spoortak in _ignore_list:
+                continue
+
+            spoortak_subsection = SpoortakSubsection(related_spoortak, spoortak_subsection.kilometrering_start,
+                                                     spoortak_subsection.kilometrering_end,
+                                                     related_model_version)
+            related_segments = self.map(spoortak_subsection, _ignore_list + [spoortak_subsection.identification])
             found_subsections.extend(related_segments)
 
         limited = self._limit_start_end(found_subsections, spoortak_subsection.kilometrering_start,
                                         spoortak_subsection.kilometrering_end)
         cleaned = self._remove_duplicates(limited)
 
-        return cleaned
+        ordered = sorted(cleaned, key=lambda x: x.spoortak_model_version)
+
+        return ordered
 
     def map_to(self, spoortak_subsection: SpoortakSubsection, model_version: int) -> [SpoortakSubsection]:
         """ Maps a spoortak subsection to a specific model version """
         results = self.map(spoortak_subsection)
-        return [result for result in results if result.model_version == model_version]
+        return [result for result in results if result.spoortak_model_version == model_version]
