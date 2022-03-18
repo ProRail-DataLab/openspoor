@@ -260,11 +260,12 @@ class PlottingLineStrings(PlotObject):
             .pipe(gpd.GeoDataFrame, geometry='geometry', crs='EPSG:28992')
         )
 
-    def __init__(self, file, name_column, subset=None, color='blue', topn=None):
+    def __init__(self, file, name_column, subset=None, color='blue', topn=None, buffersize=3):
         self.subset = subset
         self.topn = topn
         self.color = color
         self.name_column = name_column
+        self.buffersize = buffersize # In meters
         self.all_linestrings = self._get_all_linestrings(file)
 
     def add_sectie_to_map(self, geometry_data, folium_map):
@@ -279,8 +280,7 @@ class PlottingLineStrings(PlotObject):
         style_function = lambda x: {'fillColor': '#ffffff', 'color': '#000000', 'fillOpacity': 0.1, 'weight': 0.1}
         highlight_function = lambda x: {'fillColor': '#000000', 'color': '#000000', 'fillOpacity': 0.50, 'weight': 0.1}
         sectie_hover = folium.features.GeoJson(
-            data=geometry_data.assign(geometry=lambda x: x.geometry.to_crs('EPSG:28992').buffer(3)).reset_index(),
-            # Buffer in meters
+            data=geometry_data.assign(geometry=lambda x: x.geometry.to_crs('EPSG:28992').buffer(self.buffersize)).reset_index(),
             style_function=style_function,
             control=False,
             highlight_function=highlight_function,
