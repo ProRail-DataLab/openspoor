@@ -1,6 +1,8 @@
 import pandas as pd
 import folium
 from shapely.geometry import point
+import geopandas as gpd
+from shapely import wkt
 from typing import List, Optional, Dict, Tuple
 from pathlib import Path
 from urllib.parse import quote
@@ -77,7 +79,15 @@ class SpoorKaart(folium.Map):
 
         for _, item in self._children.items():
             for _, subitem in item._children.items():
+                # This is for plotted linestrings
+                if isinstance(subitem.__dict__['_parent'], folium.features.Choropleth):
+                    chloropleth = subitem.__dict__['_parent']
+                    chloropleth_features = chloropleth.__dict__['geojson'].__dict__['data']['features']
+                    for feature in chloropleth_features:
+                        bboxes.append(
+                            feature['bbox'][::-1])  # Reverse lat and long ordering here
                 try:
+                    # This is for plotted markers
                     bboxes.append(
                         subitem.__dict__['data']['features'][0]['bbox'][::-1])  # Reverse lat and long ordering here
                 except:
@@ -219,4 +229,62 @@ class PlottingDataFrame(pd.DataFrame, PlotObject):
                               popup=popup_text,
                               icon=folium.Icon(color=marker_color, prefix='fa', icon=marker, angle=rotation)).add_to(
                     folium_map)
+        return folium_map
+
+
+class PlottingLineStrings(PlotObject):
+    def _get_all_linestrings(self, file):
+        df = pd.read_csv(file, index_col=0)
+        df['geometry'] = df['geometry'].apply(wkt.loads)
+        geodf = gpd.GeoDataFrame(df, geometry='geometry', crs='EPSG:28992')
+        return geodf.set_index(self.name_column)
+
+    def __init__(self, file, name_column, subset=None, color='blue', topn=None):
+        self.subset = subset
+        self.topn = topn
+        self.color = color
+        self.name_column = name_column
+        self.all_linestrings = self._get_all_linestrings(file)
+
+    def add_sectie_to_map(self, geometry_data, folium_map):
+        # Add lines
+        folium.Choropleth(
+            geometry_data['geometry'],
+            line_weight=3,
+            line_color=self.color,
+        ).add_to(folium_map)
+
+        # Add hover functionality.
+        style_function = lambda x: {'fillColor': '#ffffff', 'color': '#000000', 'fillOpacity': 0.1, 'weight': 0.1}
+        highlight_function = lambda x: {'fillColor': '#000000', 'color': '#000000', 'fillOpacity': 0.50, 'weight': 0.1}
+        sectie_hover = folium.features.GeoJson(
+            data=geometry_data.assign(geometry=lambda x: x.geometry.to_crs('EPSG:28992').buffer(3)).reset_index(),
+            # Buffer in meters
+            style_function=style_function,
+            control=False,
+            highlight_function=highlight_function,
+            tooltip=folium.features.GeoJsonTooltip(
+                fields=[self.name_column],
+                aliases=[self.name_column],
+                style=("background-color: white; color: #333333; font-family: arial; font-size: 12px; padding: 10px;")
+            )
+        )
+        folium_map.add_child(sectie_hover)
+        folium_map.keep_in_front(sectie_hover)
+        return folium_map
+
+    def add_to(self, folium_map):
+        if not self.subset:
+            if self.topn:
+                to_plot = self.all_linestrings.head(self.topn)
+            else:
+                to_plot = self.all_linestrings
+            folium_map = self.add_sectie_to_map(to_plot, folium_map)
+        else:
+            for name in self.subset:
+                try:
+                    folium_map = self.add_sectie_to_map(self.all_linestrings.loc[[name], :], folium_map)
+                except KeyError:
+                    print(f'Failed to plot {name}')
+
         return folium_map
