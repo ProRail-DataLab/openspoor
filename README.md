@@ -27,14 +27,11 @@ Installation using anaconda
 - Clone the "openspoor" repository
   - `pip install openspoor`
 - create an environment:
-  - `conda create -n openspoorenv python==3.6.12`
+  - `conda create -n openspoorenv python==3.8`
 - activate the environment:
   - `conda activate openspoorenv`
-- If you are installing on **Windows OS** with Anaconda, first install rtree and geopandas through anaconda with the commands: 
-  - `conda install rtree==0.8.3 -y`
-  - `conda install geopandas==0.6.1 -y`
-- In the root directory of the repository, execute the command:
-  - `pip install -r requirements.txt`
+- install dependencies:
+  - `conda install -c conda-forge --file requirements.txt`
 - In the root directory of the repository, execute the command:
   - `pip install .`
 - In the root directory of the repository, execute the command: 
