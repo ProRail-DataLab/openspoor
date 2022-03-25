@@ -3,14 +3,9 @@ import geopandas as gpd
 import pandas as pd
 from unittest import mock
 
-from openspoor import (
-    TransformerCoordinatesToSpoor,
-    TransformerGeocodeToCoordinates,
-    PUICMapservices,
-    SpoortakMapservices,
-    TransformerSpoortakToCoordinates,
-    MapservicesData
-)
+from openspoor.transformers import TransformerCoordinatesToSpoor, TransformerGeocodeToCoordinates, TransformerSpoortakToCoordinates
+from openspoor.mapservices import PUICMapservices, SpoortakMapservices, MapservicesData
+
 from shapely.geometry import LineString, Point
 
 class Test:
@@ -299,7 +294,7 @@ class Test:
         crs="epsg:28992",
     )
 
-    @mock.patch("openspoor.SpoortakMapservices._download_data")
+    @mock.patch("openspoor.mapservices.SpoortakMapservices._download_data")
     def test_caching_spoortakmapservices(self, mocked_load, tmp_path):
         mocked_load.return_value = self.spoortak_mock_output
         cache_path = tmp_path / "spoortak.p"
@@ -321,7 +316,7 @@ class Test:
         )
         assert all(output.geometry.geom_almost_equals(expected_output.geometry, 6))
 
-    @mock.patch("openspoor.PUICMapservices._download_data")
+    @mock.patch("openspoor.mapservices.PUICMapservices._download_data")
     def test_caching_puicmapservices(self, mocked_load, tmp_path):
         mocked_load.return_value = self.puic_mock_output
         cache_path = tmp_path / "puic.p"
