@@ -8,6 +8,9 @@ requirements = [
       "requests",
       "rtree",
       "pyproj<3",
+      "pandas",
+      "shapely",
+      "folium"
 ]
 
 dev_packages = [
@@ -15,7 +18,7 @@ dev_packages = [
 ]
 
 setup(name='openspoor',
-      version='0.1.4',
+      version='0.1.5',
       description='Open source project to allow translations between different spoor referential systems',
       install_requires=requirements,
       extras_require={"dev": dev_packages},

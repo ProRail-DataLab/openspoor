@@ -40,8 +40,7 @@ Installation using anaconda
 
 #### Demonstration notebook
 
-In the future a notebook will be added that demonstrates the use of the openspoor package. For now one can take the 
-code in the acceptance tests as example of how to use the package.
+In the demo_notebook folder a notebook can be found that demonstrates the example usage of the openspoor package.
 
 ## Dependencies
 
