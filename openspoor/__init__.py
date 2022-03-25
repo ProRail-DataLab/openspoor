@@ -1,5 +1,3 @@
-from .transformers.TransformerCoordinatesToSpoor import *
-from .transformers.TransformerGeocodeToCoordinates import *
-from .transformers.TransformerSpoortakToCoordinates import *
-from .mapservices.PUICMapservices import *
-from .mapservices.SpoortakMapservices import *
+from importlib_metadata import version
+
+__version__ = version('openspoor')

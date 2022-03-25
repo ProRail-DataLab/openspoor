@@ -7,15 +7,17 @@ from typing import List, Optional, Dict, Tuple
 from pathlib import Path
 from urllib.parse import quote
 from ..utils.common import read_config
+from abc import ABC, abstractmethod
 
 config = read_config()
 
 
-class PlotObject:
+class PlotObject(ABC):
     """
     A parent class for every object that can be plotted on a SpoorKaart
     """
 
+    @abstractmethod
     def add_to(self, m) -> None:
         """
         A base function that should be overwritten with logic for every plottable object.

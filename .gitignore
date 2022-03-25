@@ -1,35 +1,3 @@
-Skip to content
-Search or jump to…
-Pull requests
-Issues
-Marketplace
-Explore
- 
-@JoostProRail 
-ProRail-DataLab
-/
-openspoor
-Public
-Code
-Issues
-7
-Pull requests
-3
-Actions
-Projects
-Wiki
-Security
-Insights
-openspoor/.gitignore
-@JoostProRail
-JoostProRail Merge branch 'main' into add_visualisations
-Latest commit 32d542d 10 minutes ago
- History
- 2 contributors
-@PR-Maik@JoostProRail
- 146 lines (117 sloc)  2.03 KB
-   
-
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -176,16 +144,3 @@ dmypy.json
 
 # pytype static type analyzer
 .pytype/
-© 2022 GitHub, Inc.
-Terms
-Privacy
-Security
-Status
-Docs
-Contact GitHub
-Pricing
-API
-Training
-Blog
-About
-Loading complete
