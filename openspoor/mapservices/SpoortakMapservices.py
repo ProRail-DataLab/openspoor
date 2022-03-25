@@ -4,6 +4,7 @@ from ..utils.common import read_config
 
 config = read_config()
 
+
 class SpoortakMapservices(MapservicesData):
     """
     Loads mapservices data from the Spoortakken. These contain Spoortak_

@@ -48,26 +48,21 @@ class SpoorKaart(folium.Map):
     is opened.
     """
 
-    def __init__(self, objects: List[PlotObject] = [],
-                 save_name: Optional[Path] = None,
-                 makesmaller: bool = False, **kwargs):
+    def __init__(self, objects: List[PlotObject] = [], **kwargs):
         """
         Set up a SpoorKaart object
 
         :param objects: A list of plottable objects that can be pre-defined outside the context manager of the
         spoorkaart
-        :param save_name: An Optional Path where the final .html file could be written to
-        :param makesmaller: A boolean for decreasing the size of the final plot. Designed for Databricks Notebooks
         :return: A SpoorKaart object
         """
-        self.makesmaller = makesmaller
+
         super().__init__(location=[52, 5], zoom_start=8, max_zoom=30, max_native_zoom=30, tiles=None, **kwargs)
-        self.save_name = save_name
         self._add_luchtfoto()
 
         for obj in objects:
             assert issubclass(type(obj), PlotObject), f'Unable to plot {obj}, not defined as plottable object'
-            obj.add_to(self)
+            self.add(obj)
 
     def _add_luchtfoto(self) -> None:
         """
@@ -81,9 +76,6 @@ class SpoorKaart(folium.Map):
                             maxZoom=30, maxNativeZoom=30).add_to(fg)
         folium.TileLayer('openstreetmap', transparent=True, opacity=0.2).add_to(fg)
         self.add_child(fg)
-
-    def __enter__(self):
-        return self
 
     def _fix_zoom(self) -> None:
         """
@@ -117,29 +109,38 @@ class SpoorKaart(folium.Map):
             bounds = [min(map(lambda x: x[i], bboxes)) if i < 2 else max(map(lambda x: x[i], bboxes)) for i in range(4)]
             self.fit_bounds([bounds[:2], bounds[2:]])
 
-    def __exit__(self, exc_type, exc_val, exc_tb):
+    def add(self, plotobject):
+        plotobject.add_to(self)
+
+    def show(self, makesmaller: bool = False):
         """
-        End the context manager, keeping track of any exceptions that may have occurred.
-        :return: A SpoorKaart object
+        Fix the map so it is zoomed to a nice level and is displayed at a suitable size.
+
+        :param makesmaller: A boolean for decreasing the size of the final plot. Designed for Databricks Notebooks
+        :return:
         """
-        if exc_type is not None:
-            raise exc_type(exc_val)
         self._fix_zoom()
-        if self.save_name is not None:
-            print(f'Saving as {self.save_name}')
-            self.save(self.save_name)
-        if self.makesmaller:
+        if makesmaller:
             self.superfigure = folium.Figure(1000, 400)
             self.add_to(self.superfigure)
             return self.superfigure
         else:
             return self
 
+    def save(self, save_name: Path):
+        """
+        Save the map to a given directory
+        :param save_name: A Path where the final .html file could be written to
+        :return:
+        """
+
+        self.show()
+        super(SpoorKaart, self).save(save_name)
+
 
 class PlottingDataFrame(pd.DataFrame, PlotObject):
     """
     Add functionalities to a Pandas DataFrame so it can be plotted in a nice manner.
-
     """
 
     def __init__(self, df, lat_column: str = 'lat', lon_column: str = 'lon', popup: List[str] = None,
@@ -164,10 +165,10 @@ class PlottingDataFrame(pd.DataFrame, PlotObject):
         :param url_column: A column including an url that is displayed in the popup
         """
 
-        # TODO: Make this a helper function? Also required for linestring dataframe parsing
-        if 'geometry' in df.columns and isinstance(df, pd.DataFrame):
-            df = self._convert_pandas_to_geopandas(df)
         super().__init__(df)
+        # TODO: Make this a helper function? Also required for linestring dataframe parsing
+        if 'geometry' in self.columns and isinstance(df, pd.DataFrame):
+            df = self._convert_pandas_to_geopandas(df)
         self.attrs['lat'] = lat_column
         self.attrs['lon'] = lon_column
         if isinstance(df, gpd.GeoDataFrame):
