@@ -1,4 +1,4 @@
-from openspoor import FeatureServerOverview
+from openspoor.mapservices import FeatureServerOverview
 import pytest
 
 
