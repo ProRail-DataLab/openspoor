@@ -146,7 +146,7 @@ class PlottingDataFrame(pd.DataFrame, PlotObject):
     def __init__(self, df, lat_column: str = 'lat', lon_column: str = 'lon', popup: List[str] = None,
                  colors: Dict[str, Dict[Tuple[float, float], str]] = None,
                  markertype: Optional[str] = None, marker_column: str = None, color_column: str = None,
-                 rotation_column: str = None, radius_column: str = None, url_column: str=None):
+                 rotation_column: str = None, radius_column: str = None, url_column: str = None):
         """
         Initialize a PlottingDataFrame.
 
@@ -167,7 +167,9 @@ class PlottingDataFrame(pd.DataFrame, PlotObject):
 
         super().__init__(df)
         # TODO: Make this a helper function? Also required for linestring dataframe parsing
-        if 'geometry' in self.columns and isinstance(df, pd.DataFrame):
+
+        if 'geometry' in self.columns and isinstance(df, pd.DataFrame)\
+                and not isinstance(df, gpd.geodataframe.GeoDataFrame):
             df = self._convert_pandas_to_geopandas(df)
         self.attrs['lat'] = lat_column
         self.attrs['lon'] = lon_column
