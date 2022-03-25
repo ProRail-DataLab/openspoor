@@ -25,9 +25,9 @@ These transformations can be performed between the following systems:
 ### Installation - usage
 
 #### Windows
-Openspoor is dependend on Fiona and GDAL, which are missing Windows dependencies on PyPi.
+Openspoor is dependent on Fiona and GDAL, which are missing Windows dependencies on PyPi.
 
-Use conda to install Giona and GDAL:
+Use conda to install Fiona and GDAL:
 
 - `conda install -c conda-forge Fiona GDAL`
 
@@ -50,7 +50,7 @@ Installation using anaconda
   - `conda install -c conda-forge --file requirements.txt`
 - In the root directory of the repository, execute the command:
   - `pip install -e .`
-- In the root directory of the repository, execute the command: 
+- In the root directory of the repository, execute the command:
   - `python -m pytest`
 - If all the test succeed, the openspoor package is ready to use and you are on the right "track"!
 
