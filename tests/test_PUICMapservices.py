@@ -1,6 +1,6 @@
 import geopandas as gpd
 import pandas as pd
-from openspoor import PUICMapservices
+from openspoor.mapservices import PUICMapservices
 from shapely.geometry import Point, LineString
 
 

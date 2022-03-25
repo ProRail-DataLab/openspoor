@@ -1,6 +1,6 @@
 import geopandas as gpd
 import pandas as pd
-from openspoor import TransformerCoordinatesToSpoor
+from openspoor.transformers import TransformerCoordinatesToSpoor
 from shapely.geometry import Point, LineString
 
 
