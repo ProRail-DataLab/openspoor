@@ -1,4 +1,3 @@
-import yaml
 import pandas as pd
 import geopandas as gpd
 from loguru import logger
