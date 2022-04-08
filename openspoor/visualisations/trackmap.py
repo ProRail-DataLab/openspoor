@@ -3,7 +3,7 @@ import folium
 from shapely.geometry import point
 import geopandas as gpd
 from shapely import wkt
-from typing import List, Optional, Dict, Tuple
+from typing import List, Optional, Dict, Tuple, Union
 from pathlib import Path
 from urllib.parse import quote
 from ..utils.common import read_config
@@ -14,14 +14,14 @@ config = read_config()
 
 class PlotObject(ABC):
     """
-    A parent class for every object that can be plotted on a SpoorKaart
+    A parent class for every object that can be plotted on a TrackMap
     """
 
     @abstractmethod
     def add_to(self, m) -> None:
         """
         A base function that should be overwritten with logic for every plottable object.
-        :param m: A SpoorKaart object, to which this element should be added.
+        :param m: A TrackMap object, to which this element should be added.
         :return: None
         """
         raise NotImplementedError('This needs to be set in implementation classes')
@@ -41,20 +41,20 @@ class PlotObject(ABC):
         )
 
 
-class SpoorKaart(folium.Map):
+class TrackMap(folium.Map):
     """
     Plotting functionality based on folium maps, designed for plotting objects on the Dutch railways.
-    This object is designed to work as a context manager, where every element can be added to the SpoorKaart while it
+    This object is designed to work as a context manager, where every element can be added to the TrackMap while it
     is opened.
     """
 
     def __init__(self, objects: List[PlotObject] = [], **kwargs):
         """
-        Set up a SpoorKaart object
+        Set up a TrackMap object
 
         :param objects: A list of plottable objects that can be pre-defined outside the context manager of the
-        spoorkaart
-        :return: A SpoorKaart object
+        TrackMap
+        :return: A TrackMap object
         """
 
         super().__init__(location=[52, 5], zoom_start=8, max_zoom=30, max_native_zoom=30, tiles=None, **kwargs)
@@ -135,7 +135,7 @@ class SpoorKaart(folium.Map):
         """
 
         self.show()
-        super(SpoorKaart, self).save(save_name)
+        super(TrackMap, self).save(save_name)
 
 
 class PlottingDataFrame(pd.DataFrame, PlotObject):
@@ -256,8 +256,19 @@ class PlottingDataFrame(pd.DataFrame, PlotObject):
 
 
 class PlottingLineStrings(PlotObject):
-    def _get_all_linestrings(self, file):
-        # TODO Use the pandas to geopandas functionality?
+    """
+    An object that can be plotted on a TrackMap. This is based on a geopandas dataframe or a csv file with every row
+    indicating an item to show.
+
+    """
+    def _get_all_linestrings(self, file: str) -> gpd.GeoDataFrame:
+        """
+        Helper function to generate a geopandas dataframe based on a file location.
+
+        :param file: A file location of a csv including a geopandas dataframe
+        :return: A GeoPandas dataframe.
+        """
+        # TODO: use pandas to geopandas functionality?
         return (
             pd.read_csv(file, index_col=0)
             .assign(geometry=lambda d: d.geometry.apply(wkt.loads))
@@ -265,15 +276,37 @@ class PlottingLineStrings(PlotObject):
             .pipe(gpd.GeoDataFrame, geometry='geometry', crs='EPSG:28992')
         )
 
-    def __init__(self, file, name_column, subset=None, color='blue', topn=None, buffersize=3):
+    def __init__(self, name_column: str, data: Union[gpd.GeoDataFrame, str], file: str = None,
+                 subset: Optional[list] = None, color='blue', buffersize: int = 3):
+        """
+        Initialize a PlottingLineStrings object.
+
+        :param name_column: The column giving the names of the linestrings to plot
+        :param data: A geopandas dataframe or a file location of a csv file
+        :param subset: Used to show only a part of the requested linestrings in the file.
+        :param color: The color in which the linestrings should be shown on the map
+        :param buffersize: The size of the buffer around the linestrings on the map.
+        """
+
         self.subset = subset
-        self.topn = topn
         self.color = color
         self.name_column = name_column
-        self.buffersize = buffersize # In meters
-        self.all_linestrings = self._get_all_linestrings(file)
+        self.buffersize = buffersize  # In meters
+        if isinstance(data, gpd.GeoDataFrame):
+            self.all_linestrings = data
+        elif isinstance(data, str):
+            self.all_linestrings = self._get_all_linestrings(file)
+        else:
+            raise TypeError('Provide either a geopandas dataframe or a file location of a csv to show')
 
-    def add_sectie_to_map(self, geometry_data, folium_map):
+    def add_linestring_to_map(self, geometry_data: gpd.GeoDataFrame, folium_map: TrackMap) ->TrackMap:
+        """
+        Add a single element to a TrackMap object.
+
+        :param geometry_data: One linestring to plot
+        :param folium_map: The map to add the objects to
+        :return: The updated map
+        """
         # Add lines
         folium.Choropleth(
             geometry_data['geometry'],
@@ -299,17 +332,19 @@ class PlottingLineStrings(PlotObject):
         folium_map.keep_in_front(sectie_hover)
         return folium_map
 
-    def add_to(self, folium_map):
+    def add_to(self, folium_map: TrackMap) ->TrackMap:
+        """
+        Add the linestrings to a TrackMap object
+
+        :param folium_map: The map to add the objects to
+        :return: The updated map
+        """
         if not self.subset:
-            if self.topn:
-                to_plot = self.all_linestrings.head(self.topn)
-            else:
-                to_plot = self.all_linestrings
-            folium_map = self.add_sectie_to_map(to_plot, folium_map)
+            folium_map = self.add_linestring_to_map(self.all_linestrings, folium_map)
         else:
             for name in self.subset:
                 try:
-                    folium_map = self.add_sectie_to_map(self.all_linestrings.loc[[name], :], folium_map)
+                    folium_map = self.add_linestring_to_map(self.all_linestrings.loc[[name], :], folium_map)
                 except KeyError:
                     print(f'Failed to plot {name}')
 
