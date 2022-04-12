@@ -269,6 +269,7 @@ class PlottingLineStrings(PlotObject):
         :return: A GeoPandas dataframe.
         """
         # TODO: use pandas to geopandas functionality?
+        print(file)
         return (
             pd.read_csv(file, index_col=0)
             .assign(geometry=lambda d: d.geometry.apply(wkt.loads))
@@ -276,7 +277,7 @@ class PlottingLineStrings(PlotObject):
             .pipe(gpd.GeoDataFrame, geometry='geometry', crs='EPSG:28992')
         )
 
-    def __init__(self, name_column: str, data: Union[gpd.GeoDataFrame, str], file: str = None,
+    def __init__(self, name_column: str, data: Union[gpd.GeoDataFrame, str],
                  subset: Optional[list] = None, color='blue', buffersize: int = 3):
         """
         Initialize a PlottingLineStrings object.
@@ -295,7 +296,7 @@ class PlottingLineStrings(PlotObject):
         if isinstance(data, gpd.GeoDataFrame):
             self.all_linestrings = data
         elif isinstance(data, str):
-            self.all_linestrings = self._get_all_linestrings(file)
+            self.all_linestrings = self._get_all_linestrings(data)
         else:
             raise TypeError('Provide either a geopandas dataframe or a file location of a csv to show')
 
