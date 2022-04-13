@@ -174,11 +174,11 @@ class PlottingDataFrame(pd.DataFrame, PlotObject):
         self.attrs['lat'] = lat_column
         self.attrs['lon'] = lon_column
         if isinstance(df, gpd.GeoDataFrame):
-            if isinstance(self.geometry.iloc[0], point.Point):
-                self[self.attrs['lat']] = self.geometry.apply(lambda d: d.y)
-                self[self.attrs['lon']] = self.geometry.apply(lambda d: d.x)
+            if isinstance(df.geometry.iloc[0], point.Point):
+                self[self.attrs['lat']] = df.geometry.apply(lambda d: d.y)
+                self[self.attrs['lon']] = df.geometry.apply(lambda d: d.x)
             else:
-                NotImplementedError(f"Unimplemented geometry: {self.geometry.iloc[0]}")
+                NotImplementedError(f"Unimplemented geometry: {df.geometry.iloc[0]}")
 
         self.color_column = color_column
         if self.color_column is not None:
