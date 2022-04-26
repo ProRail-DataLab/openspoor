@@ -1,0 +1,121 @@
+ID;OBJECTTYPE;CG_TYPE;NUMMER;CG_NAAM;PCA;PGO_GEBIED;OBEGINTIJD
+913;contractgebied;BASIS;14;Woerden;VolkerRail;;2016-01-05
+914;contractgebied;BAAN;81;Rijn en Gouwe;Strukton Rail;Rijn en Gouwe;2016-01-05
+915;contractgebied;BAAN;14;Woerden;VolkerRail;;2016-01-05
+916;contractgebied;BAAN;9;Amsterdam;Strukton Rail;;2015-02-06
+917;contractgebied;BAAN;7;Alkmaar;VolkerRail;;2015-02-06
+918;contractgebied;BVL;5;Dordrecht;Strukton Rail;;2014-01-06
+919;contractgebied;BASIS;7;Alkmaar;VolkerRail;;2015-02-06
+920;contractgebied;BASIS;9;Amsterdam;Strukton Rail;;2015-02-06
+921;contractgebied;BAAN;26;Maastricht;Strukton Rail;;2014-12-18
+922;contractgebied;BAAN;25;Roermond;Strukton Rail;;2014-12-18
+949;contractgebied;BAAN;8;Haarlem;VolkerRail;;2014-12-19
+950;contractgebied;BAAN;82;Lisse;VolkerRail;;2014-12-19
+951;contractgebied;BASIS;8;Haarlem;VolkerRail;;2013-12-16
+952;contractgebied;BASIS;82;Lisse;VolkerRail;;2013-12-16
+953;contractgebied;BASIS;3;Rotterdam;BAM Rail;;2013-12-16
+954;contractgebied;BASIS;34;Overijssel;Strukton Rail;Drenthe;2013-12-16
+955;contractgebied;BASIS;35;Drenthe;Strukton Rail;Drenthe;2013-12-16
+923;contractgebied;BVL;19;Roosendaal;VolkerRail;Zeeland;2015-12-11
+924;contractgebied;BVL;34;Overijssel;Strukton Rail;Drenthe;2013-08-19
+925;contractgebied;BVL;3;Rotterdam;BAM Rail;;2013-08-22
+926;contractgebied;BAAN;20;Breda;BAM Rail;;2013-12-09
+927;contractgebied;BAAN;19;Roosendaal;VolkerRail;Zeeland;2016-01-05
+928;contractgebied;BASIS;23;Boxtel;BAM Rail;;2013-12-16
+929;contractgebied;BASIS;26;Maastricht;Strukton Rail;;2013-12-16
+930;contractgebied;BASIS;25;Roermond;Strukton Rail;;2013-12-16
+931;contractgebied;BASIS;13;Utrecht;VolkerRail;;2013-12-16
+932;contractgebied;BVL;9;Amsterdam;Strukton Rail;;2015-02-06
+933;contractgebied;BVL;7;Alkmaar;VolkerRail;;2015-02-06
+934;contractgebied;BVL;29;Gelderse Vallei;VolkerRail;Veluwe;2013-08-19
+935;contractgebied;BAAN;71;A15trace;VolkerRail;;2013-10-03
+936;contractgebied;BVL;33;Gelderland;VolkerRail;Veluwe;2013-08-19
+937;contractgebied;BVL;20;Breda;BAM Rail;;2013-12-09
+938;contractgebied;BASIS;29;Gelderse Vallei;VolkerRail;Veluwe;2016-01-05
+939;contractgebied;BASIS;12;Amersfoort;ASSET Rail;Eemland;2016-01-05
+940;contractgebied;BAAN;29;Gelderse Vallei;VolkerRail;Veluwe;2016-01-05
+941;contractgebied;BAAN;12;Amersfoort;ASSET Rail;Eemland;2016-01-05
+942;contractgebied;BASIS;21;Den Bosch;BAM Rail;Betuwe;2016-01-05
+943;contractgebied;BAAN;21;Den Bosch;BAM Rail;Betuwe;2016-01-05
+944;contractgebied;BASIS;19;Roosendaal;VolkerRail;Zeeland;2016-01-05
+945;contractgebied;BASIS;18;Goes;VolkerRail;Zeeland;2014-10-17
+946;contractgebied;BAAN;18;Goes;VolkerRail;Zeeland;2014-10-17
+947;contractgebied;BVL;8;Haarlem;VolkerRail;;2014-12-19
+948;contractgebied;BVL;82;Lisse;VolkerRail;;2014-12-19
+888;contractgebied;BAAN;33;Gelderland;VolkerRail;Veluwe;2013-08-15
+889;contractgebied;BVL;6;Heerhugowaard;VolkerRail;;2013-08-22
+890;contractgebied;BASIS;6;Heerhugowaard;VolkerRail;;2013-08-16
+891;contractgebied;BAAN;6;Heerhugowaard;VolkerRail;;2013-08-16
+892;contractgebied;BAAN;3;Rotterdam;BAM Rail;;2013-08-16
+893;contractgebied;BAAN;11;Weesp;Strukton Rail;;2013-08-16
+886;contractgebied;BASIS;11;Weesp;Strukton Rail;;2015-05-01
+887;contractgebied;BAAN;34;Overijssel;Strukton Rail;Drenthe;2013-08-15
+894;contractgebied;BVL;71;A15trace;VolkerRail;;2013-11-28
+895;contractgebied;BAAN;70;HSL;Infraspeed;;2014-12-19
+896;contractgebied;BASIS;36;Friesland;Strukton Rail;Wadden;2014-07-24
+897;contractgebied;BAAN;36;Friesland;Strukton Rail;Wadden;2014-07-24
+898;contractgebied;BVL;36;Friesland;Strukton Rail;Wadden;2014-07-24
+899;contractgebied;BASIS;37;Groningen;Strukton Rail;Wadden;2014-07-24
+900;contractgebied;BASIS;28;Maas en Waal;ASSET Rail;Gelre 2;2016-01-05
+901;contractgebied;BASIS;27;Venlo;Strukton Rail;De Peel;2016-01-05
+902;contractgebied;BAAN;28;Maas en Waal;ASSET Rail;Gelre 2;2016-01-05
+903;contractgebied;BAAN;27;Venlo;Strukton Rail;De Peel;2016-01-05
+904;contractgebied;BVL;27;Venlo;Strukton Rail;De Peel;2016-01-05
+905;contractgebied;BVL;28;Maas en Waal;ASSET Rail;Gelre 2;2016-01-05
+906;contractgebied;BASIS;16;Maarn;ASSET Rail;Eemland;2016-01-05
+907;contractgebied;BAAN;16;Maarn;ASSET Rail;Eemland;2016-01-05
+908;contractgebied;BAAN;5;Dordrecht;Strukton Rail;;2016-01-05
+909;contractgebied;BAAN;22;Geldermalsen;BAM Rail;Betuwe;2016-01-05
+910;contractgebied;BASIS;22;Geldermalsen;BAM Rail;Betuwe;2016-01-05
+911;contractgebied;BASIS;5;Dordrecht;Strukton Rail;;2016-01-05
+912;contractgebied;BASIS;81;Rijn en Gouwe;Strukton Rail;Rijn en Gouwe;2016-01-05
+866;contractgebied;BAAN;13;Utrecht;VolkerRail;;2013-08-01
+867;contractgebied;BVL;31;IJsselstreek;VolkerRail;Veluwe;2012-07-30
+868;contractgebied;BVL;81;Rijn en Gouwe;Strukton Rail;Rijn en Gouwe;2012-08-17
+869;contractgebied;BVL;21;Den Bosch;BAM Rail;Betuwe;2012-08-09
+865;contractgebied;BVL;22;Geldermalsen;BAM Rail;Betuwe;2012-08-24
+873;contractgebied;BAAN;37;Groningen;Strukton Rail;Wadden;2014-07-24
+874;contractgebied;BVL;37;Groningen;Strukton Rail;Wadden;2014-07-24
+870;contractgebied;BAAN;10;Duivendrecht;Strukton Rail;;2012-08-16
+871;contractgebied;BVL;10;Duivendrecht;Strukton Rail;;2012-08-16
+872;contractgebied;BAAN;15;Driebergen;VolkerRail;;2012-08-17
+875;contractgebied;BASIS;30;Achterhoek;ASSET Rail;Gelre 2;2014-07-24
+876;contractgebied;BAAN;30;Achterhoek;ASSET Rail;Gelre 2;2014-07-24
+877;contractgebied;BVL;30;Achterhoek;ASSET Rail;Gelre 2;2014-07-24
+882;contractgebied;BVL;1;Leiden;Strukton Rail;Rijn en Gouwe;2013-08-23
+883;contractgebied;BVL;16;Maarn;ASSET Rail;Eemland;2013-08-30
+884;contractgebied;BVL;12;Amersfoort;ASSET Rail;Eemland;2013-08-30
+885;contractgebied;BASIS;10;Duivendrecht;Strukton Rail;;2015-05-01
+878;contractgebied;BAAN;1;Leiden;Strukton Rail;Rijn en Gouwe;2013-08-23
+879;contractgebied;BASIS;4;Europoort;VolkerRail;;2014-01-09
+880;contractgebied;BAAN;4;Europoort;VolkerRail;;2014-01-09
+881;contractgebied;BVL;4;Europoort;VolkerRail;;2014-01-09
+843;contractgebied;BAAN;23;Boxtel;BAM Rail;;2012-06-26
+844;contractgebied;BAAN;35;Drenthe;Strukton Rail;Drenthe;2012-07-20
+841;contractgebied;BVL;15;Driebergen;VolkerRail;;2012-04-13
+842;contractgebied;BASIS;31;IJsselstreek;VolkerRail;Veluwe;2012-06-26
+845;contractgebied;BVL;35;Drenthe;Strukton Rail;Drenthe;2012-07-23
+846;contractgebied;BAAN;31;IJsselstreek;VolkerRail;Veluwe;2012-07-26
+849;contractgebied;BVL;23;Boxtel;BAM Rail;;2012-08-09
+850;contractgebied;BVL;24;Eindhoven;Strukton Rail;De Peel;2012-08-09
+847;contractgebied;BAAN;24;Eindhoven;Strukton Rail;De Peel;2012-08-09
+848;contractgebied;BASIS;24;Eindhoven;Strukton Rail;De Peel;2012-08-09
+851;contractgebied;BVL;14;Woerden;VolkerRail;;2012-08-17
+852;contractgebied;BVL;13;Utrecht;VolkerRail;;2013-08-01
+853;contractgebied;BVL;26;Maastricht;Strukton Rail;;2013-07-11
+854;contractgebied;BVL;25;Roermond;Strukton Rail;;2013-07-11
+855;contractgebied;BASIS;33;Gelderland;VolkerRail;Veluwe;2013-08-02
+856;contractgebied;BVL;11;Weesp;Strukton Rail;;2013-08-19
+857;contractgebied;BVL;18;Goes;VolkerRail;Zeeland;2013-08-22
+858;contractgebied;BVL;70;HSL;Infraspeed;;2014-01-09
+859;contractgebied;BASIS;32;Twente;VolkerRail;Twente;2014-07-31
+860;contractgebied;BAAN;32;Twente;VolkerRail;Twente;2014-07-31
+861;contractgebied;BVL;32;Twente;VolkerRail;Twente;2014-07-31
+863;contractgebied;BAAN;2;Den Haag;BAM Rail;Den Haag;2014-07-31
+864;contractgebied;BVL;2;Den Haag;BAM Rail;Den Haag;2014-07-31
+862;contractgebied;BASIS;2;Den Haag;BAM Rail;Den Haag;2014-07-31
+956;contractgebied;BASIS;1;Leiden;Strukton Rail;Rijn en Gouwe;2013-12-16
+957;contractgebied;BASIS;70;HSL;Infraspeed;;2013-12-16
+958;contractgebied;BASIS;20;Breda;BAM Rail;;2013-12-16
+959;contractgebied;BASIS;71;A15trace;VolkerRail;;2013-12-16
+960;contractgebied;BASIS;15;Driebergen;VolkerRail;;2013-12-16

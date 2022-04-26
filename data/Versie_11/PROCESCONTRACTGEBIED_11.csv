@@ -1,0 +1,118 @@
+ID;OBJECTTYPE;CG_TYPE;NUMMER;CG_NAAM;PCA;PGO_GEBIED;OBEGINTIJD
+2104;contractgebied;BVL;7;Alkmaar;VolkerRail;Hollands Noorderkwartier;2017-02-16
+2105;contractgebied;BAAN;7;Alkmaar;VolkerRail;Hollands Noorderkwartier;2017-02-16
+2106;contractgebied;BAAN;3;Rotterdam;VolkerRail;Rotterdam;2017-02-16
+2107;contractgebied;BASIS;23;Boxtel;BAM Rail;;2013-12-16
+2108;contractgebied;BAAN;6;Heerhugowaard;VolkerRail;Hollands Noorderkwartier;2017-02-16
+2109;contractgebied;BVL;6;Heerhugowaard;VolkerRail;Hollands Noorderkwartier;2017-02-16
+2110;contractgebied;BASIS;3;Rotterdam;VolkerRail;Rotterdam;2016-10-06
+2111;contractgebied;BASIS;6;Heerhugowaard;VolkerRail;Hollands Noorderkwartier;2016-10-06
+2112;contractgebied;BASIS;7;Alkmaar;VolkerRail;Hollands Noorderkwartier;2016-10-06
+2113;contractgebied;BASIS;13;Utrecht;VolkerRail;;2013-12-16
+2117;contractgebied;BVL;28;Maas en Waal;ASSET Rail;Gelre;2017-10-23
+2114;contractgebied;BASIS;8;Haarlem;Strukton Rail;Kennemerland;2018-04-09
+2115;contractgebied;BASIS;30;Achterhoek;ASSET Rail;Gelre;2017-10-23
+2116;contractgebied;BASIS;28;Maas en Waal;ASSET Rail;Gelre;2017-10-23
+2118;contractgebied;BVL;10;Duivendrecht;Strukton Rail;Amstelsepoort;2018-04-05
+2119;contractgebied;BVL;11;Weesp;Strukton Rail;Amstelsepoort;2018-04-05
+2123;contractgebied;BASIS;11;Weesp;Strukton Rail;Amstelsepoort;2018-04-05
+2120;contractgebied;BAAN;10;Duivendrecht;Strukton Rail;Amstelsepoort;2018-04-05
+2121;contractgebied;BAAN;11;Weesp;Strukton Rail;Amstelsepoort;2018-04-05
+2122;contractgebied;BASIS;10;Duivendrecht;Strukton Rail;Amstelsepoort;2018-04-05
+2124;contractgebied;BASIS;33;Gelderland;Strukton Rail;Veluwe;2017-12-01
+2125;contractgebied;BASIS;31;IJsselstreek;Strukton Rail;Veluwe;2017-12-01
+2126;contractgebied;BASIS;29;Gelderse Vallei;Strukton Rail;Veluwe;2017-12-01
+2127;contractgebied;BAAN;33;Gelderland;Strukton Rail;Veluwe;2017-12-01
+2131;contractgebied;BVL;31;IJsselstreek;Strukton Rail;Veluwe;2017-12-01
+2128;contractgebied;BAAN;31;IJsselstreek;Strukton Rail;Veluwe;2017-12-01
+2129;contractgebied;BAAN;29;Gelderse Vallei;Strukton Rail;Veluwe;2017-12-01
+2130;contractgebied;BVL;33;Gelderland;Strukton Rail;Veluwe;2017-12-01
+2132;contractgebied;BVL;29;Gelderse Vallei;Strukton Rail;Veluwe;2017-12-01
+2133;contractgebied;BAAN;21;Den Bosch;Strukton Rail;Betuwe;2018-04-04
+2023;contractgebied;BVL;9;Amsterdam;VolkerRail;Amsterdam;2017-10-02
+2020;contractgebied;BAAN;23;Boxtel;BAM Rail;;2012-06-26
+2021;contractgebied;BASIS;9;Amsterdam;VolkerRail;Amsterdam;2017-10-02
+2022;contractgebied;BAAN;9;Amsterdam;VolkerRail;Amsterdam;2017-10-02
+2024;contractgebied;BASIS;36;Friesland;Strukton Rail;Wadden;2016-01-29
+2028;contractgebied;BAAN;12;Amersfoort;ASSET Rail;Eemland;2016-03-07
+2134;contractgebied;BAAN;22;Geldermalsen;Strukton Rail;Betuwe;2018-04-04
+2135;contractgebied;BVL;8;Haarlem;Strukton Rail;Kennemerland;2018-04-06
+2025;contractgebied;BAAN;36;Friesland;Strukton Rail;Wadden;2016-01-29
+2026;contractgebied;BVL;36;Friesland;Strukton Rail;Wadden;2016-01-29
+2027;contractgebied;BASIS;12;Amersfoort;ASSET Rail;Eemland;2016-03-07
+2029;contractgebied;BVL;23;Boxtel;BAM Rail;;2012-08-09
+2034;contractgebied;BAAN;25;Roermond;Strukton Rail;;2016-04-25
+2136;contractgebied;BAAN;8;Haarlem;Strukton Rail;Kennemerland;2018-04-05
+2030;contractgebied;BVL;2;Den Haag;BAM Rail;Den Haag;2016-04-18
+2031;contractgebied;BASIS;32;Twente;VolkerRail;Twente;2016-04-04
+2032;contractgebied;BVL;14;Woerden;VolkerRail;;2016-06-06
+2033;contractgebied;BASIS;25;Roermond;Strukton Rail;;2016-04-25
+2038;contractgebied;BAAN;28;Maas en Waal;ASSET Rail;Gelre;2017-05-31
+2035;contractgebied;BVL;19;Roosendaal;Strukton Rail;Zeeland;2017-05-31
+2036;contractgebied;BVL;18;Goes;Strukton Rail;Zeeland;2017-05-31
+2037;contractgebied;BAAN;30;Achterhoek;ASSET Rail;Gelre;2017-05-31
+2039;contractgebied;BVL;30;Achterhoek;ASSET Rail;Gelre;2017-05-31
+2040;contractgebied;BASIS;35;Drenthe;ASSET Rail;Drenthe;2017-06-06
+2041;contractgebied;BASIS;34;Overijssel;ASSET Rail;Drenthe;2017-06-06
+2042;contractgebied;BAAN;35;Drenthe;ASSET Rail;Drenthe;2017-06-06
+2043;contractgebied;BAAN;34;Overijssel;ASSET Rail;Drenthe;2017-06-06
+2044;contractgebied;BVL;35;Drenthe;ASSET Rail;Drenthe;2017-06-06
+2045;contractgebied;BVL;34;Overijssel;ASSET Rail;Drenthe;2017-06-06
+2046;contractgebied;BASIS;81;Rijn en Gouwe;BAM Rail;Rijn en Gouwe;2017-09-05
+2050;contractgebied;BAAN;15;Driebergen;VolkerRail;;2017-09-15
+2047;contractgebied;BAAN;81;Rijn en Gouwe;BAM Rail;Rijn en Gouwe;2017-09-05
+2048;contractgebied;BVL;81;Rijn en Gouwe;BAM Rail;Rijn en Gouwe;2017-09-05
+2049;contractgebied;BAAN;32;Twente;VolkerRail;Twente;2017-09-15
+2051;contractgebied;BVL;15;Driebergen;VolkerRail;;2017-09-15
+2052;contractgebied;BAAN;13;Utrecht;VolkerRail;;2017-09-15
+2053;contractgebied;BVL;13;Utrecht;VolkerRail;;2017-09-15
+2054;contractgebied;BASIS;2;Den Haag;BAM Rail;Den Haag;2016-04-18
+2058;contractgebied;BAAN;24;Eindhoven;ASSET Rail;De Peel;2017-05-31
+2055;contractgebied;BAAN;2;Den Haag;BAM Rail;Den Haag;2016-04-18
+2056;contractgebied;BVL;27;Venlo;ASSET Rail;De Peel;2017-05-31
+2057;contractgebied;BAAN;27;Venlo;ASSET Rail;De Peel;2017-05-31
+2059;contractgebied;BASIS;27;Venlo;ASSET Rail;De Peel;2017-05-31
+2060;contractgebied;BASIS;24;Eindhoven;ASSET Rail;De Peel;2017-05-31
+2061;contractgebied;BASIS;16;Maarn;ASSET Rail;Eemland;2016-01-05
+2062;contractgebied;BAAN;16;Maarn;ASSET Rail;Eemland;2016-01-05
+2063;contractgebied;BAAN;5;Dordrecht;Strukton Rail;;2016-01-05
+2064;contractgebied;BASIS;5;Dordrecht;Strukton Rail;;2016-01-05
+2068;contractgebied;BVL;25;Roermond;Strukton Rail;;2016-04-25
+2065;contractgebied;BAAN;1;Leiden;BAM Rail;Rijn en Gouwe;2017-09-05
+2066;contractgebied;BASIS;22;Geldermalsen;Strukton Rail;Betuwe;2018-04-04
+2067;contractgebied;BASIS;21;Den Bosch;Strukton Rail;Betuwe;2018-04-04
+2069;contractgebied;BASIS;4;Europoort;VolkerRail;;2016-11-18
+2070;contractgebied;BAAN;4;Europoort;VolkerRail;;2016-11-18
+2071;contractgebied;BVL;4;Europoort;VolkerRail;;2016-11-18
+2072;contractgebied;BASIS;71;A15trace;VolkerRail;;2016-11-18
+2073;contractgebied;BAAN;71;A15trace;VolkerRail;;2016-11-18
+2074;contractgebied;BVL;71;A15trace;VolkerRail;;2016-11-18
+2075;contractgebied;BASIS;37;Groningen;Strukton Rail;Wadden;2016-04-07
+2077;contractgebied;BAAN;19;Roosendaal;Strukton Rail;Zeeland;2017-05-31
+2078;contractgebied;BAAN;18;Goes;Strukton Rail;Zeeland;2017-05-31
+2079;contractgebied;BASIS;18;Goes;Strukton Rail;Zeeland;2017-05-31
+2076;contractgebied;BASIS;26;Maastricht;Strukton Rail;;2016-04-08
+2083;contractgebied;BVL;24;Eindhoven;ASSET Rail;De Peel;2017-06-06
+2080;contractgebied;BVL;1;Leiden;BAM Rail;Rijn en Gouwe;2017-09-05
+2081;contractgebied;BVL;37;Groningen;Strukton Rail;Wadden;2016-04-07
+2082;contractgebied;BASIS;70;HSL;Infraspeed;;2016-04-07
+2084;contractgebied;BVL;16;Maarn;ASSET Rail;Eemland;2013-08-30
+2085;contractgebied;BVL;12;Amersfoort;ASSET Rail;Eemland;2013-08-30
+2086;contractgebied;BVL;5;Dordrecht;Strukton Rail;;2014-01-06
+2087;contractgebied;BVL;32;Twente;VolkerRail;Twente;2016-04-04
+2088;contractgebied;BAAN;37;Groningen;Strukton Rail;Wadden;2016-04-07
+2092;contractgebied;BASIS;15;Driebergen;VolkerRail;;2013-12-16
+2089;contractgebied;BASIS;19;Roosendaal;Strukton Rail;Zeeland;2017-05-31
+2090;contractgebied;BASIS;20;Breda;BAM Rail;;2016-04-29
+2091;contractgebied;BAAN;20;Breda;BAM Rail;;2016-04-29
+2093;contractgebied;BVL;20;Breda;BAM Rail;;2016-04-07
+2094;contractgebied;BAAN;70;HSL;Infraspeed;;2016-04-07
+2095;contractgebied;BVL;70;HSL;Infraspeed;;2016-04-07
+2096;contractgebied;BASIS;14;Woerden;VolkerRail;;2016-06-13
+2097;contractgebied;BAAN;14;Woerden;VolkerRail;;2016-06-13
+2101;contractgebied;BASIS;1;Leiden;BAM Rail;Rijn en Gouwe;2017-09-05
+2098;contractgebied;BVL;3;Rotterdam;VolkerRail;Rotterdam;2017-02-16
+2099;contractgebied;BAAN;26;Maastricht;Strukton Rail;;2016-04-08
+2100;contractgebied;BVL;26;Maastricht;Strukton Rail;;2016-04-08
+2102;contractgebied;BVL;21;Den Bosch;Strukton Rail;Betuwe;2018-04-04
+2103;contractgebied;BVL;22;Geldermalsen;Strukton Rail;Betuwe;2018-04-04
