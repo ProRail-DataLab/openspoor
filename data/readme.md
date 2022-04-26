@@ -2,7 +2,7 @@
 
 ## Source
 
-All of these spoortak models were downloaded form the BBMS platform However some of the BBMS_BERICHT_xx.csv files were
+All of these spoortak models were downloaded from the BBMS platform However some of the BBMS_BERICHT_xx.csv files were
 missing and were provided by a ProRail employee who happened to have them
 
 ## Spoortak model 18+

@@ -1,5 +1,6 @@
 import os
 from glob import glob
+from os.path import basename, join
 
 import numpy as np
 from typing import Optional
@@ -45,17 +46,18 @@ class SpoortakModelsData(Singleton):
 
         for spoortak, row in df_changed_geo.iterrows():
             log.warning(
-                f'Swapped begin & eind km for {spoortak} met verschillende geocode begin & eind mogenlijk was dit een ander kilometerlint')
+                f'Swapped from & two km for {spoortak} with different geocodes. This might actualy be a different kilometerlint and thus have incorrect results.')
 
         df.drop(columns=['KM_BEGIN', 'KM_EIND'], inplace=True)
 
     @staticmethod
     def _get_model_numbers(data_path: str) -> [int]:
-        """ Return the available model numbers """
-        dirs = glob(os.path.join(data_path, 'Versie_*'))
+        """ Return the available model numbers
+        converts ".../Version_17", ".../Version_18" to 17, 18
+        """
+        dirs = glob(join(data_path, 'Versie_*'))
 
-        # return [int(os.path.basename(directory).removeprefix('Version_')) for directory in dirs] # python 3.9 feature
-        return [int(os.path.basename(directory).split('_')[1]) for directory in dirs]
+        return [int(basename(directory).split('_')[1]) for directory in dirs]
 
     def __init__(self, data_path: str):
         # we've applied the singleton pattern here so we can check if the data is already there.
