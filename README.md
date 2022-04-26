@@ -22,29 +22,41 @@ These transformations can be performed between the following systems:
 
 ## Getting Started
 
-#### Installation
+### Installation - usage
+
+#### Windows
+Openspoor is dependent on Fiona and GDAL, which are missing Windows dependencies on PyPi.
+
+Use conda to install Fiona and GDAL:
+
+- `conda install -c conda-forge Fiona GDAL`
+
+- `pip install openspoor`
+
+#### Mac/Linux
+
+- `pip install openspoor`
+
+### Installation - development
+
 Installation using anaconda
 - Clone the "openspoor" repository
-  - `pip install openspoor`
+  - `git clone https://github.com/ProRail-DataLab/openspoor.git`
 - create an environment:
-  - `conda create -n openspoorenv python==3.6.12`
+  - `conda create -n openspoorenv python==3.8`
 - activate the environment:
   - `conda activate openspoorenv`
-- If you are installing on **Windows OS** with Anaconda, first install rtree and geopandas through anaconda with the commands: 
-  - `conda install rtree==0.8.3 -y`
-  - `conda install geopandas==0.6.1 -y`
+- install dependencies:
+  - `conda install -c conda-forge --file requirements.txt`
 - In the root directory of the repository, execute the command:
-  - `pip install -r requirements.txt`
+  - `pip install -e .`
 - In the root directory of the repository, execute the command:
-  - `pip install .`
-- In the root directory of the repository, execute the command: 
   - `python -m pytest`
 - If all the test succeed, the openspoor package is ready to use and you are on the right "track"!
 
-#### Demonstration notebook
+### Demonstration notebook
 
-In the future a notebook will be added that demonstrates the use of the openspoor package. For now one can take the 
-code in the acceptance tests as example of how to use the package.
+In the demo_notebook folder a notebook can be found that demonstrates the example usage of the openspoor package.
 
 ## Dependencies
 

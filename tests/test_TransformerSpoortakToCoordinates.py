@@ -1,6 +1,6 @@
 import pandas as pd
 import geopandas as gpd
-from openspoor import TransformerSpoortakToCoordinates
+from openspoor.transformers import TransformerSpoortakToCoordinates
 from shapely.geometry import LineString
 
 class Test:
