@@ -18,19 +18,18 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+
       - uses: conda-incubator/setup-miniconda@v2
         with:
           auto-update-conda: true
           python-version: "3.8"
 
       - name: Install dependencies
-        shell: bash
         run: |
           conda install -c conda-forge --file requirements.txt
           python -m pip install --upgrade pip
           pip install ".[dev]"
 
       - name: Test with pytest
-        shell: bash
         run: |
           pytest --junitxml=junit/test-results.xml --cov=openspoor --cov-fail-under=50 tests/
