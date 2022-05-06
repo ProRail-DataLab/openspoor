@@ -73,7 +73,6 @@ class SpoortakModelsData(Singleton):
 
             try:
                 for model_version in self.model_version_numbers:
-                    dtypes = {'KM_BEGIN': float, 'KM_EIND': float, 'LENGTE': float}
                     self.models[model_version] = pd.read_csv(os.path.join(data_path,
                                                                           f'Versie_{model_version:02d}',
                                                                           f'SPOORTAK_{model_version}.csv'),
@@ -90,7 +89,6 @@ class SpoortakModelsData(Singleton):
                                                              },
                                                              index_col='SPOORTAK_IDENTIFICATIE',
                                                              encoding='latin1',
-                                                             dtype=dtypes
                                                              )
 
                     self._replace_km_columns(self.models[model_version])
