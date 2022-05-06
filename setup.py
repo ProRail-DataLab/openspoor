@@ -16,7 +16,8 @@ requirements = [
 
 dev_packages = [
     "pytest",
-    "pytest-cov"
+    "pytest-cov",
+    "parameterized"
 ]
 
 setup(name='openspoor',
