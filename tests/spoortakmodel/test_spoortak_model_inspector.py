@@ -11,6 +11,11 @@ MODELS_DATA_DIR = str(pathlib.Path(__file__).parent.resolve().joinpath('..', '..
 
 
 class TestSpoortakModelInspector(unittest.TestCase):
+
+    def test_data_dir_exists(self):
+        """ Test that the data directory exists and is accesable"""
+        self.assertTrue(os.path.exists(MODELS_DATA_DIR), f'{MODELS_DATA_DIR} does not exist')
+
     @patch('openspoor.spoortakmodel.spoortak_model_inspector.pprint')
     def test_spoortak_in_modfwe(self, mock_pprint):
         expected_spoortak_model_rows = 15
