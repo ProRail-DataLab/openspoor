@@ -18,7 +18,7 @@ dev_packages = [
 ]
 
 setup(name='openspoor',
-      version='0.1.6',
+      version='0.1.7',
       description='Open source project to allow translations between different spoor referential systems',
       install_requires=requirements,
       extras_require={"dev": dev_packages},
