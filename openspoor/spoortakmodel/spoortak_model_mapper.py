@@ -117,7 +117,6 @@ class SpoortakModelMapper:
 
         # scan backwards
         for model_version in self._data.model_version_numbers[::-1]:
-            model = self._data.models[model_version]
 
             # step 1: Scan the model data for all references
             spoortak_data = self._retrieve_spoortak(spoortak_subsection.identification, model_version)

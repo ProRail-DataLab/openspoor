@@ -39,7 +39,7 @@ class TestSpoortakModelsData(unittest.TestCase):
                     'kilometrering_start', 'kilometrering_end']
         sut = SpoortakModelsData(MODELS_DATA_DIR)
         for model in models:
-            with self.subTest(msg=f'Model {model}'):
+            with self.subTest(model=model):
                 self.assertCountEqual(sut.models[model].columns, expected)
 
 #

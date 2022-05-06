@@ -10,10 +10,16 @@ MODELS_DATA_DIR = str(pathlib.Path(__file__).parent.resolve().joinpath('..', '..
 
 class TestSpoortakModelMapper(unittest.TestCase):
     def test_map_happy_flow(self):
+        expected_models = [12, 14, 15, 16, 17]
         subsection = SpoortakSubsection('478_1201V_0.6', 535, 570)
 
         sut = SpoortakModelMapper(SpoortakModelsData(MODELS_DATA_DIR))
         result = sut.map(subsection)
+        result_models = [model.spoortak_model_version for model in result]
+
+        for model in expected_models:
+            with self.subTest(model=model):
+                self.assertIn(model, result_models)
 
         self.assertEqual(4, len(result))
 
