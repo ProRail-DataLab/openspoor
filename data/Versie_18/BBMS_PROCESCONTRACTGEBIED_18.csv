@@ -1,0 +1,121 @@
+CG_TYPE;NUMMER;CG_NAAM;PGO_GEBIED;PGO_GEBIED_NR;REGIO;GEBIED;VERSIE_DATUM;VERSIE_GELDIG;VERSIE_NUMMER
+BAAN;1;Leiden;Rijn en Gouwe;100;Randstad Zuid;Zuid-Holland Noord;20211201;C;18
+BAAN;10;Duivendrecht;Amstelsepoort;230;Randstad Noord;Midden;20211201;C;18
+BAAN;11;Weesp;Amstelsepoort;230;Randstad Noord;Midden;20211201;C;18
+BAAN;12;Amersfoort;Eemland;200;Randstad Noord;Midden;20211201;C;18
+BAAN;13;Utrecht;Neerlands Midden;250;Randstad Noord;Midden;20211201;C;18
+BAAN;14;Woerden;Neerlands Midden;250;Randstad Noord;Midden;20211201;C;18
+BAAN;15;Driebergen;Neerlands Midden;250;Randstad Noord;Midden;20211201;C;18
+BAAN;16;Maarn;Eemland;200;Randstad Noord;Midden;20211201;C;18
+BAAN;18;Goes;Zeeland;310;Zuid;Zuid-West;20211201;C;18
+BAAN;19;Roosendaal;Zeeland;310;Zuid;Zuid-West;20211201;C;18
+BAAN;2;Den Haag;Den Haag;110;Randstad Zuid;Zuid-Holland Noord;20211201;C;18
+BAAN;20;Breda;Brabant;330;Zuid;Zuid-West;20211201;C;18
+BAAN;21;Den Bosch;Betuwe;320;Zuid;Zuid-West;20211201;C;18
+BAAN;22;Geldermalsen;Betuwe;320;Zuid;Zuid-West;20211201;C;18
+BAAN;23;Boxtel;Brabant;330;Zuid;Zuid-West;20211201;C;18
+BAAN;24;Eindhoven;De Peel;300;Zuid;Zuid-Oost;20211201;C;18
+BAAN;25;Roermond;Limburg;340;Zuid;Zuid-Oost;20211201;C;18
+BAAN;26;Maastricht;Limburg;340;Zuid;Zuid-Oost;20211201;C;18
+BAAN;27;Venlo;De Peel;300;Zuid;Zuid-Oost;20211201;C;18
+BAAN;28;Maas en Waal;Gelre;400;Noord-Oost;Oost;20211201;C;18
+BAAN;29;Gelderse Vallei;Veluwe;430;Noord-Oost;Oost;20211201;C;18
+BAAN;3;Rotterdam;Rotterdam;120;Randstad Zuid;Zuid-Holland Zuid;20211201;C;18
+BAAN;30;Achterhoek;Gelre;400;Noord-Oost;Oost;20211201;C;18
+BAAN;31;IJsselstreek;Veluwe;430;Noord-Oost;Oost;20211201;C;18
+BAAN;32;Twente;Twente;410;Noord-Oost;Oost;20211201;C;18
+BAAN;33;Gelderland;Veluwe;430;Noord-Oost;Oost;20211201;C;18
+BAAN;34;Overijssel;Drenthe;440;Noord-Oost;Noord;20211201;C;18
+BAAN;35;Drenthe;Drenthe;440;Noord-Oost;Noord;20211201;C;18
+BAAN;36;Friesland;Wadden;420;Noord-Oost;Noord;20211201;C;18
+BAAN;37;Groningen;Wadden;420;Noord-Oost;Noord;20211201;C;18
+BAAN;4;Europoort;Zee-Zevenaar;130;Randstad Zuid;Zee-Zevenaar;20211201;C;18
+BAAN;5;Dordrecht;Dordrecht;140;Randstad Zuid;Zuid-Holland Zuid;20211201;C;18
+BAAN;6;Heerhugowaard;Hollands Noorderkwartier;210;Randstad Noord;Noord-West;20211201;C;18
+BAAN;7;Alkmaar;Hollands Noorderkwartier;210;Randstad Noord;Noord-West;20211201;C;18
+BAAN;70;HSL;;;Randstad Zuid;Zuid-Holland Zuid;20211201;C;18
+BAAN;71;A15trace;Zee-Zevenaar;130;Randstad Zuid;Zee-Zevenaar;20211201;C;18
+BAAN;8;Haarlem;Kennemerland;240;Randstad Noord;Noord-West;20211201;C;18
+BAAN;81;Rijn en Gouwe;Rijn en Gouwe;100;Randstad Zuid;Zuid-Holland Noord;20211201;C;18
+BAAN;9;Amsterdam;Amsterdam;220;Randstad Noord;Midden;20211201;C;18
+BAAN;99;Kijfhoek;Zee-Zevenaar;130;Randstad Zuid;Zee-Zevenaar;20211201;C;18
+BASIS;1;Leiden;Rijn en Gouwe;100;Randstad Zuid;Zuid-Holland Noord;20211201;C;18
+BASIS;10;Duivendrecht;Amstelsepoort;230;Randstad Noord;Midden;20211201;C;18
+BASIS;11;Weesp;Amstelsepoort;230;Randstad Noord;Midden;20211201;C;18
+BASIS;12;Amersfoort;Eemland;200;Randstad Noord;Midden;20211201;C;18
+BASIS;13;Utrecht;Neerlands Midden;250;Randstad Noord;Midden;20211201;C;18
+BASIS;14;Woerden;Neerlands Midden;250;Randstad Noord;Midden;20211201;C;18
+BASIS;15;Driebergen;Neerlands Midden;250;Randstad Noord;Midden;20211201;C;18
+BASIS;16;Maarn;Eemland;200;Randstad Noord;Midden;20211201;C;18
+BASIS;18;Goes;Zeeland;310;Zuid;Zuid-West;20211201;C;18
+BASIS;19;Roosendaal;Zeeland;310;Zuid;Zuid-West;20211201;C;18
+BASIS;2;Den Haag;Den Haag;110;Randstad Zuid;Zuid-Holland Noord;20211201;C;18
+BASIS;20;Breda;Brabant;330;Zuid;Zuid-West;20211201;C;18
+BASIS;21;Den Bosch;Betuwe;320;Zuid;Zuid-West;20211201;C;18
+BASIS;22;Geldermalsen;Betuwe;320;Zuid;Zuid-West;20211201;C;18
+BASIS;23;Boxtel;Brabant;330;Zuid;Zuid-West;20211201;C;18
+BASIS;24;Eindhoven;De Peel;300;Zuid;Zuid-Oost;20211201;C;18
+BASIS;25;Roermond;Limburg;340;Zuid;Zuid-Oost;20211201;C;18
+BASIS;26;Maastricht;Limburg;340;Zuid;Zuid-Oost;20211201;C;18
+BASIS;27;Venlo;De Peel;300;Zuid;Zuid-Oost;20211201;C;18
+BASIS;28;Maas en Waal;Gelre;400;Noord-Oost;Oost;20211201;C;18
+BASIS;29;Gelderse Vallei;Veluwe;430;Noord-Oost;Oost;20211201;C;18
+BASIS;3;Rotterdam;Rotterdam;120;Randstad Zuid;Zuid-Holland Zuid;20211201;C;18
+BASIS;30;Achterhoek;Gelre;400;Noord-Oost;Oost;20211201;C;18
+BASIS;31;IJsselstreek;Veluwe;430;Noord-Oost;Oost;20211201;C;18
+BASIS;32;Twente;Twente;410;Noord-Oost;Oost;20211201;C;18
+BASIS;33;Gelderland;Veluwe;430;Noord-Oost;Oost;20211201;C;18
+BASIS;34;Overijssel;Drenthe;440;Noord-Oost;Noord;20211201;C;18
+BASIS;35;Drenthe;Drenthe;440;Noord-Oost;Noord;20211201;C;18
+BASIS;36;Friesland;Wadden;420;Noord-Oost;Noord;20211201;C;18
+BASIS;37;Groningen;Wadden;420;Noord-Oost;Noord;20211201;C;18
+BASIS;4;Europoort;Zee-Zevenaar;130;Randstad Zuid;Zee-Zevenaar;20211201;C;18
+BASIS;5;Dordrecht;Dordrecht;140;Randstad Zuid;Zuid-Holland Zuid;20211201;C;18
+BASIS;6;Heerhugowaard;Hollands Noorderkwartier;210;Randstad Noord;Noord-West;20211201;C;18
+BASIS;7;Alkmaar;Hollands Noorderkwartier;210;Randstad Noord;Noord-West;20211201;C;18
+BASIS;70;HSL;;;Randstad Zuid;Zuid-Holland Zuid;20211201;C;18
+BASIS;71;A15trace;Zee-Zevenaar;130;Randstad Zuid;Zee-Zevenaar;20211201;C;18
+BASIS;8;Haarlem;Kennemerland;240;Randstad Noord;Noord-West;20211201;C;18
+BASIS;81;Rijn en Gouwe;Rijn en Gouwe;100;Randstad Zuid;Zuid-Holland Noord;20211201;C;18
+BASIS;9;Amsterdam;Amsterdam;220;Randstad Noord;Midden;20211201;C;18
+BASIS;99;Kijfhoek;Zee-Zevenaar;130;Randstad Zuid;Zee-Zevenaar;20211201;C;18
+BVL;1;Leiden;Rijn en Gouwe;100;Randstad Zuid;Zuid-Holland Noord;20211201;C;18
+BVL;10;Duivendrecht;Amstelsepoort;230;Randstad Noord;Midden;20211201;C;18
+BVL;11;Weesp;Amstelsepoort;230;Randstad Noord;Midden;20211201;C;18
+BVL;12;Amersfoort;Eemland;200;Randstad Noord;Midden;20211201;C;18
+BVL;13;Utrecht;Neerlands Midden;250;Randstad Noord;Midden;20211201;C;18
+BVL;14;Woerden;Neerlands Midden;250;Randstad Noord;Midden;20211201;C;18
+BVL;15;Driebergen;Neerlands Midden;250;Randstad Noord;Midden;20211201;C;18
+BVL;16;Maarn;Eemland;200;Randstad Noord;Midden;20211201;C;18
+BVL;18;Goes;Zeeland;310;Zuid;Zuid-West;20211201;C;18
+BVL;19;Roosendaal;Zeeland;310;Zuid;Zuid-West;20211201;C;18
+BVL;2;Den Haag;Den Haag;110;Randstad Zuid;Zuid-Holland Noord;20211201;C;18
+BVL;20;Breda;Brabant;330;Zuid;Zuid-West;20211201;C;18
+BVL;21;Den Bosch;Betuwe;320;Zuid;Zuid-West;20211201;C;18
+BVL;22;Geldermalsen;Betuwe;320;Zuid;Zuid-West;20211201;C;18
+BVL;23;Boxtel;Brabant;330;Zuid;Zuid-West;20211201;C;18
+BVL;24;Eindhoven;De Peel;300;Zuid;Zuid-Oost;20211201;C;18
+BVL;25;Roermond;Limburg;340;Zuid;Zuid-Oost;20211201;C;18
+BVL;26;Maastricht;Limburg;340;Zuid;Zuid-Oost;20211201;C;18
+BVL;27;Venlo;De Peel;300;Zuid;Zuid-Oost;20211201;C;18
+BVL;28;Maas en Waal;Gelre;400;Noord-Oost;Oost;20211201;C;18
+BVL;29;Gelderse Vallei;Veluwe;430;Noord-Oost;Oost;20211201;C;18
+BVL;3;Rotterdam;Rotterdam;120;Randstad Zuid;Zuid-Holland Zuid;20211201;C;18
+BVL;30;Achterhoek;Gelre;400;Noord-Oost;Oost;20211201;C;18
+BVL;31;IJsselstreek;Veluwe;430;Noord-Oost;Oost;20211201;C;18
+BVL;32;Twente;Twente;410;Noord-Oost;Oost;20211201;C;18
+BVL;33;Gelderland;Veluwe;430;Noord-Oost;Oost;20211201;C;18
+BVL;34;Overijssel;Drenthe;440;Noord-Oost;Noord;20211201;C;18
+BVL;35;Drenthe;Drenthe;440;Noord-Oost;Noord;20211201;C;18
+BVL;36;Friesland;Wadden;420;Noord-Oost;Noord;20211201;C;18
+BVL;37;Groningen;Wadden;420;Noord-Oost;Noord;20211201;C;18
+BVL;4;Europoort;Zee-Zevenaar;130;Randstad Zuid;Zee-Zevenaar;20211201;C;18
+BVL;5;Dordrecht;Dordrecht;140;Randstad Zuid;Zuid-Holland Zuid;20211201;C;18
+BVL;6;Heerhugowaard;Hollands Noorderkwartier;210;Randstad Noord;Noord-West;20211201;C;18
+BVL;7;Alkmaar;Hollands Noorderkwartier;210;Randstad Noord;Noord-West;20211201;C;18
+BVL;70;HSL;;;Randstad Zuid;Zuid-Holland Zuid;20211201;C;18
+BVL;71;A15trace;Zee-Zevenaar;130;Randstad Zuid;Zee-Zevenaar;20211201;C;18
+BVL;8;Haarlem;Kennemerland;240;Randstad Noord;Noord-West;20211201;C;18
+BVL;81;Rijn en Gouwe;Rijn en Gouwe;100;Randstad Zuid;Zuid-Holland Noord;20211201;C;18
+BVL;9;Amsterdam;Amsterdam;220;Randstad Noord;Midden;20211201;C;18
+BVL;99;Kijfhoek;Zee-Zevenaar;130;Randstad Zuid;Zee-Zevenaar;20211201;C;18

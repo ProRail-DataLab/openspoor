@@ -1,0 +1,121 @@
+ID;OBJECTTYPE;CG_TYPE;NUMMER;CG_NAAM;PCA;PGO_GEBIED;OBEGINTIJD
+4138;contractgebied;BASIS;23;Boxtel;ASSET Rail;Brabant;2019-06-11
+4139;contractgebied;BASIS;20;Breda;ASSET Rail;Brabant;2019-06-11
+4140;contractgebied;BVL;20;Breda;ASSET Rail;Brabant;2019-06-11
+4141;contractgebied;BAAN;20;Breda;ASSET Rail;Brabant;2019-06-11
+4142;contractgebied;BVL;15;Driebergen;VolkerRail;;2019-06-11
+4143;contractgebied;BAAN;99;Kijfhoek;Strukton Rail;;2019-06-11
+4144;contractgebied;BAAN;18;Goes;Strukton Rail;Zeeland;2019-06-11
+4145;contractgebied;BASIS;29;Gelderse Vallei;Strukton Rail;Veluwe;2019-06-11
+4146;contractgebied;BAAN;28;Maas en Waal;ASSET Rail;Gelre;2019-06-11
+4147;contractgebied;BAAN;11;Weesp;Strukton Rail;Amstelsepoort;2019-06-11
+4148;contractgebied;BASIS;26;Maastricht;Strukton Rail;Limburg;2019-06-11
+4149;contractgebied;BASIS;25;Roermond;Strukton Rail;Limburg;2019-06-11
+4150;contractgebied;BVL;26;Maastricht;Strukton Rail;Limburg;2019-06-11
+4151;contractgebied;BAAN;25;Roermond;Strukton Rail;Limburg;2019-06-11
+4152;contractgebied;BAAN;26;Maastricht;Strukton Rail;Limburg;2019-06-11
+4153;contractgebied;BVL;19;Roosendaal;Strukton Rail;Zeeland;2019-06-11
+4154;contractgebied;BASIS;34;Overijssel;ASSET Rail;Drenthe;2019-06-11
+4155;contractgebied;BAAN;35;Drenthe;ASSET Rail;Drenthe;2019-06-11
+4156;contractgebied;BAAN;21;Den Bosch;Strukton Rail;Betuwe;2019-06-11
+4157;contractgebied;BVL;7;Alkmaar;VolkerRail;Hollands Noorderkwartier;2019-06-11
+4158;contractgebied;BVL;4;Europoort;VolkerRail;;2019-06-11
+4159;contractgebied;BVL;28;Maas en Waal;ASSET Rail;Gelre;2019-06-11
+4160;contractgebied;BAAN;1;Leiden;BAM Rail;Rijn en Gouwe;2019-06-11
+4161;contractgebied;BAAN;10;Duivendrecht;Strukton Rail;Amstelsepoort;2019-06-11
+4162;contractgebied;BAAN;27;Venlo;ASSET Rail;De Peel;2019-06-11
+4163;contractgebied;BVL;32;Twente;VolkerRail;Twente;2019-06-11
+4164;contractgebied;BVL;22;Geldermalsen;Strukton Rail;Betuwe;2019-06-11
+4165;contractgebied;BASIS;5;Dordrecht;ASSET Rail;Dordrecht;2019-06-11
+4166;contractgebied;BAAN;5;Dordrecht;ASSET Rail;Dordrecht;2019-06-11
+4167;contractgebied;BAAN;22;Geldermalsen;Strukton Rail;Betuwe;2019-06-11
+4168;contractgebied;BASIS;22;Geldermalsen;Strukton Rail;Betuwe;2019-06-11
+4169;contractgebied;BVL;5;Dordrecht;ASSET Rail;Dordrecht;2019-06-11
+4050;contractgebied;BASIS;35;Drenthe;ASSET Rail;Drenthe;2019-06-11
+4051;contractgebied;BASIS;15;Driebergen;VolkerRail;;2019-06-11
+4052;contractgebied;BAAN;71;A15trace;VolkerRail;;2019-06-11
+4053;contractgebied;BASIS;10;Duivendrecht;Strukton Rail;Amstelsepoort;2019-06-11
+4054;contractgebied;BAAN;4;Europoort;VolkerRail;;2019-06-11
+4055;contractgebied;BVL;31;IJsselstreek;Strukton Rail;Veluwe;2019-06-11
+4056;contractgebied;BAAN;24;Eindhoven;ASSET Rail;De Peel;2019-06-11
+4057;contractgebied;BASIS;30;Achterhoek;ASSET Rail;Gelre;2019-06-11
+4058;contractgebied;BVL;30;Achterhoek;ASSET Rail;Gelre;2019-06-11
+4059;contractgebied;BAAN;30;Achterhoek;ASSET Rail;Gelre;2019-06-11
+4060;contractgebied;BASIS;70;HSL;Infraspeed;;2019-06-11
+4061;contractgebied;BAAN;70;HSL;Infraspeed;;2019-06-11
+4062;contractgebied;BVL;70;HSL;Infraspeed;;2019-06-11
+4063;contractgebied;BAAN;33;Gelderland;Strukton Rail;Veluwe;2019-06-11
+4064;contractgebied;BAAN;36;Friesland;Strukton Rail;Wadden;2019-06-11
+4065;contractgebied;BAAN;14;Woerden;VolkerRail;;2019-06-11
+4066;contractgebied;BVL;36;Friesland;Strukton Rail;Wadden;2019-06-11
+4067;contractgebied;BASIS;36;Friesland;Strukton Rail;Wadden;2019-06-11
+4068;contractgebied;BVL;21;Den Bosch;Strukton Rail;Betuwe;2019-06-11
+4069;contractgebied;BASIS;4;Europoort;VolkerRail;;2019-06-11
+4070;contractgebied;BAAN;8;Haarlem;Strukton Rail;Kennemerland;2019-06-11
+4071;contractgebied;BASIS;31;IJsselstreek;Strukton Rail;Veluwe;2019-06-11
+4072;contractgebied;BASIS;81;Rijn en Gouwe;BAM Rail;Rijn en Gouwe;2019-06-11
+4073;contractgebied;BASIS;19;Roosendaal;Strukton Rail;Zeeland;2019-06-11
+4074;contractgebied;BVL;33;Gelderland;Strukton Rail;Veluwe;2019-06-11
+4075;contractgebied;BVL;12;Amersfoort;ASSET Rail;Eemland;2019-06-11
+4076;contractgebied;BAAN;13;Utrecht;VolkerRail;;2019-06-11
+4077;contractgebied;BASIS;9;Amsterdam;VolkerRail;Amsterdam;2019-06-11
+4078;contractgebied;BVL;10;Duivendrecht;Strukton Rail;Amstelsepoort;2019-06-11
+4079;contractgebied;BVL;18;Goes;Strukton Rail;Zeeland;2019-06-11
+4080;contractgebied;BAAN;32;Twente;VolkerRail;Twente;2019-06-11
+4081;contractgebied;BASIS;18;Goes;Strukton Rail;Zeeland;2019-06-11
+4082;contractgebied;BAAN;7;Alkmaar;VolkerRail;Hollands Noorderkwartier;2019-06-11
+4083;contractgebied;BASIS;8;Haarlem;Strukton Rail;Kennemerland;2019-06-11
+4084;contractgebied;BAAN;29;Gelderse Vallei;Strukton Rail;Veluwe;2019-06-11
+4085;contractgebied;BASIS;2;Den Haag;BAM Rail;Den Haag;2019-06-11
+4086;contractgebied;BVL;37;Groningen;Strukton Rail;Wadden;2019-06-11
+4087;contractgebied;BVL;3;Rotterdam;VolkerRail;Rotterdam;2019-06-11
+4088;contractgebied;BASIS;99;Kijfhoek;Strukton Rail;;2019-06-11
+4089;contractgebied;BVL;24;Eindhoven;ASSET Rail;De Peel;2019-06-11
+4090;contractgebied;BVL;27;Venlo;ASSET Rail;De Peel;2019-06-11
+4091;contractgebied;BVL;81;Rijn en Gouwe;BAM Rail;Rijn en Gouwe;2019-06-11
+4092;contractgebied;BASIS;33;Gelderland;Strukton Rail;Veluwe;2019-06-11
+4093;contractgebied;BVL;29;Gelderse Vallei;Strukton Rail;Veluwe;2019-06-11
+4094;contractgebied;BAAN;37;Groningen;Strukton Rail;Wadden;2019-06-11
+4095;contractgebied;BASIS;1;Leiden;BAM Rail;Rijn en Gouwe;2019-06-11
+4096;contractgebied;BASIS;71;A15trace;VolkerRail;;2019-06-11
+4097;contractgebied;BASIS;24;Eindhoven;ASSET Rail;De Peel;2019-06-11
+4098;contractgebied;BASIS;13;Utrecht;VolkerRail;;2019-06-11
+4099;contractgebied;BVL;16;Maarn;ASSET Rail;Eemland;2019-06-11
+4100;contractgebied;BVL;2;Den Haag;BAM Rail;Den Haag;2019-06-11
+4101;contractgebied;BAAN;2;Den Haag;BAM Rail;Den Haag;2019-06-11
+4102;contractgebied;BAAN;16;Maarn;ASSET Rail;Eemland;2019-06-11
+4103;contractgebied;BASIS;27;Venlo;ASSET Rail;De Peel;2019-06-11
+4104;contractgebied;BASIS;11;Weesp;Strukton Rail;Amstelsepoort;2019-06-11
+4105;contractgebied;BVL;34;Overijssel;ASSET Rail;Drenthe;2019-06-11
+4106;contractgebied;BAAN;19;Roosendaal;Strukton Rail;Zeeland;2019-06-11
+4107;contractgebied;BAAN;15;Driebergen;VolkerRail;;2019-06-11
+4108;contractgebied;BAAN;34;Overijssel;ASSET Rail;Drenthe;2019-06-11
+4109;contractgebied;BASIS;7;Alkmaar;VolkerRail;Hollands Noorderkwartier;2019-06-11
+4110;contractgebied;BASIS;21;Den Bosch;Strukton Rail;Betuwe;2019-06-11
+4111;contractgebied;BAAN;31;IJsselstreek;Strukton Rail;Veluwe;2019-06-11
+4112;contractgebied;BVL;6;Heerhugowaard;VolkerRail;Hollands Noorderkwartier;2019-06-11
+4113;contractgebied;BVL;99;Kijfhoek;Strukton Rail;;2019-06-11
+4114;contractgebied;BASIS;32;Twente;VolkerRail;Twente;2019-06-11
+4115;contractgebied;BVL;71;A15trace;VolkerRail;;2019-06-11
+4116;contractgebied;BASIS;37;Groningen;Strukton Rail;Wadden;2019-06-11
+4117;contractgebied;BVL;9;Amsterdam;VolkerRail;Amsterdam;2019-06-11
+4118;contractgebied;BAAN;9;Amsterdam;VolkerRail;Amsterdam;2019-06-11
+4119;contractgebied;BVL;8;Haarlem;Strukton Rail;Kennemerland;2019-06-11
+4120;contractgebied;BVL;11;Weesp;Strukton Rail;Amstelsepoort;2019-06-11
+4121;contractgebied;BASIS;12;Amersfoort;ASSET Rail;Eemland;2019-06-11
+4122;contractgebied;BASIS;14;Woerden;VolkerRail;;2019-06-11
+4123;contractgebied;BASIS;6;Heerhugowaard;VolkerRail;Hollands Noorderkwartier;2019-06-11
+4124;contractgebied;BAAN;81;Rijn en Gouwe;BAM Rail;Rijn en Gouwe;2019-06-11
+4125;contractgebied;BVL;1;Leiden;BAM Rail;Rijn en Gouwe;2019-06-11
+4126;contractgebied;BASIS;16;Maarn;ASSET Rail;Eemland;2019-06-11
+4127;contractgebied;BAAN;12;Amersfoort;ASSET Rail;Eemland;2019-06-11
+4128;contractgebied;BAAN;6;Heerhugowaard;VolkerRail;Hollands Noorderkwartier;2019-06-11
+4129;contractgebied;BVL;14;Woerden;VolkerRail;;2019-06-11
+4130;contractgebied;BASIS;3;Rotterdam;VolkerRail;Rotterdam;2019-06-11
+4131;contractgebied;BVL;25;Roermond;Strukton Rail;Limburg;2019-06-11
+4132;contractgebied;BVL;35;Drenthe;ASSET Rail;Drenthe;2019-06-11
+4133;contractgebied;BVL;13;Utrecht;VolkerRail;;2019-06-11
+4134;contractgebied;BASIS;28;Maas en Waal;ASSET Rail;Gelre;2019-06-11
+4135;contractgebied;BAAN;3;Rotterdam;VolkerRail;Rotterdam;2019-06-11
+4136;contractgebied;BVL;23;Boxtel;ASSET Rail;Brabant;2019-06-11
+4137;contractgebied;BAAN;23;Boxtel;ASSET Rail;Brabant;2019-06-11
