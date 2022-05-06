@@ -15,7 +15,7 @@ spoordata_columns: ['SPOOR_ID', 'SPOOR_PUIC', 'PRORAIL_GEBIED', 'GEOCODE_NR',
                     'KM_GEOCODE_VAN', 'Type', 'X_BEGIN',
                     'Y_BEGIN', 'geometry']
 
-# Spoorkaart settings
+# TrackMap settings
 default_radius: 2
 default_marker: 'info'
 default_color: 'blue'

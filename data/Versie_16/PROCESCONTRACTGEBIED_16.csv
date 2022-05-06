@@ -1,0 +1,121 @@
+ID;OBJECTTYPE;CG_TYPE;NUMMER;CG_NAAM;PCA;PGO_GEBIED;OBEGINTIJD
+4179;contractgebied;BAAN;8;Haarlem;Strukton Rail;Kennemerland;2020-09-08
+4180;contractgebied;BASIS;31;IJsselstreek;Strukton Rail;Veluwe;2020-09-08
+4181;contractgebied;BASIS;81;Rijn en Gouwe;BAM Rail;Rijn en Gouwe;2020-09-08
+4182;contractgebied;BAAN;36;Friesland;Strukton Rail;Wadden;2020-09-08
+4183;contractgebied;BASIS;10;Duivendrecht;Strukton Rail;Amstelsepoort;2020-09-08
+4184;contractgebied;BAAN;4;Europoort;VolkerRail;Zee-Zevenaar;2020-09-08
+4271;contractgebied;BVL;14;Woerden;ASSET Rail;Neerlands Midden;2020-09-08
+4272;contractgebied;BAAN;15;Driebergen;ASSET Rail;Neerlands Midden;2020-09-08
+4273;contractgebied;BVL;15;Driebergen;ASSET Rail;Neerlands Midden;2020-09-08
+4274;contractgebied;BASIS;37;Groningen;Strukton Rail;Wadden;2020-09-08
+4275;contractgebied;BASIS;11;Weesp;Strukton Rail;Amstelsepoort;2020-09-08
+4276;contractgebied;BVL;34;Overijssel;ASSET Rail;Drenthe;2020-09-08
+4277;contractgebied;BAAN;34;Overijssel;ASSET Rail;Drenthe;2020-09-08
+4278;contractgebied;BASIS;34;Overijssel;ASSET Rail;Drenthe;2020-09-08
+4279;contractgebied;BAAN;11;Weesp;Strukton Rail;Amstelsepoort;2020-09-08
+4280;contractgebied;BASIS;30;Achterhoek;ASSET Rail;Gelre;2020-09-08
+4188;contractgebied;BASIS;19;Roosendaal;Strukton Rail;Zeeland;2020-09-08
+4185;contractgebied;BVL;31;IJsselstreek;Strukton Rail;Veluwe;2020-09-08
+4186;contractgebied;BAAN;24;Eindhoven;ASSET Rail;De Peel;2020-09-08
+4187;contractgebied;BVL;36;Friesland;Strukton Rail;Wadden;2020-09-08
+4284;contractgebied;BASIS;14;Woerden;ASSET Rail;Neerlands Midden;2020-09-08
+4281;contractgebied;BVL;30;Achterhoek;ASSET Rail;Gelre;2020-09-08
+4282;contractgebied;BAAN;30;Achterhoek;ASSET Rail;Gelre;2020-09-08
+4283;contractgebied;BAAN;71;A15trace;VolkerRail;Zee-Zevenaar;2020-09-08
+4285;contractgebied;BVL;11;Weesp;Strukton Rail;Amstelsepoort;2020-09-08
+4286;contractgebied;BASIS;71;A15trace;VolkerRail;Zee-Zevenaar;2020-09-08
+4287;contractgebied;BVL;71;A15trace;VolkerRail;Zee-Zevenaar;2020-09-08
+4288;contractgebied;BASIS;35;Drenthe;ASSET Rail;Drenthe;2020-09-08
+4289;contractgebied;BAAN;37;Groningen;Strukton Rail;Wadden;2020-09-08
+4192;contractgebied;BASIS;9;Amsterdam;VolkerRail;Amsterdam;2020-09-08
+4189;contractgebied;BASIS;1;Leiden;BAM Rail;Rijn en Gouwe;2020-09-08
+4190;contractgebied;BASIS;24;Eindhoven;ASSET Rail;De Peel;2020-09-08
+4191;contractgebied;BVL;12;Amersfoort;ASSET Rail;Eemland;2020-09-08
+4193;contractgebied;BASIS;99;Kijfhoek;VolkerRail;Zee-Zevenaar;2020-09-08
+4197;contractgebied;BVL;29;Gelderse Vallei;Strukton Rail;Veluwe;2020-09-08
+4194;contractgebied;BVL;24;Eindhoven;ASSET Rail;De Peel;2020-09-08
+4195;contractgebied;BVL;27;Venlo;ASSET Rail;De Peel;2020-09-08
+4196;contractgebied;BVL;81;Rijn en Gouwe;BAM Rail;Rijn en Gouwe;2020-09-08
+4198;contractgebied;BVL;9;Amsterdam;VolkerRail;Amsterdam;2020-09-08
+4199;contractgebied;BVL;3;Rotterdam;VolkerRail;Rotterdam;2020-09-08
+4200;contractgebied;BVL;6;Heerhugowaard;VolkerRail;Hollands Noorderkwartier;2020-09-08
+4204;contractgebied;BASIS;28;Maas en Waal;ASSET Rail;Gelre;2020-09-08
+4201;contractgebied;BVL;99;Kijfhoek;VolkerRail;Zee-Zevenaar;2020-09-08
+4202;contractgebied;BASIS;32;Twente;VolkerRail;Twente;2020-09-08
+4203;contractgebied;BAAN;9;Amsterdam;VolkerRail;Amsterdam;2020-09-08
+4205;contractgebied;BAAN;3;Rotterdam;VolkerRail;Rotterdam;2020-09-08
+4206;contractgebied;BASIS;6;Heerhugowaard;VolkerRail;Hollands Noorderkwartier;2020-09-08
+4207;contractgebied;BAAN;81;Rijn en Gouwe;BAM Rail;Rijn en Gouwe;2020-09-08
+4208;contractgebied;BASIS;21;Den Bosch;Strukton Rail;Betuwe;2020-09-08
+4212;contractgebied;BASIS;12;Amersfoort;ASSET Rail;Eemland;2020-09-08
+4209;contractgebied;BVL;8;Haarlem;Strukton Rail;Kennemerland;2020-09-08
+4210;contractgebied;BVL;16;Maarn;ASSET Rail;Eemland;2020-09-08
+4211;contractgebied;BVL;2;Den Haag;VolkerRail;Den Haag;2020-09-08
+4213;contractgebied;BASIS;18;Goes;Strukton Rail;Zeeland;2020-09-08
+4217;contractgebied;BASIS;2;Den Haag;VolkerRail;Den Haag;2020-09-08
+4214;contractgebied;BAAN;7;Alkmaar;VolkerRail;Hollands Noorderkwartier;2020-09-08
+4215;contractgebied;BASIS;8;Haarlem;Strukton Rail;Kennemerland;2020-09-08
+4216;contractgebied;BAAN;29;Gelderse Vallei;Strukton Rail;Veluwe;2020-09-08
+4221;contractgebied;BASIS;3;Rotterdam;VolkerRail;Rotterdam;2020-09-08
+4218;contractgebied;BAAN;31;IJsselstreek;Strukton Rail;Veluwe;2020-09-08
+4219;contractgebied;BAAN;21;Den Bosch;Strukton Rail;Betuwe;2020-09-08
+4220;contractgebied;BAAN;6;Heerhugowaard;VolkerRail;Hollands Noorderkwartier;2020-09-08
+4222;contractgebied;BAAN;2;Den Haag;VolkerRail;Den Haag;2020-09-08
+4223;contractgebied;BAAN;16;Maarn;ASSET Rail;Eemland;2020-09-08
+4224;contractgebied;BASIS;27;Venlo;ASSET Rail;De Peel;2020-09-08
+4225;contractgebied;BVL;32;Twente;VolkerRail;Twente;2020-09-08
+4229;contractgebied;BAAN;18;Goes;Strukton Rail;Zeeland;2020-09-08
+4226;contractgebied;BVL;1;Leiden;BAM Rail;Rijn en Gouwe;2020-09-08
+4227;contractgebied;BASIS;16;Maarn;ASSET Rail;Eemland;2020-09-08
+4228;contractgebied;BAAN;99;Kijfhoek;VolkerRail;Zee-Zevenaar;2020-09-08
+4230;contractgebied;BASIS;29;Gelderse Vallei;Strukton Rail;Veluwe;2020-09-08
+4231;contractgebied;BAAN;28;Maas en Waal;ASSET Rail;Gelre;2020-09-08
+4232;contractgebied;BASIS;26;Maastricht;Strukton Rail;Limburg;2020-09-08
+4233;contractgebied;BASIS;25;Roermond;Strukton Rail;Limburg;2020-09-08
+4239;contractgebied;BVL;26;Maastricht;Strukton Rail;Limburg;2020-09-08
+4234;contractgebied;BVL;7;Alkmaar;VolkerRail;Hollands Noorderkwartier;2020-09-08
+4235;contractgebied;BAAN;19;Roosendaal;Strukton Rail;Zeeland;2020-09-08
+4236;contractgebied;BASIS;7;Alkmaar;VolkerRail;Hollands Noorderkwartier;2020-09-08
+4237;contractgebied;BVL;23;Boxtel;ASSET Rail;Brabant;2020-09-08
+4238;contractgebied;BAAN;23;Boxtel;ASSET Rail;Brabant;2020-09-08
+4240;contractgebied;BAAN;25;Roermond;Strukton Rail;Limburg;2020-09-08
+4244;contractgebied;BVL;28;Maas en Waal;ASSET Rail;Gelre;2020-09-08
+4241;contractgebied;BAAN;26;Maastricht;Strukton Rail;Limburg;2020-09-08
+4242;contractgebied;BVL;19;Roosendaal;Strukton Rail;Zeeland;2020-09-08
+4243;contractgebied;BVL;4;Europoort;VolkerRail;Zee-Zevenaar;2020-09-08
+4245;contractgebied;BAAN;1;Leiden;BAM Rail;Rijn en Gouwe;2020-09-08
+4249;contractgebied;BASIS;22;Geldermalsen;Strukton Rail;Betuwe;2020-09-08
+4246;contractgebied;BAAN;10;Duivendrecht;Strukton Rail;Amstelsepoort;2020-09-08
+4247;contractgebied;BAAN;27;Venlo;ASSET Rail;De Peel;2020-09-08
+4248;contractgebied;BAAN;12;Amersfoort;ASSET Rail;Eemland;2020-09-08
+4250;contractgebied;BVL;5;Dordrecht;ASSET Rail;Dordrecht;2020-09-08
+4251;contractgebied;BVL;25;Roermond;Strukton Rail;Limburg;2020-09-08
+4255;contractgebied;BAAN;22;Geldermalsen;Strukton Rail;Betuwe;2020-09-08
+4252;contractgebied;BVL;22;Geldermalsen;Strukton Rail;Betuwe;2020-09-08
+4253;contractgebied;BASIS;5;Dordrecht;ASSET Rail;Dordrecht;2020-09-08
+4254;contractgebied;BAAN;5;Dordrecht;ASSET Rail;Dordrecht;2020-09-08
+4259;contractgebied;BAAN;20;Breda;ASSET Rail;Brabant;2020-09-08
+4256;contractgebied;BASIS;23;Boxtel;ASSET Rail;Brabant;2020-09-08
+4257;contractgebied;BASIS;20;Breda;ASSET Rail;Brabant;2020-09-08
+4258;contractgebied;BVL;20;Breda;ASSET Rail;Brabant;2020-09-08
+4260;contractgebied;BAAN;33;Gelderland;Strukton Rail;Veluwe;2020-09-08
+4261;contractgebied;BVL;33;Gelderland;Strukton Rail;Veluwe;2020-09-08
+4262;contractgebied;BASIS;33;Gelderland;Strukton Rail;Veluwe;2020-09-08
+4173;contractgebied;BVL;10;Duivendrecht;Strukton Rail;Amstelsepoort;2020-09-08
+4170;contractgebied;BASIS;36;Friesland;Strukton Rail;Wadden;2020-09-08
+4171;contractgebied;BVL;21;Den Bosch;Strukton Rail;Betuwe;2020-09-08
+4172;contractgebied;BASIS;4;Europoort;VolkerRail;Zee-Zevenaar;2020-09-08
+4174;contractgebied;BVL;18;Goes;Strukton Rail;Zeeland;2020-09-08
+4175;contractgebied;BAAN;32;Twente;VolkerRail;Twente;2020-09-08
+4176;contractgebied;BASIS;70;HSL;Infraspeed;;2020-09-08
+4177;contractgebied;BAAN;70;HSL;Infraspeed;;2020-09-08
+4178;contractgebied;BVL;70;HSL;Infraspeed;;2020-09-08
+4266;contractgebied;BAAN;14;Woerden;ASSET Rail;Neerlands Midden;2020-09-08
+4263;contractgebied;BVL;37;Groningen;Strukton Rail;Wadden;2020-09-08
+4264;contractgebied;BVL;35;Drenthe;ASSET Rail;Drenthe;2020-09-08
+4265;contractgebied;BAAN;35;Drenthe;ASSET Rail;Drenthe;2020-09-08
+4267;contractgebied;BASIS;15;Driebergen;ASSET Rail;Neerlands Midden;2020-09-08
+4268;contractgebied;BAAN;13;Utrecht;ASSET Rail;Neerlands Midden;2020-09-08
+4269;contractgebied;BASIS;13;Utrecht;ASSET Rail;Neerlands Midden;2020-09-08
+4270;contractgebied;BVL;13;Utrecht;ASSET Rail;Neerlands Midden;2020-09-08
