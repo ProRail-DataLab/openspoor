@@ -7,7 +7,7 @@ from pprint import pprint
 
 from openspoor.spoortakmodel import SpoortakModelInspector, SpoortakModelsData
 
-MODELS_DATA_DIR = str(pathlib.Path(__file__).parent.resolve().joinpath('..', '..', 'data'))
+MODELS_DATA_DIR = str(pathlib.Path(__file__).parents[2].resolve().joinpath('data'))
 
 
 class TestSpoortakModelInspector(unittest.TestCase):

@@ -74,7 +74,8 @@ class SpoortakModelsData(Singleton):
             try:
                 for model_version in self.model_version_numbers:
                     self.models[model_version] = pd.read_csv(os.path.join(data_path,
-                                                                          f'Versie_{model_version:02d}/SPOORTAK_{model_version}.csv'),
+                                                                          f'Versie_{model_version:02d}',
+                                                                          f'SPOORTAK_{model_version}.csv'),
                                                              delimiter=';',
                                                              header=0,
                                                              converters={
