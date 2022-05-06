@@ -1,4 +1,3 @@
-
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -88,6 +87,8 @@ target/
 
 # Unwanted visualisations
 *.html
+*.csv
+!data/**/*.csv
 
 # IPython
 profile_default/
