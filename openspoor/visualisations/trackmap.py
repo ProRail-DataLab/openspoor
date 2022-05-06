@@ -269,7 +269,6 @@ class PlottingLineStrings(PlotObject):
         :return: A GeoPandas dataframe.
         """
         # TODO: use pandas to geopandas functionality?
-        print(file)
         return (
             pd.read_csv(file, index_col=0)
             .assign(geometry=lambda d: d.geometry.apply(wkt.loads))
