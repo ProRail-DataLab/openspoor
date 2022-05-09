@@ -112,6 +112,7 @@ class SpoortakModelMapper:
         if not _ignore_list:
             _ignore_list = []
 
+        geocodes = []
         found_subsections = []
         spoortak_found = False
 
@@ -133,7 +134,7 @@ class SpoortakModelMapper:
             geocodes = [spoortak_data['GEOCODE_BEGIN'], spoortak_data['GEOCODE_EIND']]
 
             found_subsections.append(
-                SpoortakSubsection(spoortak_data.name,
+                SpoortakSubsection(str(spoortak_data.name),
                                    max(spoortak_subsection.kilometrering_start, spoortak_data['kilometrering_start']),
                                    min(spoortak_subsection.kilometrering_end, spoortak_data['kilometrering_end']),
                                    model_version))
@@ -142,7 +143,8 @@ class SpoortakModelMapper:
                 log.info(f'Spoortak was new, not searching further back in the model history')
                 break
 
-        # find anything that is related, assume same km lint if one of the geocodes matches and just add them all to the list
+        # find anything that is related,
+        # assume same km lint if one of the geocodes matches and just add them all to the list
         related_spoortakken = self._related_spoortakken(spoortak_subsection.identification, geocodes)
         for related_spoortak, related_model_version in related_spoortakken:
             if related_spoortak in _ignore_list:
