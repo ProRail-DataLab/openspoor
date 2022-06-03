@@ -8,7 +8,7 @@ from loguru import logger
 from shapely.geometry import Point, LineString, Polygon
 import pickle
 
-from ..utils.map_services_requests import safe_request, secure_map_services_request
+from ..utils.map_services_requests import SafeRequest, secure_map_services_request
 from ..utils.common import read_config
 
 config = read_config()
@@ -90,7 +90,7 @@ class MapservicesData:
         :return: int, max_features_count
         """
         count_url = input_base_url + "&returnCountOnly=True"
-        return json.loads(safe_request().request('GET', count_url).data)['count']
+        return json.loads(SafeRequest().get_response(count_url))['count']
 
     def _retrieve_batch_of_features_to_gdf(self, input_base_url, offset):
         """

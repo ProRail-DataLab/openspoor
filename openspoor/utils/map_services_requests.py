@@ -2,19 +2,22 @@ import time
 import json
 import certifi
 import urllib3
-from functools import lru_cache
+
+from openspoor.utils.singleton import Singleton
 
 
-@lru_cache
-def safe_request():
-    """
-    Use a pool manager to make safe requests.
+class SafeRequest(Singleton):
+    def __init__(self):
+        self.pool = urllib3.PoolManager(ca_certs=certifi.where())
 
-    :return: A place to make safe requests from.
-    """
-    return urllib3.PoolManager(
-        ca_certs=certifi.where()
-    )
+    def get_response(self, url):
+        out = self.pool.request('GET', url)._body.decode('UTF-8')
+        print(out)
+        return out #self.pool.request('GET', url)._body.decode('UTF-8')
+
+    def get_json(self, url, input_json):
+        return json.loads(self.pool.request('POST', url, body=json.dumps(input_json)).data)
+
 
 
 def secure_map_services_request(url, input_json=None, max_retry=5, time_between=1):
@@ -33,13 +36,21 @@ def secure_map_services_request(url, input_json=None, max_retry=5, time_between=
     while count <= max_retry:
         try:
             if input_json:
-                response = safe_request().request("POST", url, fields=json)
+                return SafeRequest().get_json(url, input_json)
+                # pool = SafeRequest().pool
+                # print(pool)
+                # request = SafeRequest().pool.request("POST", url, headers=json)
+                # print(request)
+                # data = request.data
+                # print(data)
+                # return json.loads(SafeRequest().pool.request("POST", url, fields=json).data)
             else:
-                response = safe_request().request("GET", url)
-            return json.loads(response.data)
+                return SafeRequest().get_response(url)
+            # return json.loads(response.data)
         except Exception as error:
+            print(error)
             time.sleep(time_between)
             count += 1
-            if count >= max_retry:
+            if count >= 1:
                 raise error
     raise ConnectionError(f'Unable to connect to {url}')
