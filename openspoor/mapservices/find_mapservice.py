@@ -1,6 +1,7 @@
-import requests
 import pandas as pd
 import re
+
+from ..utils.map_services_requests import safe_request
 
 
 class FeatureServerOverview:
@@ -20,9 +21,15 @@ class FeatureServerOverview:
         :param featureserver_url: The url of the selected featureserver
         :return: A pandas dataframe, listing the urls and descriptions of the found layers
         """
+        import requests
         featureserver_page = requests.get(featureserver_url)
-
         featureserver_text = featureserver_page.text
+        print(featureserver_text)
+
+
+        # featureserver_text = str(safe_request().request('GET', featureserver_url).data)
+        # print(featureserver_text)
+        # kapot
         featureservers = re.findall(r'href="/(.+)">(.+)</a> \(\d+\)', featureserver_text)
         featureservers = [[f'{self.prefix}{fs}', description] for fs, description in featureservers]
         return pd.DataFrame(featureservers, columns=['layer_url', 'description'])
@@ -33,7 +40,8 @@ class FeatureServerOverview:
 
         :return: A pandas dataframe, listing the urls and descriptions of the found layers in all featureservers
         """
-        all_services = requests.get(self.base_url).text
+        all_services = str(safe_request().request('GET', self.base_url).data)
+        print(all_services)
         featureserver_redirects = re.findall(r'href="/(.+/FeatureServer)"', all_services)
 
         featureserver_urls = [f'{self.prefix}{redirect}' for redirect in featureserver_redirects]
