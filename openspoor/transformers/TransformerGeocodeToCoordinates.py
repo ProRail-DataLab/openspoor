@@ -1,6 +1,7 @@
 import yaml
 import pandas as pd
 from ..utils.map_services_requests import secure_map_services_request
+from ..utils.map_services_requests import  SafeRequest
 from ..utils.common import read_config
 
 config = read_config()
@@ -68,6 +69,11 @@ class TransformerGeocodeToCoordinates:
                  coordinates.
         """
         input_json = self._make_json_for_geocode_to_xy_api(input_df)
+
+        print(type(input_json))
+
+        # response_json = SafeRequest().request('GET', self.mapservices_url,
+        #                                             input_json)
         response_json = secure_map_services_request(self.mapservices_url,
                                                     input_json)
         return self._transform_xy_json_to_df(response_json)
@@ -106,6 +112,7 @@ class TransformerGeocodeToCoordinates:
         :param api_response_json: dictionary as from self.mapservices_url
         :return: pandas dataframe with geocode and x, y information
         """
+        print(api_response_json)
         features_series = pd.Series(api_response_json['features'])
         geocode_series = features_series.apply(
             lambda dictionary: dictionary['geocode']
