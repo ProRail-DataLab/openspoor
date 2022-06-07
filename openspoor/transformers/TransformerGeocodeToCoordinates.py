@@ -74,7 +74,7 @@ class TransformerGeocodeToCoordinates:
 
         # response_json = SafeRequest().request('GET', self.mapservices_url,
         #                                             input_json)
-        response_json = secure_map_services_request(self.mapservices_url,
+        response_json = secure_map_services_request('POST', self.mapservices_url,
                                                     input_json)
         return self._transform_xy_json_to_df(response_json)
 

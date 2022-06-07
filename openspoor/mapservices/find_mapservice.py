@@ -26,7 +26,7 @@ class FeatureServerOverview:
         # featureserver_text = featureserver_page.text
 
 
-        featureserver_text = SafeRequest().get_response(featureserver_url)
+        featureserver_text = SafeRequest().get_response('GET', featureserver_url)
         featureservers = re.findall(r'href="/(.+)">(.+)</a> \(\d+\)', featureserver_text)
         featureservers = [[f'{self.prefix}{fs}', description] for fs, description in featureservers]
         return pd.DataFrame(featureservers, columns=['layer_url', 'description'])
@@ -37,7 +37,7 @@ class FeatureServerOverview:
 
         :return: A pandas dataframe, listing the urls and descriptions of the found layers in all featureservers
         """
-        all_services = SafeRequest().get_response(self.base_url)
+        all_services = SafeRequest().get_response('GET', self.base_url)
         featureserver_redirects = re.findall(r'href="/(.+/FeatureServer)"', all_services)
 
         featureserver_urls = [f'{self.prefix}{redirect}' for redirect in featureserver_redirects]

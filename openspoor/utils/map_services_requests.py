@@ -10,19 +10,19 @@ class SafeRequest(Singleton):
     def __init__(self):
         self.pool = urllib3.PoolManager(ca_certs=certifi.where())
 
-    def get_response(self, url, headers=None):
+    def get_response(self, request_type, url, headers=None):
         if headers:
             headers = json.dumps(headers)
-        return self.pool.request('GET', url,headers=headers)._body.decode('UTF-8')
+        return self.pool.request(request_type, url,headers=headers)._body.decode('UTF-8')
 
     def get_out_json(self, url, input_json=None):
-        return json.loads(self.get_response(url, input_json))
+        return json.loads(self.get_response('GET', url, input_json))
 
-    def get_json(self, url, input_json):
-        return json.loads(self.pool.request('POST', url, body=json.dumps(input_json)).data)
+    def get_json(self, request_type, url, input_json):
+        return json.loads(self.pool.request(request_type, url, body=json.dumps(input_json)).data)
 
 
-def secure_map_services_request(url, input_json=None, max_retry=5, time_between=1):
+def secure_map_services_request(request_type, url, input_json=None, max_retry=5, time_between=1):
     """
     Makes call to url and returns obtained data in such a way that if blocked, the request is made again at a later
     point in time.
@@ -39,7 +39,7 @@ def secure_map_services_request(url, input_json=None, max_retry=5, time_between=
         try:
             if input_json:
                 print("DOING THIS")
-                return SafeRequest().get_json(url, input_json)
+                return SafeRequest().get_json('POST', url, input_json)
                 # pool = SafeRequest().pool
                 # print(pool)
                 # request = SafeRequest().pool.request("POST", url, headers=json)
@@ -49,7 +49,7 @@ def secure_map_services_request(url, input_json=None, max_retry=5, time_between=
                 # return json.loads(SafeRequest().pool.request("POST", url, fields=json).data)
             else:
                 print("DOING THAT")
-                return SafeRequest().get_response(url)
+                return SafeRequest().get_response('GET', url)
             # return json.loads(response.data)
         except Exception as error:
             print(error)

@@ -150,7 +150,7 @@ class TransformerCoordinatesToSpoor:
         input_json = self._prep_dictionary_for_mapservices_call(input_df)
 
         # response_json = SafeRequest().request_json('POST', self.xy_to_geocode_url, input_json)
-        response_json = secure_map_services_request(self.xy_to_geocode_url, input_json)
+        response_json = secure_map_services_request('POST', self.xy_to_geocode_url, input_json)
         return self._transform_json_to_km_dataframe(response_json, one_point=one_point)
 
     @staticmethod
