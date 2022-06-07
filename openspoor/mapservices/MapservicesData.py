@@ -90,7 +90,8 @@ class MapservicesData:
         :return: int, max_features_count
         """
         count_url = input_base_url + "&returnCountOnly=True"
-        return json.loads(SafeRequest().get_response(count_url))['count']
+        return SafeRequest().get_out_json(count_url)['count']
+        # return json.loads(SafeRequest().get_response(count_url))['count']
 
     def _retrieve_batch_of_features_to_gdf(self, input_base_url, offset):
         """
@@ -103,8 +104,9 @@ class MapservicesData:
         same api
         :return: geopandas dataframe of features
         """
-        data = secure_map_services_request(input_base_url + "&resultOffset=" +
-                                           str(offset))
+        data = SafeRequest().get_out_json(input_base_url + "&resultOffset=" + str(offset))
+        # data = secure_map_services_request(input_base_url + "&resultOffset=" +
+        #                                    str(offset))
         # Sleep to avoid api being overwhelmed by requests
         time.sleep(2)
 
@@ -121,6 +123,7 @@ class MapservicesData:
         map_services.prorail.nl
         :return: geopandas dataframe
         """
+        print(f'{data=}')
         attribute_list = [feature['attributes'] for feature in data['features']]
         if data['geometryType'] == 'esriGeometryPoint':
             geometry_list = [Point((f['geometry'])['x'], (f['geometry'])['y'])

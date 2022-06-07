@@ -10,14 +10,16 @@ class SafeRequest(Singleton):
     def __init__(self):
         self.pool = urllib3.PoolManager(ca_certs=certifi.where())
 
-    def get_response(self, url):
-        out = self.pool.request('GET', url)._body.decode('UTF-8')
-        print(out)
-        return out #self.pool.request('GET', url)._body.decode('UTF-8')
+    def get_response(self, url, headers=None):
+        if headers:
+            headers = json.dumps(headers)
+        return self.pool.request('GET', url,headers=headers)._body.decode('UTF-8')
+
+    def get_out_json(self, url, input_json=None):
+        return json.loads(self.get_response(url, input_json))
 
     def get_json(self, url, input_json):
         return json.loads(self.pool.request('POST', url, body=json.dumps(input_json)).data)
-
 
 
 def secure_map_services_request(url, input_json=None, max_retry=5, time_between=1):
@@ -36,6 +38,7 @@ def secure_map_services_request(url, input_json=None, max_retry=5, time_between=
     while count <= max_retry:
         try:
             if input_json:
+                print("DOING THIS")
                 return SafeRequest().get_json(url, input_json)
                 # pool = SafeRequest().pool
                 # print(pool)
@@ -45,6 +48,7 @@ def secure_map_services_request(url, input_json=None, max_retry=5, time_between=
                 # print(data)
                 # return json.loads(SafeRequest().pool.request("POST", url, fields=json).data)
             else:
+                print("DOING THAT")
                 return SafeRequest().get_response(url)
             # return json.loads(response.data)
         except Exception as error:
