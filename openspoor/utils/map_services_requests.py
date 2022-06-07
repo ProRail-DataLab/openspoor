@@ -10,16 +10,21 @@ class SafeRequest(Singleton):
     def __init__(self):
         self.pool = urllib3.PoolManager(ca_certs=certifi.where())
 
+    def base_func(self, request_type, url, body):
+        return self.pool.request(request_type, url, body=body)
+
     def get_response(self, request_type, url, headers=None):
         if headers:
             headers = json.dumps(headers)
         return self.pool.request(request_type, url,headers=headers)._body.decode('UTF-8')
 
-    def get_out_json(self, url, input_json=None):
-        return json.loads(self.get_response('GET', url, input_json))
+    def get_out_json(self, request_type, url, input_json=None):
+        return json.loads(self.get_response(request_type, url, input_json))
 
     def get_json(self, request_type, url, input_json):
-        return json.loads(self.pool.request(request_type, url, body=json.dumps(input_json)).data)
+        if input_json:
+            input_json = json.dumps(input_json)
+        return json.loads(self.pool.request(request_type, url, body=input_json).data)
 
 
 def secure_map_services_request(request_type, url, input_json=None, max_retry=5, time_between=1):
