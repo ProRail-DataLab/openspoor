@@ -106,7 +106,6 @@ class TransformerGeocodeToCoordinates:
         :param api_response_json: dictionary as from self.mapservices_url
         :return: pandas dataframe with geocode and x, y information
         """
-        print(api_response_json)
         features_series = pd.Series(api_response_json['features'])
         geocode_series = features_series.apply(
             lambda dictionary: dictionary['geocode']
