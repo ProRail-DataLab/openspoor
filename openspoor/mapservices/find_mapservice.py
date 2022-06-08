@@ -1,7 +1,7 @@
 import pandas as pd
 import re
 
-from ..utils.map_services_requests import SafeRequest
+from ..utils.saferequests import SafeRequest
 
 
 class FeatureServerOverview:
@@ -21,11 +21,6 @@ class FeatureServerOverview:
         :param featureserver_url: The url of the selected featureserver
         :return: A pandas dataframe, listing the urls and descriptions of the found layers
         """
-        # import requests
-        # featureserver_page = requests.get(featureserver_url)
-        # featureserver_text = featureserver_page.text
-
-
         featureserver_text = SafeRequest().get_string('GET', featureserver_url)
         featureservers = re.findall(r'href="/(.+)">(.+)</a> \(\d+\)', featureserver_text)
         featureservers = [[f'{self.prefix}{fs}', description] for fs, description in featureservers]

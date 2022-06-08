@@ -1,5 +1,5 @@
 import pandas as pd
-from ..utils.map_services_requests import  SafeRequest
+from ..utils.saferequests import  SafeRequest
 from ..utils.common import read_config
 
 config = read_config()

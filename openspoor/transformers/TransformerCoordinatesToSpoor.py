@@ -1,7 +1,7 @@
 import pandas as pd
 import geopandas as gpd
 from loguru import logger
-from ..utils.map_services_requests import SafeRequest
+from ..utils.saferequests import SafeRequest
 from ..utils.common import read_config
 
 config = read_config()

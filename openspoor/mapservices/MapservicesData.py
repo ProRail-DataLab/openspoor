@@ -8,7 +8,7 @@ from loguru import logger
 from shapely.geometry import Point, LineString, Polygon
 import pickle
 
-from ..utils.map_services_requests import SafeRequest
+from ..utils.saferequests import SafeRequest
 from ..utils.common import read_config
 
 config = read_config()
@@ -91,7 +91,6 @@ class MapservicesData:
         """
         count_url = input_base_url + "&returnCountOnly=True"
         return SafeRequest().get_json('GET', count_url)['count']
-        # return json.loads(SafeRequest().get_response(count_url))['count']
 
     def _retrieve_batch_of_features_to_gdf(self, input_base_url, offset):
         """
@@ -105,11 +104,6 @@ class MapservicesData:
         :return: geopandas dataframe of features
         """
         data = SafeRequest().get_json('GET', input_base_url + "&resultOffset=" + str(offset))
-        # data = secure_map_services_request(input_base_url + "&resultOffset=" +
-        #                                    str(offset))
-        # Sleep to avoid api being overwhelmed by requests
-        time.sleep(2)
-
         temp_gdf = self._transform_dict_to_gdf(data)
         logger.info("Downloaded " + str(offset + len(temp_gdf)) + " features")
         return temp_gdf
@@ -123,7 +117,6 @@ class MapservicesData:
         map_services.prorail.nl
         :return: geopandas dataframe
         """
-        print(f'{data=}')
         attribute_list = [feature['attributes'] for feature in data['features']]
         if data['geometryType'] == 'esriGeometryPoint':
             geometry_list = [Point((f['geometry'])['x'], (f['geometry'])['y'])
