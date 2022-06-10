@@ -3,6 +3,7 @@ import json
 import certifi
 import urllib3
 from typing import Optional
+import logging
 
 from openspoor.utils.singleton import Singleton
 
@@ -23,27 +24,8 @@ class SafeRequest(Singleton):
         self.max_retry = max_retry
         self.time_between = time_between
 
-    def force_time_between_and_retry(func):
-        def retryer(self, request_type: str, url: str, body: Optional[dict] = None, *args, **kwargs):
-            count = 0
-            while count <= self.max_retry:
-                try:
-                    time_since_last = time.time() - SafeRequest.last_request
-                    if time_since_last < self.time_between:
-                        time.sleep(self.time_between - time_since_last)
-                    SafeRequest.last_request = time.time()  # Do this before the query to update even if unsuccessful
-                    return func(self, request_type, url, body)
-                except Exception as error:
-                    print(error)
-                    count += 1
-                    if count >= self.max_retry:
-                        raise error
-            raise ConnectionError(f'Unable to connect to {url}')
-
-        return retryer
-
-    @force_time_between_and_retry
-    def _request(self, request_type: str, url: str, body: Optional[dict] = None) -> urllib3.response.HTTPResponse:
+    def _request_with_retry(self, request_type: str, url: str, body: Optional[dict] = None)\
+            -> urllib3.response.HTTPResponse:
         """
         Make an API call using a certificate
 
@@ -54,7 +36,21 @@ class SafeRequest(Singleton):
         """
         if isinstance(body, dict):
             body = json.dumps(body)
-        return self.pool.request(request_type, url, body=body)
+
+        count = 0
+        while count <= self.max_retry:
+            try:
+                time_since_last = time.time() - SafeRequest.last_request
+                if time_since_last < self.time_between:
+                    time.sleep(self.time_between - time_since_last)
+                SafeRequest.last_request = time.time()  # Do this before the query to update even if unsuccessful
+                return self.pool.request(request_type, url, body=body)
+            except Exception as error:
+                count += 1
+                logging.warning(f'Error encountered performing attempt {count} out of {self.max_retry}')
+                logging.warning(error)
+                if count >= self.max_retry:
+                    raise error
 
     def get_string(self, request_type: str, url: str, body: Optional[dict] = None):
         """
@@ -66,20 +62,9 @@ class SafeRequest(Singleton):
         :return: The output of the request as a string
         """
 
-        return self._request(request_type, url, body)._body.decode('UTF-8')
+        return self._request_with_retry(request_type, url, body).data.decode('UTF-8')
 
     def get_json(self, request_type: str, url: str, body: Optional[dict] = None) -> dict:
-        """
-        Return a request as a dictionary.
-
-        :param request_type: The request type to use
-        :param url: The URL to query
-        :param body: A dictionary to be passed as a body
-        :return: The output body of the request as a dictionary
-        """
-        return json.loads(self.get_string(request_type, url, body))
-
-    def get_data(self, request_type: str, url: str, body: Optional[dict] = None) -> dict:
         """
         Return the request data as a dictionary.
 
@@ -88,4 +73,4 @@ class SafeRequest(Singleton):
         :param body: A dictionary to be passed as a body
         :return: The output data of the request as a dictionary
         """
-        return json.loads(self._request(request_type, url, body).data)
+        return json.loads(self.get_string(request_type, url, body))

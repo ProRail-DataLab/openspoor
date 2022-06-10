@@ -8,7 +8,7 @@ from loguru import logger
 from shapely.geometry import Point, LineString, Polygon
 import pickle
 
-from ..utils.saferequests import SafeRequest
+from ..utils.safe_requests import SafeRequest
 from ..utils.common import read_config
 
 config = read_config()

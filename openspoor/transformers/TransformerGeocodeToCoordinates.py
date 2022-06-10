@@ -1,5 +1,5 @@
 import pandas as pd
-from ..utils.saferequests import  SafeRequest
+from ..utils.safe_requests import  SafeRequest
 from ..utils.common import read_config
 
 config = read_config()
@@ -69,7 +69,7 @@ class TransformerGeocodeToCoordinates:
         """
         input_json = self._make_json_for_geocode_to_xy_api(input_df)
 
-        response_json = SafeRequest().get_data('GET', self.mapservices_url, input_json)
+        response_json = SafeRequest().get_json('GET', self.mapservices_url, input_json)
         return self._transform_xy_json_to_df(response_json)
 
     def _make_json_for_geocode_to_xy_api(self, input_df):

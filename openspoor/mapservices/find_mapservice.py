@@ -1,7 +1,7 @@
 import pandas as pd
 import re
 
-from ..utils.saferequests import SafeRequest
+from ..utils.safe_requests import SafeRequest
 
 
 class FeatureServerOverview:
