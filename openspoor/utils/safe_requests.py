@@ -45,7 +45,12 @@ class SafeRequest(Singleton):
                 if time_since_last < self.time_between:
                     time.sleep(self.time_between - time_since_last)
                 SafeRequest.last_request = time.time()  # Do this before the query to update even if unsuccessful
-                return self.pool.request(request_type, url, body=body)
+                request = self.pool.request(request_type, url, body=body)
+                if request.status == 200:
+                    return request
+                else:
+                    raise ConnectionError(f'Request not successful at {url}')
+
             except Exception as error:
                 count += 1
                 logging.warning(f'Error encountered performing attempt {count} out of {self.max_retry}')
