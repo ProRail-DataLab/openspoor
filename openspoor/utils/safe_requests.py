@@ -27,7 +27,8 @@ class SafeRequest(Singleton):
     def _request_with_retry(self, request_type: str, url: str, body: Optional[dict] = None)\
             -> urllib3.response.HTTPResponse:
         """
-        Make an API call using a certificate
+        Make an API call using a certificate. Ensure the time between consecutive calls is at least self.time_between
+        seconds and retry for the required amount of times.
 
         :param request_type: The request type to use
         :param url: The URL to query
