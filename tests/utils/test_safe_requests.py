@@ -34,7 +34,7 @@ def base_safe_requests():
 
 
 def test_get_string_failure(base_safe_requests, invalid_url):
-    with pytest.raises(KeyError):
+    with pytest.raises(Exception):  # This is a bit generic, as the exception raised varies on where you run this
         base_safe_requests.get_string('GET', invalid_url)
 
 
