@@ -48,7 +48,7 @@ class SafeRequest(Singleton):
                 if request.status == 200:
                     return request
                 else:
-                    raise ConnectionError(f'Request not successful at {url}')
+                    raise ConnectionError(f'Status {request.status} received at {url} instead of 200')
 
             except Exception as error:
                 count += 1
