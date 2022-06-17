@@ -1,11 +1,13 @@
 import pandas as pd
 from loguru import logger
-from .MapservicesData import MapservicesData
+from .MapservicesData import CachableQuery
 from ..utils.common import read_config
 
 config = read_config()
 
-class PUICMapservices(MapservicesData):
+
+# class PUICMapservices(MapservicesData):
+class PUICMapservices(CachableQuery):
     """
     Loads mapservices data from the Geleidingssystemen. These contains PUIC data for spoor, wissels and kruisingbenen.
     """
@@ -17,7 +19,8 @@ class PUICMapservices(MapservicesData):
                     'spoor, wissel and kruisingbeen data from '
                     'Geleidingsystemen mapservices api.')
 
-        MapservicesData.__init__(self, cache_location)
+        # MapservicesData.__init__(self, None, cache_location)
+        CachableQuery.__init__(self, cache_location)
 
         self.spoor_url = config['spoor_url']
 
@@ -25,8 +28,7 @@ class PUICMapservices(MapservicesData):
 
         self.spoordata_columns = config['spoordata_columns']
 
-
-    def _download_data(self):
+    def _download_data(self, *args, **kwargs):
         """
         Return combined spoortak, wissel and kruising data from
         self.spoor_url and self.wisselkruisingbeen_url

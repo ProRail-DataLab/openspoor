@@ -4,7 +4,8 @@ import geopandas as gpd
 import requests
 import time
 import json
-import yaml
+from typing import Optional
+from pathlib import Path
 from loguru import logger
 from shapely.geometry import Point, LineString, Polygon
 import pickle
@@ -14,19 +15,32 @@ from ..utils.common import read_config
 
 config = read_config()
 
-class MapservicesData:
-    """
-    Class to allow easy access to mapservices.prorail.nl. Mainly used as
-    abstract parent class to other mapservices classes
-    """
-    def __init__(self, cache_location=None):
-        """
-        :param cache_location: filepath where pickle file of data will be
-        loaded from (or saved to if file is absent)
-        """
 
-        self.standard_featureserver_query = config['standard_featureserver_query']
-        self.crs = config['crs']
+def _get_query_url(dict_query):
+    if dict_query is None:
+        where_query = "/query?"
+    else:
+        value_types = [type(k) for k in dict_query.values()]
+        where_query = "/query?where="
+        for i in range(len(list(dict_query.values()))):
+            if value_types[i] == list:
+                where_query = where_query + "%28"
+                for val in range(len(list(dict_query.values())[i])):
+                    where_query = where_query + list(dict_query.keys())[i] + "+%3D+%27" + \
+                                  list(dict_query.values())[i][val] + "%27+or+"
+                where_query = where_query[:-4] + "%29+and+"
+            else:
+                where_query = where_query + list(dict_query.keys())[i] + "+%3D+%27" + \
+                              list(dict_query.values())[
+                                  i] + "%27+and+"
+        where_query = where_query[:-5] + "&"
+
+    return where_query
+
+
+class CachableQuery:
+
+    def __init__(self, cache_location: Optional[Path] = None):
         self.cache_location = cache_location
 
     def load_data(self):
@@ -48,8 +62,12 @@ class MapservicesData:
 
         return all_data_gdf
 
-    def _download_data(self):
-        pass
+    def _download_data(self, url):
+
+        """
+        Downloads data from self.spoortakken_url
+        """
+        return self._load_all_features_to_gdf(url, None)
 
     def _load_all_features_to_gdf(self, input_base_url, dict_query=None):
         """
@@ -64,7 +82,7 @@ class MapservicesData:
         :return: geopandas dataframe with all data from the api call
         """
 
-        where_query = self._get_query_url(dict_query)
+        where_query = _get_query_url(dict_query)
 
         input_url = input_base_url + where_query + self.standard_featureserver_query
         logger.info("Load data with api call: " + input_url)
@@ -139,23 +157,30 @@ class MapservicesData:
         return gpd.GeoDataFrame(data=attribute_list, crs=self.crs,
                                 geometry=geometry_list)
 
-    def _get_query_url(self, dict_query):
-        if dict_query == None:
-            where_query = "/query?"
-        else:
-            value_types = [type(k) for k in dict_query.values()]
-            where_query = "/query?where="
-            for i in range(len(list(dict_query.values()))):
-                if value_types[i] == list:
-                    where_query = where_query + "%28"
-                    for val in range(len(list(dict_query.values())[i])):
-                        where_query = where_query + list(dict_query.keys())[i] + "+%3D+%27" + \
-                                      list(dict_query.values())[i][val] + "%27+or+"
-                    where_query = where_query[:-4] + "%29+and+"
-                else:
-                    where_query = where_query + list(dict_query.keys())[i] + "+%3D+%27" + \
-                                  list(dict_query.values())[
-                                      i] + "%27+and+"
-            where_query = where_query[:-5] + "&"
 
-        return where_query
+class SingleQuery(CachableQuery):
+    """
+    Class to allow easy access to mapservices.prorail.nl. Mainly used as
+    abstract parent class to other mapservices classes
+    """
+    def __init__(self, url: Optional[str] = None, cache_location: Optional[Path] = None):
+        """
+        :param url: An url to download from
+        :param cache_location: filepath where pickle file of data will be
+        loaded from (or saved to if file is absent)
+        """
+
+        CachableQuery.__init__(self, cache_location=cache_location)
+
+        self.standard_featureserver_query = config['standard_featureserver_query']
+        self.crs = config['crs']
+        self.url = url
+        self.cache_location = cache_location
+
+    def _download_data(self, *args, **kwargs):
+        """
+        Downloads data from self.url
+        """
+        return self._load_all_features_to_gdf(self.url, None)
+
+
