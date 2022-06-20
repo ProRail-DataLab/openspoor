@@ -30,10 +30,10 @@ class SpoortakModelsData(Singleton):
         return float(value.replace('.', '').replace(',', '.'))
 
     @staticmethod
-    def _km_to_meters(km: float) -> Optional[int]:
+    def _km_to_meters(km: float) -> float:
         if km is None or np.isnan(km):
-            return None
-        return int(km * 1000)
+            return np.nan
+        return km * 1000.0
 
     @staticmethod
     def _replace_km_columns(df: pd.DataFrame) -> None:
@@ -74,7 +74,8 @@ class SpoortakModelsData(Singleton):
             try:
                 for model_version in self.model_version_numbers:
                     self.models[model_version] = pd.read_csv(os.path.join(data_path,
-                                                                          f'Versie_{model_version:02d}/SPOORTAK_{model_version}.csv'),
+                                                                          f'Versie_{model_version:02d}',
+                                                                          f'SPOORTAK_{model_version}.csv'),
                                                              delimiter=';',
                                                              header=0,
                                                              converters={
@@ -83,10 +84,11 @@ class SpoortakModelsData(Singleton):
                                                                  'KM_EIND': lambda km: self._km_to_meters(
                                                                      self._convert_dutch_number(km)),
                                                                  'LENGTE': lambda km: self._km_to_meters(
-                                                                     self._convert_dutch_number(km))
+                                                                     self._convert_dutch_number(
+                                                                         km))
                                                              },
                                                              index_col='SPOORTAK_IDENTIFICATIE',
-                                                             encoding='latin1'
+                                                             encoding='latin1',
                                                              )
 
                     self._replace_km_columns(self.models[model_version])
@@ -96,7 +98,7 @@ class SpoortakModelsData(Singleton):
 
             self.model_changes = {
                 model_version: pd.read_csv(
-                    os.path.join(data_path, f'Versie_{model_version:02d}/BBMS_BERICHT_{model_version}.csv'),
+                    os.path.join(data_path, f'Versie_{model_version:02d}', f'BBMS_BERICHT_{model_version}.csv'),
                     delimiter=';',
                     header=0,
                     encoding='latin1'

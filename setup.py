@@ -2,20 +2,22 @@ from setuptools import setup, find_packages
 from pathlib import Path
 
 requirements = [
-      "importlib_metadata",
-      "geopandas",
-      "pyyaml",
-      "loguru",
-      "requests",
-      "rtree",
-      "pyproj<3",
-      "pandas",
-      "shapely",
-      "folium"
+    "importlib_metadata",
+    "geopandas",
+    "pyyaml",
+    "loguru",
+    "requests",
+    "rtree",
+    "pyproj<3",
+    "pandas",
+    "shapely",
+    "folium"
 ]
 
 dev_packages = [
-      "pytest",
+    "pytest",
+    "pytest-cov",
+    "parameterized"
 ]
 
 setup(name='openspoor',
