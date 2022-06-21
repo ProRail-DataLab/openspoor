@@ -7,7 +7,7 @@ from typing import Optional
 import logging
 import pandas as pd
 
-from ..spoortakmodel.singleton import Singleton
+from openspoor.utils.singleton import Singleton
 
 log = logging.getLogger(__name__)
 
