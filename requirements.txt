@@ -10,3 +10,4 @@ pandas==1.4.*
 shapely==1.8.*
 importlib_metadata==4.11.*
 numpy==1.21.*
+parameterized==0.8.1
