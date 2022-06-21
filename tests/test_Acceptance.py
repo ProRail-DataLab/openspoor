@@ -3,10 +3,12 @@ import geopandas as gpd
 import pandas as pd
 from unittest import mock
 
-from openspoor.transformers import TransformerCoordinatesToSpoor, TransformerGeocodeToCoordinates, TransformerSpoortakToCoordinates
+from openspoor.transformers import TransformerCoordinatesToSpoor, TransformerGeocodeToCoordinates, \
+    TransformerSpoortakToCoordinates
 from openspoor.mapservices import PUICMapservices, SpoortakMapservices, MapservicesData
 
 from shapely.geometry import LineString, Point
+
 
 class Test:
     spoortak_mock_output = gpd.GeoDataFrame(
@@ -653,11 +655,11 @@ class Test:
     def test_acceptance_query_functionality(self):
         data = MapservicesData()
         input_base_url = "http://mapservices.prorail.nl/arcgis/rest/services/Kadastraal_004/MapServer/5"
-        query_dict = {'KADSLEUTEL': ['ANM00G3774','ANM00G3775', 'ANM00H483'], 'KADGEM': ['ANM00']}
+        query_dict = {'KADSLEUTEL': ['ANM00G3774', 'ANM00G3775', 'ANM00H483'], 'KADGEM': ['ANM00']}
 
         output = data._load_all_features_to_gdf(input_base_url, dict_query=query_dict)
 
         assert (
-                (output['KADSLEUTEL'][0] in ['ANM00G3774','ANM00G3775', 'ANM00H483']) \
-               & (output['GEMEENTE'][0]=='Arnemuiden')
+                (output['KADSLEUTEL'][0] in ['ANM00G3774', 'ANM00G3775', 'ANM00H483']) \
+                & (output['GEMEENTE'][0] == 'Arnemuiden')
         )
