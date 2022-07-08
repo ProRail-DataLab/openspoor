@@ -1,5 +1,13 @@
-from openspoor.mapservices import FeatureServerOverview
 import pytest
+from unittest import mock
+import pandas as pd
+import geopandas as gpd
+from glob import glob
+
+from shapely.geometry import Point
+from pathlib import Path
+
+from openspoor.mapservices import FeatureSearchResults, FeatureServerOverview
 
 
 @pytest.fixture(scope='session')
@@ -26,3 +34,33 @@ def test_search_for(all_featureserver_layers):
     assert out_spoor.shape[0] > out_hek.shape[0], 'Spoor does not occur more often than hek'
     assert out_hek.shape[1] == 2, 'Invalid number of columns'
     assert out_spoor.shape[1] == 2, 'Invalid number of columns'
+
+
+class TestFeatureSearchResults:
+    spoortak_mock_output = gpd.GeoDataFrame({'example_col': [1, 2, 3],
+                                             },
+                                            geometry=[Point(112734.52699999884, 480849.4979999997),
+                                                      Point(112679.4849999994, 480767.1550000012),
+                                                      Point(112622.47399999946, 480681.72399999946)],
+                                            crs="epsg:28992")
+
+    @mock.patch("openspoor.mapservices.MapServicesQuery._download_data")
+    def test_FeatureSearchResults(self, mocked_load, tmpdir):
+        mocked_load.return_value = self.spoortak_mock_output
+
+        search_results = pd.DataFrame({'layer_url': ['a', 'b', 'c'],
+                                       'description': ['d', 'e', 'f']})
+
+        output_dir = Path(tmpdir) / 'outputs'
+        FeatureSearchResults(search_results).write_gkpg(output_dir, 0)
+
+        files = glob(str(output_dir) + "/**")
+        assert len(files) == 1, 'A file was written'
+        assert gpd.read_file(files[0]).shape == (3, 2), 'Incorrect shape'
+
+        FeatureSearchResults(search_results).write_gkpg(output_dir, 1)
+        files = glob(str(output_dir) + "/**")
+        assert len(files) == 2, 'A file was written'
+
+        with pytest.raises(IndexError):
+            FeatureSearchResults(search_results).write_gkpg(output_dir, 4)

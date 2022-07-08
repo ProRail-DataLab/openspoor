@@ -1,7 +1,36 @@
 import pandas as pd
 import re
+from loguru import logger
+from pathlib import Path
+from typing import Optional
 
 from ..utils.safe_requests import SafeRequest
+from openspoor.mapservices.MapservicesQuery import MapServicesQuery
+
+
+class FeatureSearchResults(pd.DataFrame):
+
+    def write_gkpg(self, output_dir: Path, entry_number: int = 0) -> None:
+        """
+        Write the data at the requested url to a local file directory
+
+        :param entry_number: The entry in the dataframe to write
+        :param output_dir: The directory which to write to
+        :return: None, a file is written in the indicated
+        """
+
+        if len(self) <= entry_number:
+            logger.warning("No results found")
+            raise IndexError("Invalid entry requested")
+
+        url = self.layer_url.values[entry_number]
+        description = self.description.values[entry_number]
+
+        output_gdf = MapServicesQuery(url).load_data()
+        output_folder = Path(output_dir)
+        output_folder.mkdir(exist_ok=True)
+        output_gdf.to_file(output_folder / f"{description.replace(' ', '_')}.gpkg", driver='GPKG')
+        return output_gdf
 
 
 class FeatureServerOverview:
@@ -13,6 +42,7 @@ class FeatureServerOverview:
         self.prefix = 'https://mapservices.prorail.nl/'
         self.base_url = "https://mapservices.prorail.nl/arcgis/rest/services"
         self.df = self.get_all_featureserver_layers()
+        self.search_results = None
 
     def _get_layers_in_featureservers(self, featureserver_url: str) -> pd.DataFrame:
         """
@@ -49,4 +79,10 @@ class FeatureServerOverview:
         :param search_for: A case unsensitive string for which you want to find all available layers
         :return: A pandas dataframe, listing the urls and descriptions of the found layers in all featureservers
         """
-        return self.df.loc[lambda d: d.description.str.lower().str.contains(search_for.lower())]
+        logger.info(f'Searching for "{search_for}"')
+        return FeatureSearchResults(
+            self.df.loc[lambda d: d.description.str.lower().str.contains(search_for.lower())]
+        )
+
+
+
