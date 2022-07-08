@@ -1,16 +1,13 @@
 import os
 import pandas as pd
 import geopandas as gpd
-import requests
-import time
-import json
 from typing import Optional
 from pathlib import Path
 from loguru import logger
 from shapely.geometry import Point, LineString, Polygon
 import pickle
 
-from ..utils.map_services_requests import secure_map_services_request
+from ..utils.safe_requests import SafeRequest
 from ..utils.common import read_config
 
 config = read_config()
@@ -36,10 +33,6 @@ def _get_query_url(dict_query):
         where_query = where_query[:-5] + "&"
 
     return where_query
-
-
-# class CachableQuery:
-
 
 
 class MapServicesQuery:
@@ -123,7 +116,7 @@ class MapServicesQuery:
         :return: int, max_features_count
         """
         count_url = input_base_url + "&returnCountOnly=True"
-        return json.loads(requests.get(count_url, verify=False).text)['count']
+        return SafeRequest().get_json('GET', count_url)['count']
 
     def _retrieve_batch_of_features_to_gdf(self, input_base_url, offset):
         """
@@ -136,11 +129,7 @@ class MapServicesQuery:
         same api
         :return: geopandas dataframe of features
         """
-        data = secure_map_services_request(input_base_url + "&resultOffset=" +
-                                           str(offset))
-        # Sleep to avoid api being overwhelmed by requests
-        time.sleep(2)
-
+        data = SafeRequest().get_json('GET', input_base_url + "&resultOffset=" + str(offset))
         temp_gdf = self._transform_dict_to_gdf(data)
         logger.info("Downloaded " + str(offset + len(temp_gdf)) + " features")
         return temp_gdf
@@ -171,5 +160,3 @@ class MapServicesQuery:
 
         return gpd.GeoDataFrame(data=attribute_list, crs=self.crs,
                                 geometry=geometry_list)
-
-

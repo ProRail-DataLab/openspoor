@@ -1,6 +1,6 @@
 import pandas as pd
 from loguru import logger
-from .MapservicesData import MapServicesQuery
+from .MapservicesQuery import MapServicesQuery
 from ..utils.common import read_config
 
 config = read_config()

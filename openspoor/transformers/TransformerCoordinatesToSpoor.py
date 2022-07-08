@@ -1,7 +1,7 @@
 import pandas as pd
 import geopandas as gpd
 from loguru import logger
-from ..utils.map_services_requests import secure_map_services_request
+from ..utils.safe_requests import SafeRequest
 from ..utils.common import read_config
 
 config = read_config()
@@ -147,7 +147,8 @@ class TransformerCoordinatesToSpoor:
         :return: pandas df, containing the Geocode_KM per geosubcode and the index corresponding to input df
         """
         input_json = self._prep_dictionary_for_mapservices_call(input_df)
-        response_json = secure_map_services_request(self.xy_to_geocode_url, input_json)
+
+        response_json = SafeRequest().get_json('POST', self.xy_to_geocode_url, input_json)
         return self._transform_json_to_km_dataframe(response_json, one_point=one_point)
 
     @staticmethod
