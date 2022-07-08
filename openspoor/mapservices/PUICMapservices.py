@@ -1,30 +1,27 @@
 import pandas as pd
 from loguru import logger
-from .MapservicesData import CachableQuery
+from .MapservicesData import MapServicesQuery
 from ..utils.common import read_config
 
 config = read_config()
 
 
-# class PUICMapservices(MapservicesData):
-class PUICMapservices(CachableQuery):
+class PUICMapservices:
     """
     Loads mapservices data from the Geleidingssystemen. These contains PUIC data for spoor, wissels and kruisingbenen.
     """
-    def __init__(self, cache_location=None):
+    def __init__(self, spoor_cache_location=None, wisselkruisingbeen_cache_location=None):
         """
-        :param cache_location: filepath as in MapservicesData class
+        :param spoor_cache_location: filepath as in MapservicesData class
         """
         logger.info('Initiating PUICMapservices object in order to obtain '
                     'spoor, wissel and kruisingbeen data from '
                     'Geleidingsystemen mapservices api.')
 
-        # MapservicesData.__init__(self, None, cache_location)
-        CachableQuery.__init__(self, cache_location)
-
-        self.spoor_url = config['spoor_url']
-
-        self.wisselkruisingbeen_url = config['wisselkruisingbeen_url']
+        self.spoor_query = MapServicesQuery(url=config['spoor_url'],
+                                            cache_location=spoor_cache_location)
+        self.wisselkruisingbeen_query = MapServicesQuery(url=config['wisselkruisingbeen_url'],
+                                                         cache_location=wisselkruisingbeen_cache_location)
 
         self.spoordata_columns = config['spoordata_columns']
 
@@ -33,12 +30,10 @@ class PUICMapservices(CachableQuery):
         Return combined spoortak, wissel and kruising data from
         self.spoor_url and self.wisselkruisingbeen_url
         """
-        spoor_gdf = self._load_all_features_to_gdf(self.spoor_url, None)
+        spoor_gdf = self.spoor_query.load_data()
         spoor_gdf = self._prep_spoor_gdf(spoor_gdf)
 
-        wisselkruisingbeen_gdf = self._load_all_features_to_gdf(
-            self.wisselkruisingbeen_url, None
-        )
+        wisselkruisingbeen_gdf = self.wisselkruisingbeen_query.load_data()
         wisselkruisingbeen_gdf = self._prep_wisselkruisingbeen_gdf(
             wisselkruisingbeen_gdf
         )

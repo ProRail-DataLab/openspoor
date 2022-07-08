@@ -38,10 +38,32 @@ def _get_query_url(dict_query):
     return where_query
 
 
-class CachableQuery:
+# class CachableQuery:
 
-    def __init__(self, cache_location: Optional[Path] = None):
+
+
+class MapServicesQuery:
+    """
+    Class to allow easy access to mapservices.prorail.nl. Mainly used as
+    abstract parent class to other mapservices classes
+    """
+    def __init__(self, url: Optional[str] = None, cache_location: Optional[Path] = None):
+        """
+        :param url: An url to download from
+        :param cache_location: filepath where pickle file of data will be
+        loaded from (or saved to if file is absent)
+        """
+
+        self.standard_featureserver_query = config['standard_featureserver_query']
+        self.url = url
+        self.crs = config['crs']
         self.cache_location = cache_location
+
+    def _download_data(self, *args, **kwargs):
+        """
+        Downloads data from self.url
+        """
+        return self._load_all_features_to_gdf(self.url, None)
 
     def load_data(self):
         """
@@ -61,13 +83,6 @@ class CachableQuery:
             all_data_gdf = self._download_data()
 
         return all_data_gdf
-
-    def _download_data(self, url):
-
-        """
-        Downloads data from self.spoortakken_url
-        """
-        return self._load_all_features_to_gdf(url, None)
 
     def _load_all_features_to_gdf(self, input_base_url, dict_query=None):
         """
@@ -156,31 +171,5 @@ class CachableQuery:
 
         return gpd.GeoDataFrame(data=attribute_list, crs=self.crs,
                                 geometry=geometry_list)
-
-
-class SingleQuery(CachableQuery):
-    """
-    Class to allow easy access to mapservices.prorail.nl. Mainly used as
-    abstract parent class to other mapservices classes
-    """
-    def __init__(self, url: Optional[str] = None, cache_location: Optional[Path] = None):
-        """
-        :param url: An url to download from
-        :param cache_location: filepath where pickle file of data will be
-        loaded from (or saved to if file is absent)
-        """
-
-        CachableQuery.__init__(self, cache_location=cache_location)
-
-        self.standard_featureserver_query = config['standard_featureserver_query']
-        self.crs = config['crs']
-        self.url = url
-        self.cache_location = cache_location
-
-    def _download_data(self, *args, **kwargs):
-        """
-        Downloads data from self.url
-        """
-        return self._load_all_features_to_gdf(self.url, None)
 
 
