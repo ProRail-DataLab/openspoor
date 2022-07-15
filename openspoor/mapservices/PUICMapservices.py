@@ -1,6 +1,7 @@
 import pandas as pd
 from loguru import logger
 from .MapservicesQuery import MapServicesQuery
+from .find_mapservice import FeatureServerOverview
 from ..utils.common import read_config
 
 config = read_config()
@@ -18,10 +19,13 @@ class PUICMapservices:
                     'spoor, wissel and kruisingbeen data from '
                     'Geleidingsystemen mapservices api.')
 
-        self.spoor_query = MapServicesQuery(url=config['spoor_url'],
-                                            cache_location=spoor_cache_location)
-        self.wisselkruisingbeen_query = MapServicesQuery(url=config['wisselkruisingbeen_url'],
-                                                         cache_location=wisselkruisingbeen_cache_location)
+        featureserver = FeatureServerOverview()
+        self.spoor_query = featureserver.search_for('spoortakdeel', exact=True)
+        if spoor_cache_location:
+            self.spoor_query.write_gpkg(spoor_cache_location)
+        self.wisselkruisingbeen_query = featureserver.search_for('wissel kruisingbeen', exact=True)
+        if wisselkruisingbeen_cache_location:
+            self.wisselkruisingbeen_query.write_gpkg(wisselkruisingbeen_cache_location)
 
         self.spoordata_columns = config['spoordata_columns']
 

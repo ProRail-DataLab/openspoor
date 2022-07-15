@@ -7,12 +7,14 @@ from glob import glob
 from shapely.geometry import Point
 from pathlib import Path
 
-from openspoor.mapservices import FeatureSearchResults, FeatureServerOverview
+from openspoor.mapservices import FeatureServerOverview, FeatureSearchResults
 
 
 @pytest.fixture(scope='session')
 def all_featureserver_layers():
-    return FeatureServerOverview()
+    featureserver = FeatureServerOverview()
+    featureserver.df = featureserver.get_all_featureserver_layers()
+    return featureserver
 
 
 def test_get_all_featureserver_layers(all_featureserver_layers):
@@ -68,21 +70,20 @@ class TestFeatureSearchResults:
         out_gdf = FeatureSearchResults(search_results).load_data(0)
         gpd.testing.assert_geodataframe_equal(out_gdf, mocked_load), 'Incorrecting loading of data'
 
-
     @mock.patch("openspoor.mapservices.MapServicesQuery._download_data")
     def test_FeatureSearchResults(self, mocked_load, search_results, tmpdir):
         mocked_load.return_value = self.spoortak_mock_output
 
         output_dir = Path(tmpdir) / 'outputs'
-        FeatureSearchResults(search_results).write_gkpg(output_dir, 0)
+        FeatureSearchResults(search_results).write_gpkg(output_dir, 0)
 
         files = glob(str(output_dir) + "/**")
         assert len(files) == 1, 'A file was written'
         assert gpd.read_file(files[0]).shape == (3, 2), 'Incorrect shape'
 
-        FeatureSearchResults(search_results).write_gkpg(output_dir, 1)
+        FeatureSearchResults(search_results).write_gpkg(output_dir, 1)
         files = glob(str(output_dir) + "/**")
         assert len(files) == 2, 'A file was written'
 
         with pytest.raises(IndexError):
-            FeatureSearchResults(search_results).write_gkpg(output_dir, 4)
+            FeatureSearchResults(search_results).write_gpkg(output_dir, 4)

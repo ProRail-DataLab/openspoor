@@ -6,6 +6,7 @@ import geopandas as gpd
 
 from ..utils.safe_requests import SafeRequest
 from openspoor.mapservices.MapservicesQuery import MapServicesQuery
+from openspoor.utils.singleton import Singleton
 
 
 class FeatureSearchResults(pd.DataFrame):
@@ -25,7 +26,7 @@ class FeatureSearchResults(pd.DataFrame):
 
         return MapServicesQuery(url).load_data()
 
-    def write_gkpg(self, output_dir: Path, entry_number: int = 0) -> None:
+    def write_gpkg(self, output_dir: Path, entry_number: int = 0) -> None:
         """
         Write the data at the requested url to a local file directory
 
@@ -43,7 +44,7 @@ class FeatureSearchResults(pd.DataFrame):
         return output_gdf
 
 
-class FeatureServerOverview:
+class FeatureServerOverview(Singleton):
     """
     Class used to find all the available featureservers in mapservices.
     This can be used to navigate the API through python, allowing some more efficient searching.
@@ -51,7 +52,7 @@ class FeatureServerOverview:
     def __init__(self):
         self.prefix = 'https://mapservices.prorail.nl/'
         self.base_url = "https://mapservices.prorail.nl/arcgis/rest/services"
-        self.df = self.get_all_featureserver_layers()
+        self.df = None
         self.search_results = None
 
     def _get_layers_in_featureservers(self, featureserver_url: str) -> pd.DataFrame:
@@ -78,7 +79,7 @@ class FeatureServerOverview:
         featureserver_urls = [f'{self.prefix}{redirect}' for redirect in featureserver_redirects]
         return (
             pd.concat(self._get_layers_in_featureservers(url) for url in featureserver_urls)
-            .drop_duplicates('description', keep='last') # Keep only the most recent data
+            .drop_duplicates('description', keep='last')  # Keep only the most recent data
             .reset_index(drop=True)
         )
 
@@ -90,6 +91,10 @@ class FeatureServerOverview:
         :param exact: Whether to only return layers that match this string completely
         :return: A pandas dataframe, listing the urls and descriptions of the found layers in all featureservers
         """
+
+        if self.df is None:
+            logger.info(f'Retrieving featureserver layers')
+            self.df = self.get_all_featureserver_layers()
         logger.info(f'Searching for "{search_for}"')
         if exact:
             return FeatureSearchResults(
