@@ -174,6 +174,7 @@ class PlottingDataFrame(pd.DataFrame, PlotObject):
         self.attrs['lat'] = lat_column
         self.attrs['lon'] = lon_column
         if isinstance(df, gpd.GeoDataFrame):
+            self = self.to_crs('EPSG:4326')
             if isinstance(df.geometry.iloc[0], point.Point):
                 self[self.attrs['lat']] = df.geometry.apply(lambda d: d.y)
                 self[self.attrs['lon']] = df.geometry.apply(lambda d: d.x)
