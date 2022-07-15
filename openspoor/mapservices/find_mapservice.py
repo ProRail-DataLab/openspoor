@@ -2,13 +2,28 @@ import pandas as pd
 import re
 from loguru import logger
 from pathlib import Path
-from typing import Optional
+import geopandas as gpd
 
 from ..utils.safe_requests import SafeRequest
 from openspoor.mapservices.MapservicesQuery import MapServicesQuery
 
 
 class FeatureSearchResults(pd.DataFrame):
+
+    def load_data(self, entry_number: int = 0) -> gpd.GeoDataFrame:
+        """
+        Prepare the data for analysis
+
+        :param entry_number: The row giving the url to query
+        :return: A geopandas dataframe
+        """
+        if len(self) <= entry_number:
+            logger.warning("No results found")
+            raise IndexError("Invalid entry requested")
+
+        url = self.layer_url.values[entry_number]
+
+        return MapServicesQuery(url).load_data()
 
     def write_gkpg(self, output_dir: Path, entry_number: int = 0) -> None:
         """
@@ -19,14 +34,9 @@ class FeatureSearchResults(pd.DataFrame):
         :return: None, a file is written in the indicated
         """
 
-        if len(self) <= entry_number:
-            logger.warning("No results found")
-            raise IndexError("Invalid entry requested")
-
-        url = self.layer_url.values[entry_number]
+        output_gdf = self.load_data(entry_number)
         description = self.description.values[entry_number]
 
-        output_gdf = MapServicesQuery(url).load_data()
         output_folder = Path(output_dir)
         output_folder.mkdir(exist_ok=True)
         output_gdf.to_file(output_folder / f"{description.replace(' ', '_')}.gpkg", driver='GPKG')
@@ -72,17 +82,20 @@ class FeatureServerOverview:
             .reset_index(drop=True)
         )
 
-    def search_for(self, search_for: str) -> pd.DataFrame:
+    def search_for(self, search_for: str, exact: bool=False) -> pd.DataFrame:
         """
         Find all layers which include a certain phrase.
 
         :param search_for: A case unsensitive string for which you want to find all available layers
+        :param exact: Whether to only return layers that match this string completely
         :return: A pandas dataframe, listing the urls and descriptions of the found layers in all featureservers
         """
         logger.info(f'Searching for "{search_for}"')
-        return FeatureSearchResults(
-            self.df.loc[lambda d: d.description.str.lower().str.contains(search_for.lower())]
-        )
-
-
-
+        if exact:
+            return FeatureSearchResults(
+                self.df.loc[lambda d: d.description == search_for.lower()]
+            )
+        else:
+            return FeatureSearchResults(
+                self.df.loc[lambda d: d.description.str.lower().str.contains(search_for.lower())]
+            )

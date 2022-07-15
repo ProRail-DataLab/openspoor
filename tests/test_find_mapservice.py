@@ -28,12 +28,26 @@ def test_get_layers_in_featureservers(all_featureserver_layers):
     assert out.shape[1] == 2, 'Unexpected number of columns'
 
 
+def test_exact_match(all_featureserver_layers):
+    general_search_hits = all_featureserver_layers.search_for('spo').shape[0]  # Should find
+    exact_search_hits = all_featureserver_layers.search_for('spo', exact=True).shape[0]
+
+    assert general_search_hits > 0, 'Did not find hits for a very general search'
+    assert exact_search_hits == 0, 'Found hits for exact search where none where expected'
+
+
 def test_search_for(all_featureserver_layers):
     out_hek = all_featureserver_layers.search_for('hek')
     out_spoor = all_featureserver_layers.search_for('spoor')
     assert out_spoor.shape[0] > out_hek.shape[0], 'Spoor does not occur more often than hek'
     assert out_hek.shape[1] == 2, 'Invalid number of columns'
     assert out_spoor.shape[1] == 2, 'Invalid number of columns'
+
+
+@pytest.fixture()
+def search_results():
+    return pd.DataFrame({'layer_url': ['a', 'b', 'c'],
+                         'description': ['d', 'e', 'f']})
 
 
 class TestFeatureSearchResults:
@@ -45,11 +59,14 @@ class TestFeatureSearchResults:
                                             crs="epsg:28992")
 
     @mock.patch("openspoor.mapservices.MapServicesQuery._download_data")
-    def test_FeatureSearchResults(self, mocked_load, tmpdir):
-        mocked_load.return_value = self.spoortak_mock_output
+    def test_FeatureSearchResults(self, mocked_load, search_results, tmpdir):
+        out_gdf = FeatureSearchResults(search_results).load_data(0)
+        gpd.testing.assert_geodataframe_equal(out_gdf, mocked_load), 'Incorrecting loading of data'
 
-        search_results = pd.DataFrame({'layer_url': ['a', 'b', 'c'],
-                                       'description': ['d', 'e', 'f']})
+
+    @mock.patch("openspoor.mapservices.MapServicesQuery._download_data")
+    def test_FeatureSearchResults(self, mocked_load, search_results, tmpdir):
+        mocked_load.return_value = self.spoortak_mock_output
 
         output_dir = Path(tmpdir) / 'outputs'
         FeatureSearchResults(search_results).write_gkpg(output_dir, 0)
