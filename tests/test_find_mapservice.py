@@ -29,11 +29,16 @@ def test_get_layers_in_featureservers(all_featureserver_layers):
 
 
 def test_exact_match(all_featureserver_layers):
-    general_search_hits = all_featureserver_layers.search_for('spo').shape[0]  # Should find
+    # This should find many hits, as 'spo' is part of 'spoor'
+    general_search_hits = all_featureserver_layers.search_for('spo').shape[0]
     exact_search_hits = all_featureserver_layers.search_for('spo', exact=True).shape[0]
+
+    exact_search_hits_haag = all_featureserver_layers.search_for('haag', exact=True).shape[0]  # Hedges
 
     assert general_search_hits > 0, 'Did not find hits for a very general search'
     assert exact_search_hits == 0, 'Found hits for exact search where none where expected'
+    assert exact_search_hits_haag == 1, 'Found no hit for haag when one was expected'
+
 
 
 def test_search_for(all_featureserver_layers):

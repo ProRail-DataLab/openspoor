@@ -82,7 +82,7 @@ class FeatureServerOverview:
             .reset_index(drop=True)
         )
 
-    def search_for(self, search_for: str, exact: bool=False) -> pd.DataFrame:
+    def search_for(self, search_for: str, exact: bool = False) -> pd.DataFrame:
         """
         Find all layers which include a certain phrase.
 
@@ -93,7 +93,7 @@ class FeatureServerOverview:
         logger.info(f'Searching for "{search_for}"')
         if exact:
             return FeatureSearchResults(
-                self.df.loc[lambda d: d.description == search_for.lower()]
+                self.df.loc[lambda d: d.description.str.lower() == search_for.lower()]
             )
         else:
             return FeatureSearchResults(
