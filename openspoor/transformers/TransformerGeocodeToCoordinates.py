@@ -47,7 +47,7 @@ class TransformerGeocodeToCoordinates:
                    columns.
         :return: A pandas dataframe with x, y coordinate columns
         """
-        xy_information = self._geocode_naar_xy(df)
+        xy_information = self._geocode_naar_xy(df).drop_duplicates()
 
         # The index steps are required to keep the index of df
         index = df.index

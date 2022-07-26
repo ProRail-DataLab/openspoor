@@ -36,7 +36,13 @@ Use conda to install Fiona and GDAL:
 
 #### Mac/Linux
 
+- `conda create -n [env_name] python=3.8`
+- `conda install -c conda-forge proj=7.0.0`
+- `conda install -c conda-forge pyproj=2.6.0`
 - `pip install openspoor`
+
+The steps above involving conda(-forge) are necessary for Mac M1 chips (used since Nov 2020). In case your Mac does not
+have a M1 chip, then `pip install openspoor` should suffice.
 
 ### Installation - development
 
