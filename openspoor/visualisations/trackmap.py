@@ -166,12 +166,16 @@ class PlottingDataFrame(pd.DataFrame, PlotObject):
         :param url_column: A column including an url that is displayed in the popup
         """
 
-        super().__init__(df)
-        # TODO: Make this a helper function? Also required for linestring dataframe parsing
+        df = pd.DataFrame(df)
 
-        if 'geometry' in self.columns and isinstance(df, pd.DataFrame)\
+        if 'geometry' in df.columns and isinstance(df, pd.DataFrame)\
                 and not isinstance(df, gpd.geodataframe.GeoDataFrame):
             df = self._convert_pandas_to_geopandas(df)
+        elif isinstance(df, gpd.GeoDataFrame):
+            df = df.to_crs('EPSG:4326')
+
+        super().__init__(df)
+
         self.attrs['lat'] = lat_column
         self.attrs['lon'] = lon_column
         if isinstance(df, gpd.GeoDataFrame):
