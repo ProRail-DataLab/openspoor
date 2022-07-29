@@ -166,7 +166,8 @@ class PlottingDataFrame(pd.DataFrame, PlotObject):
         :param url_column: A column including an url that is displayed in the popup
         """
 
-        df = pd.DataFrame(df)
+        if not isinstance(df, pd.DataFrame):
+            df = pd.DataFrame(df)
 
         if 'geometry' in df.columns and isinstance(df, pd.DataFrame)\
                 and not isinstance(df, gpd.geodataframe.GeoDataFrame):
