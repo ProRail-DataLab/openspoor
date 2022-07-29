@@ -11,8 +11,9 @@ class PUICMapservices:
     """
     Loads mapservices data from the Geleidingssystemen. These contains PUIC data for spoor, wissels and kruisingbenen.
     """
-    def __init__(self, spoor_cache_location=None, wisselkruisingbeen_cache_location=None):
+    def __init__(self, historic=False, spoor_cache_location=None, wisselkruisingbeen_cache_location=None):
         """
+        :param historic: whether you want historic data; this is the only working data at this moment
         :param spoor_cache_location: filepath as in MapservicesData class
         """
         logger.info('Initiating PUICMapservices object in order to obtain '
@@ -20,10 +21,16 @@ class PUICMapservices:
                     'Geleidingsystemen mapservices api.')
 
         featureserver = FeatureServerOverview()
-        self.spoor_query = featureserver.search_for('spoortakdeel', exact=True)
+        if historic:
+            self.spoor_query = "https://mapservices.prorail.nl/arcgis/rest/services/Geleidingssysteem_007/FeatureServer/13/"
+            self.wisselkruisingbeen_query = "https://mapservices.prorail.nl/arcgis/rest/services/Geleidingssysteem_007/FeatureServer/12/"
+        else:
+            logger.warning('PUICMapservices does not work yet for recent data; try rerunning with historic=True')
+            self.spoor_query = featureserver.search_for('spoortakdeel', exact=True)
+            self.wisselkruisingbeen_query = featureserver.search_for('wissel kruisingbeen', exact=True)
+
         if spoor_cache_location:
             self.spoor_query.write_gpkg(spoor_cache_location)
-        self.wisselkruisingbeen_query = featureserver.search_for('wissel kruisingbeen', exact=True)
         if wisselkruisingbeen_cache_location:
             self.wisselkruisingbeen_query.write_gpkg(wisselkruisingbeen_cache_location)
 
