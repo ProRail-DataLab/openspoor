@@ -174,7 +174,7 @@ class PlottingDataFrame(pd.DataFrame, PlotObject):
         self.attrs['lat'] = lat_column
         self.attrs['lon'] = lon_column
         if isinstance(df, gpd.GeoDataFrame):
-            self = self.to_crs('EPSG:4326')
+            self = df.to_crs('EPSG:4326')
             if isinstance(df.geometry.iloc[0], point.Point):
                 self[self.attrs['lat']] = df.geometry.apply(lambda d: d.y)
                 self[self.attrs['lon']] = df.geometry.apply(lambda d: d.x)
@@ -201,7 +201,7 @@ class PlottingDataFrame(pd.DataFrame, PlotObject):
                 popup_text = ''
                 for col in self.attrs['popup']:
                     if col == self.attrs['url_column']:
-                        url = quote(row[col], safe='/:?=&') # Replaces characters unsuitable for URL's
+                        url = quote(row[col], safe='/:?=&')  # Replaces characters unsuitable for URL's
                         popup_text = popup_text + f"{col}: <a href={url}>Hyperlink</a><br>",
                     else:
                         popup_text = popup_text + f'{col}: {row[col]}<br>'
