@@ -111,6 +111,7 @@ class TrackMap(folium.Map):
 
     def add(self, plotobject):
         plotobject.add_to(self)
+        return self
 
     def show(self, makesmaller: bool = False):
         """
