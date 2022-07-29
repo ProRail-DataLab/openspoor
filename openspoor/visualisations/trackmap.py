@@ -111,6 +111,7 @@ class TrackMap(folium.Map):
 
     def add(self, plotobject):
         plotobject.add_to(self)
+        return self
 
     def show(self, makesmaller: bool = False):
         """
@@ -165,12 +166,17 @@ class PlottingDataFrame(pd.DataFrame, PlotObject):
         :param url_column: A column including an url that is displayed in the popup
         """
 
-        super().__init__(df)
-        # TODO: Make this a helper function? Also required for linestring dataframe parsing
+        if not isinstance(df, pd.DataFrame):
+            df = pd.DataFrame(df)
 
-        if 'geometry' in self.columns and isinstance(df, pd.DataFrame)\
+        if 'geometry' in df.columns and isinstance(df, pd.DataFrame)\
                 and not isinstance(df, gpd.geodataframe.GeoDataFrame):
             df = self._convert_pandas_to_geopandas(df)
+        elif isinstance(df, gpd.GeoDataFrame):
+            df = df.to_crs('EPSG:4326')
+
+        super().__init__(df)
+
         self.attrs['lat'] = lat_column
         self.attrs['lon'] = lon_column
         if isinstance(df, gpd.GeoDataFrame):
@@ -200,7 +206,7 @@ class PlottingDataFrame(pd.DataFrame, PlotObject):
                 popup_text = ''
                 for col in self.attrs['popup']:
                     if col == self.attrs['url_column']:
-                        url = quote(row[col], safe='/:?=&') # Replaces characters unsuitable for URL's
+                        url = quote(row[col], safe='/:?=&')  # Replaces characters unsuitable for URL's
                         popup_text = popup_text + f"{col}: <a href={url}>Hyperlink</a><br>",
                     else:
                         popup_text = popup_text + f'{col}: {row[col]}<br>'
