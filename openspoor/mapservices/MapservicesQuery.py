@@ -13,28 +13,6 @@ from ..utils.common import read_config
 config = read_config()
 
 
-def _get_query_url(dict_query):
-    if dict_query is None:
-        where_query = "/query?"
-    else:
-        value_types = [type(k) for k in dict_query.values()]
-        where_query = "/query?where="
-        for i in range(len(list(dict_query.values()))):
-            if value_types[i] == list:
-                where_query = where_query + "%28"
-                for val in range(len(list(dict_query.values())[i])):
-                    where_query = where_query + list(dict_query.keys())[i] + "+%3D+%27" + \
-                                  list(dict_query.values())[i][val] + "%27+or+"
-                where_query = where_query[:-4] + "%29+and+"
-            else:
-                where_query = where_query + list(dict_query.keys())[i] + "+%3D+%27" + \
-                              list(dict_query.values())[
-                                  i] + "%27+and+"
-        where_query = where_query[:-5] + "&"
-
-    return where_query
-
-
 class MapServicesQuery:
     """
     Class to allow easy access to mapservices.prorail.nl. Mainly used as
@@ -42,9 +20,10 @@ class MapServicesQuery:
     """
     def __init__(self, url: Optional[str] = None, cache_location: Optional[Path] = None):
         """
-        :param url: An url to download from
-        :param cache_location: filepath where pickle file of data will be
-        loaded from (or saved to if file is absent)
+        :param url: An url of a mapservices.prorail.nl feature server to download from.
+                this is the part of the url until /query?
+                e.g. https://mapservices.prorail.nl/arcgis/rest/services/Geleidingssysteem_007/FeatureServer/12
+        :param cache_location: filepath where pickle file of data will be loaded from (or saved to if file is absent)
         """
 
         self.standard_featureserver_query = config['standard_featureserver_query']
@@ -77,20 +56,39 @@ class MapServicesQuery:
 
         return all_data_gdf
 
+    @staticmethod
+    def _get_query_url(dict_query):
+        if dict_query is None:
+            where_query = "/query?"
+        else:
+            value_types = [type(k) for k in dict_query.values()]
+            where_query = "/query?where="
+            for i in range(len(list(dict_query.values()))):
+                if value_types[i] == list:
+                    where_query = where_query + "%28"
+                    for val in range(len(list(dict_query.values())[i])):
+                        where_query = where_query + list(dict_query.keys())[i] + "+%3D+%27" + \
+                                      list(dict_query.values())[i][val] + "%27+or+"
+                    where_query = where_query[:-4] + "%29+and+"
+                else:
+                    where_query = where_query + list(dict_query.keys())[i] + "+%3D+%27" + \
+                                  list(dict_query.values())[
+                                      i] + "%27+and+"
+            where_query = where_query[:-5] + "&"
+
+        return where_query
+
     def _load_all_features_to_gdf(self, dict_query=None):
         """
         Downloads all available features from a feature server and set correct
         geometry.
 
-        :param input_base_url: api call to mapservices.prorail.nl feature server
-                this is the part of the url until /query?
-                e.g. https://mapservices.prorail.nl/arcgis/rest/services/Geleidingssysteem_007/FeatureServer/12
         :param dict_query: dictionary with data to filter. keys are column names.
                 more than one column are possible and also more than one value for each column
         :return: geopandas dataframe with all data from the api call
         """
 
-        where_query = _get_query_url(dict_query)
+        where_query = self._get_query_url(dict_query)
 
         input_url = self.url + where_query + self.standard_featureserver_query
         logger.info("Load data with api call: " + input_url)
