@@ -299,7 +299,7 @@ class Test:
         crs="epsg:28992",
     )
 
-    @mock.patch("openspoor.mapservices.MapServicesQuery._download_data")
+    @mock.patch("openspoor.mapservices.MapServicesQuery._load_all_features_to_gdf")
     def test_caching_singlequery(self, mocked_load, tmp_path):
         mocked_load.return_value = self.spoortak_mock_output
         cache_path = tmp_path / "spoortak.p"
@@ -321,7 +321,7 @@ class Test:
         )
         assert all(output.geometry.geom_almost_equals(expected_output.geometry, 6))
 
-    @mock.patch("openspoor.mapservices.MapServicesQuery._download_data")
+    @mock.patch("openspoor.mapservices.MapServicesQuery._load_all_features_to_gdf")
     def test_caching_puicmapservices(self, mocked_load, tmp_path):
         mocked_load.return_value = self.puic_mock_output
         cache_path = tmp_path / "puic.p"

@@ -65,12 +65,12 @@ class TestFeatureSearchResults:
                                                       Point(112622.47399999946, 480681.72399999946)],
                                             crs="epsg:28992")
 
-    @mock.patch("openspoor.mapservices.MapServicesQuery._download_data")
+    @mock.patch("openspoor.mapservices.MapServicesQuery._load_all_features_to_gdf")
     def test_FeatureSearchResults(self, mocked_load, search_results, tmpdir):
         out_gdf = FeatureSearchResults(search_results).load_data(0)
         gpd.testing.assert_geodataframe_equal(out_gdf, mocked_load), 'Incorrecting loading of data'
 
-    @mock.patch("openspoor.mapservices.MapServicesQuery._download_data")
+    @mock.patch("openspoor.mapservices.MapServicesQuery._load_all_features_to_gdf")
     def test_FeatureSearchResults(self, mocked_load, search_results, tmpdir):
         mocked_load.return_value = self.spoortak_mock_output
 

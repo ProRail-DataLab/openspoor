@@ -31,12 +31,6 @@ class MapServicesQuery:
         self.crs = config['crs']
         self.cache_location = cache_location
 
-    def _download_data(self, *args, **kwargs):
-        """
-        Downloads data from self.url
-        """
-        return self._load_all_features_to_gdf(None)
-
     def load_data(self):
         """
         If there is a self.cache_location then attempts to return from
@@ -48,11 +42,11 @@ class MapServicesQuery:
                 with open(self.cache_location, 'rb') as infile:
                     all_data_gdf = pickle.load(infile)
             else:
-                all_data_gdf = self._download_data()
+                all_data_gdf = self._load_all_features_to_gdf()
                 with open(self.cache_location, 'wb') as outfile:
                     pickle.dump(all_data_gdf, outfile)
         else:
-            all_data_gdf = self._download_data()
+            all_data_gdf = self._load_all_features_to_gdf()
 
         return all_data_gdf
 
