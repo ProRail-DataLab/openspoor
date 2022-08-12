@@ -349,3 +349,58 @@ class PlottingLineStrings(PlotObject):
                     print(f'Failed to plot {name}')
 
         return folium_map
+
+class PlottingAreas(PlotObject):
+    def __init__(self, data: Union[gpd.GeoDataFrame, str], name_column: str,
+                 subset: Optional[list] = None):
+        """
+        Initialize a PlottingAreas object.
+        TODODODOD
+        """
+
+        self.name_column = name_column
+        self.subset = subset
+        if isinstance(data, gpd.GeoDataFrame):
+            self.all_areas = data
+        elif isinstance(data, str):
+            self.all_areas = self._get_all_linestrings(data)
+        else:
+            raise TypeError('Provide either a geopandas dataframe or a file location of a csv to show')
+
+
+    def add_areas_to_map(self, geometry_data: gpd.GeoDataFrame, folium_map: TrackMap) ->TrackMap:
+        """
+        Add a single element to a TrackMap object.
+
+        :param geometry_data: One linestring to plot
+        :param folium_map: The map to add the objects to
+        :return: The updated map
+        """
+        for _, r in geometry_data.iterrows():
+            # Without simplifying the representation of each borough,
+            # the map might not be displayed
+            sim_geo = gpd.GeoSeries(r['geometry']).simplify(tolerance=0.001)
+            geo_j = sim_geo.to_json()
+            geo_j = folium.GeoJson(data=geo_j,
+                                   style_function=lambda x: {'fillColor': 'orange'})
+            folium.Popup(r[self.name_column]).add_to(geo_j)
+            geo_j.add_to(folium_map)
+        return folium_map
+
+    def add_to(self, folium_map: TrackMap) ->TrackMap:
+        """
+        Add the linestrings to a TrackMap object
+
+        :param folium_map: The map to add the objects to
+        :return: The updated map
+        """
+        if not self.subset:
+            folium_map = self.add_areas_to_map(self.all_areas, folium_map)
+        else:
+            for name in self.subset:
+                try:
+                    folium_map = self.add_areas_to_map(self.all_areas.loc[[name], :], folium_map)
+                except KeyError:
+                    print(f'Failed to plot {name}')
+
+        return folium_map
