@@ -36,7 +36,7 @@ class PUICMapservices:
 
         self.spoordata_columns = config['spoordata_columns']
 
-    def download_data(self, *args, **kwargs):
+    def load_data(self, *args, **kwargs):
         """
         Return combined spoortak, wissel and kruising data from
         self.spoor_url and self.wisselkruisingbeen_url

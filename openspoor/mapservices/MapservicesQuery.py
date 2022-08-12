@@ -56,7 +56,7 @@ class MapServicesQuery:
         """
         Downloads data from self.url
         """
-        return self._load_all_features_to_gdf(self.url, None)
+        return self._load_all_features_to_gdf(None)
 
     def load_data(self):
         """
@@ -77,7 +77,7 @@ class MapServicesQuery:
 
         return all_data_gdf
 
-    def _load_all_features_to_gdf(self, input_base_url, dict_query=None):
+    def _load_all_features_to_gdf(self, dict_query=None):
         """
         Downloads all available features from a feature server and set correct
         geometry.
@@ -92,7 +92,7 @@ class MapServicesQuery:
 
         where_query = _get_query_url(dict_query)
 
-        input_url = input_base_url + where_query + self.standard_featureserver_query
+        input_url = self.url + where_query + self.standard_featureserver_query
         logger.info("Load data with api call: " + input_url)
         total_features_count = self._retrieve_max_features_count(input_url)
         output_gdf = pd.DataFrame({})
