@@ -346,6 +346,7 @@ class PlottingAreas(PlotObject):
     def __init__(self, data: Union[gpd.GeoDataFrame, str],
                  name_column: Optional[str] = None,
                  color: str = 'orange',
+                 border: bool = True,
                  subset: Optional[list] = None):
         """
         Initialize a PlottingAreas object.
@@ -353,6 +354,7 @@ class PlottingAreas(PlotObject):
         """
 
         self.color = color
+        self.border = border
         self.subset = subset
         if isinstance(data, gpd.GeoDataFrame):
             self.all_areas = data
@@ -377,7 +379,8 @@ class PlottingAreas(PlotObject):
             sim_geo = gpd.GeoSeries(r['geometry']).simplify(tolerance=0.00001)
             geo_j = sim_geo.to_json()
             geo_j = folium.GeoJson(data=geo_j,
-                                   style_function=lambda x: {'fillColor': self.color})
+                                   style_function=lambda x: {'fillColor': self.color,
+                                                             'stroke': self.border})
             folium.Popup(index).add_to(geo_j)
             # geo_j.add_to(folium_map)
             folium_map.add_child(geo_j)
