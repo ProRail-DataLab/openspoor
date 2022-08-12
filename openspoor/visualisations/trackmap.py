@@ -268,6 +268,7 @@ class PlottingLineStrings(PlotObject):
         :param file: A file location of a csv including a geopandas dataframe
         :return: A GeoPandas dataframe.
         """
+        return gpd.read_file(file)
         # TODO: use pandas to geopandas functionality?
         return (
             pd.read_csv(file, index_col=0)
