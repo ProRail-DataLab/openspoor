@@ -350,6 +350,7 @@ class PlottingLineStrings(PlotObject):
 
         return folium_map
 
+
 class PlottingAreas(PlotObject):
     def __init__(self, data: Union[gpd.GeoDataFrame, str], name_column: str,
                  subset: Optional[list] = None):
@@ -363,9 +364,10 @@ class PlottingAreas(PlotObject):
         if isinstance(data, gpd.GeoDataFrame):
             self.all_areas = data
         elif isinstance(data, str):
-            self.all_areas = self._get_all_linestrings(data)
+            self.all_areas = gpd.read_file(data)
         else:
             raise TypeError('Provide either a geopandas dataframe or a file location of a csv to show')
+        self.all_areas = self.all_areas.to_crs('EPSG:4326')
 
 
     def add_areas_to_map(self, geometry_data: gpd.GeoDataFrame, folium_map: TrackMap) ->TrackMap:
@@ -377,6 +379,7 @@ class PlottingAreas(PlotObject):
         :return: The updated map
         """
         for _, r in geometry_data.iterrows():
+            print(r)
             # Without simplifying the representation of each borough,
             # the map might not be displayed
             sim_geo = gpd.GeoSeries(r['geometry']).simplify(tolerance=0.001)
@@ -384,7 +387,8 @@ class PlottingAreas(PlotObject):
             geo_j = folium.GeoJson(data=geo_j,
                                    style_function=lambda x: {'fillColor': 'orange'})
             folium.Popup(r[self.name_column]).add_to(geo_j)
-            geo_j.add_to(folium_map)
+            # geo_j.add_to(folium_map)
+            folium_map.add_child(geo_j)
         return folium_map
 
     def add_to(self, folium_map: TrackMap) ->TrackMap:
