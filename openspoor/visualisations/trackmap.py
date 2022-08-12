@@ -78,6 +78,7 @@ class TrackMap(folium.Map):
         self.add_child(fg)
 
     def _fix_zoom(self) -> None:
+        # TODO: Make sure this works for areas too
         """
         Set the zoom level so all of the plotted objects fit neatly within the default shown window.
 
@@ -86,6 +87,7 @@ class TrackMap(folium.Map):
         bboxes = []
 
         for _, item in self._children.items():
+            print(item)
             for _, subitem in item._children.items():
                 # This is for plotted linestrings
                 if isinstance(subitem.__dict__['_parent'], folium.features.Choropleth):
@@ -353,14 +355,13 @@ class PlottingLineStrings(PlotObject):
 
 
 class PlottingAreas(PlotObject):
-    def __init__(self, data: Union[gpd.GeoDataFrame, str], name_column: str,
+    def __init__(self, data: Union[gpd.GeoDataFrame, str], name_column: Optional[str] = None,
                  subset: Optional[list] = None):
         """
         Initialize a PlottingAreas object.
         TODODODOD
         """
 
-        self.name_column = name_column
         self.subset = subset
         if isinstance(data, gpd.GeoDataFrame):
             self.all_areas = data
@@ -370,6 +371,8 @@ class PlottingAreas(PlotObject):
             raise TypeError('Provide either a geopandas dataframe or a file location of a csv to show')
         self.all_areas = self.all_areas.to_crs('EPSG:4326')
 
+        if name_column is not None:
+            self.all_areas = self.all_areas.set_index(name_column)
 
     def add_areas_to_map(self, geometry_data: gpd.GeoDataFrame, folium_map: TrackMap) ->TrackMap:
         """
@@ -379,7 +382,7 @@ class PlottingAreas(PlotObject):
         :param folium_map: The map to add the objects to
         :return: The updated map
         """
-        for _, r in geometry_data.iterrows():
+        for index, r in geometry_data.iterrows():
             print(r)
             # Without simplifying the representation of each borough,
             # the map might not be displayed
@@ -387,14 +390,14 @@ class PlottingAreas(PlotObject):
             geo_j = sim_geo.to_json()
             geo_j = folium.GeoJson(data=geo_j,
                                    style_function=lambda x: {'fillColor': 'orange'})
-            folium.Popup(r[self.name_column]).add_to(geo_j)
+            folium.Popup(index).add_to(geo_j)
             # geo_j.add_to(folium_map)
             folium_map.add_child(geo_j)
         return folium_map
 
-    def add_to(self, folium_map: TrackMap) ->TrackMap:
+    def add_to(self, folium_map: TrackMap) -> TrackMap:
         """
-        Add the linestrings to a TrackMap object
+        Add the areas to a TrackMap object
 
         :param folium_map: The map to add the objects to
         :return: The updated map
