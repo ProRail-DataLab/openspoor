@@ -93,35 +93,33 @@ class MapServicesQuery:
 
         # Loop per 1000 features, as feature servers return max 1000 per call
         for features_offset in range(0, total_features_count, 1000):
-            temp_gdf = self._retrieve_batch_of_features_to_gdf(input_url,
-                                                               features_offset)
+            temp_gdf = self._retrieve_batch_of_features_to_gdf(input_url, features_offset)
             output_gdf = pd.concat([output_gdf, temp_gdf], ignore_index=True)
 
         return output_gdf
 
     @staticmethod
-    def _retrieve_max_features_count(input_base_url):
+    def _retrieve_max_features_count(input_url):
         """
-        Retrieve the total number of features of the given input_base_url.
+        Retrieve the total number of features of the given input url.
 
-        :param input_base_url: string, base_url for features
+        :param input_url: string, base_url for features
         :return: int, max_features_count
         """
-        count_url = input_base_url + "&returnCountOnly=True"
-        return SafeRequest().get_json('GET', count_url)['count']
+        return SafeRequest().get_json('GET', input_url + "&returnCountOnly=True")['count']
 
-    def _retrieve_batch_of_features_to_gdf(self, input_base_url, offset):
+    def _retrieve_batch_of_features_to_gdf(self, input_url, offset):
         """
-        Retrieve a batch of features from input_base_url. As api calls can
+        Retrieve a batch of features from the url. As api calls can
         retrieve a maximum of 1000 features, the offset is used to retrieve
         batches by 1000 at a time.
 
-        :param input_base_url: string, base_url for features to be retrieved
+        :param input_url: The url to query data from
         :param offset: int, offset from 0 to retrieve different batches from the
         same api
         :return: geopandas dataframe of features
         """
-        data = SafeRequest().get_json('GET', input_base_url + "&resultOffset=" + str(offset))
+        data = SafeRequest().get_json('GET', input_url + "&resultOffset=" + str(offset))
         temp_gdf = self._transform_dict_to_gdf(data)
         logger.info("Downloaded " + str(offset + len(temp_gdf)) + " features")
         return temp_gdf
