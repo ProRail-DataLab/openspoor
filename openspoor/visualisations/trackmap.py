@@ -78,34 +78,20 @@ class TrackMap(folium.Map):
         self.add_child(fg)
 
     def _fix_zoom(self) -> None:
-        # TODO: Make sure this works for areas too
         """
-        Set the zoom level so all of the plotted objects fit neatly within the default shown window.
+        Set the zoom level so all of the plotted objects fit neatly within the initial view of the output.
 
         :return: None
         """
         bboxes = []
 
         for _, item in self._children.items():
-            print(item)
-            for _, subitem in item._children.items():
-                # This is for plotted linestrings
-                if isinstance(subitem.__dict__['_parent'], folium.features.Choropleth):
-                    chloropleth = subitem.__dict__['_parent']
-                    chloropleth_features = chloropleth.__dict__['geojson'].__dict__['data']['features']
-                    for feature in chloropleth_features:
-                        bboxes.append(
-                            feature['bbox'][::-1])  # Reverse lat and long ordering here
-                try:
-                    # This is for plotted markers
-                    bboxes.append(
-                        subitem.__dict__['data']['features'][0]['bbox'][::-1])  # Reverse lat and long ordering here
-                except:
-                    pass
-            try:
-                bboxes.append(item.location * 2)  # Change order
-            except:
-                pass
+            if isinstance(item, folium.features.Choropleth):  # For linestrings
+                bboxes.extend(feature['bbox'][::-1] for feature in item.geojson.data['features'])
+            if isinstance(item, folium.features.GeoJson):  # For areas
+                bboxes.append([i for coords in item.get_bounds() for i in coords])
+            if isinstance(item, folium.map.Marker):  # For markers
+                bboxes.append(item.location * 2)  # Min and max bound are equal for points, hence the repeat
 
         if bboxes:  # Fit only if there are some items to show
             bounds = [min(map(lambda x: x[i], bboxes)) if i < 2 else max(map(lambda x: x[i], bboxes)) for i in range(4)]
@@ -177,6 +163,7 @@ class PlottingDataFrame(pd.DataFrame, PlotObject):
         self.attrs['lon'] = lon_column
         if isinstance(df, gpd.GeoDataFrame):
             if isinstance(df.geometry.iloc[0], point.Point):
+                df = df.to_crs('EPSG:4326')
                 self[self.attrs['lat']] = df.geometry.apply(lambda d: d.y)
                 self[self.attrs['lon']] = df.geometry.apply(lambda d: d.x)
             else:
@@ -270,13 +257,14 @@ class PlottingLineStrings(PlotObject):
         :param file: A file location of a csv including a geopandas dataframe
         :return: A GeoPandas dataframe.
         """
-        return gpd.read_file(file)
+        return gpd.read_file(file).to_crs('EPSG:4326')
         # TODO: use pandas to geopandas functionality?
         return (
             pd.read_csv(file, index_col=0)
             .assign(geometry=lambda d: d.geometry.apply(wkt.loads))
             .set_index(self.name_column)
             .pipe(gpd.GeoDataFrame, geometry='geometry', crs='EPSG:28992')
+
         )
 
     def __init__(self, name_column: str, data: Union[gpd.GeoDataFrame, str],
@@ -355,13 +343,16 @@ class PlottingLineStrings(PlotObject):
 
 
 class PlottingAreas(PlotObject):
-    def __init__(self, data: Union[gpd.GeoDataFrame, str], name_column: Optional[str] = None,
+    def __init__(self, data: Union[gpd.GeoDataFrame, str],
+                 name_column: Optional[str] = None,
+                 color: str = 'orange',
                  subset: Optional[list] = None):
         """
         Initialize a PlottingAreas object.
         TODODODOD
         """
 
+        self.color = color
         self.subset = subset
         if isinstance(data, gpd.GeoDataFrame):
             self.all_areas = data
@@ -383,13 +374,10 @@ class PlottingAreas(PlotObject):
         :return: The updated map
         """
         for index, r in geometry_data.iterrows():
-            print(r)
-            # Without simplifying the representation of each borough,
-            # the map might not be displayed
-            sim_geo = gpd.GeoSeries(r['geometry']).simplify(tolerance=0.001)
+            sim_geo = gpd.GeoSeries(r['geometry']).simplify(tolerance=0.00001)
             geo_j = sim_geo.to_json()
             geo_j = folium.GeoJson(data=geo_j,
-                                   style_function=lambda x: {'fillColor': 'orange'})
+                                   style_function=lambda x: {'fillColor': self.color})
             folium.Popup(index).add_to(geo_j)
             # geo_j.add_to(folium_map)
             folium_map.add_child(geo_j)
