@@ -1,42 +1,50 @@
 import pandas as pd
 from loguru import logger
-from .MapservicesData import MapservicesData
+from .MapservicesQuery import MapServicesQuery
+from .find_mapservice import FeatureServerOverview
 from ..utils.common import read_config
 
 config = read_config()
 
-class PUICMapservices(MapservicesData):
+
+class PUICMapservices:
     """
     Loads mapservices data from the Geleidingssystemen. These contains PUIC data for spoor, wissels and kruisingbenen.
     """
-    def __init__(self, cache_location=None):
+    def __init__(self, historical=False, spoor_cache_location=None, wisselkruisingbeen_cache_location=None):
         """
-        :param cache_location: filepath as in MapservicesData class
+        :param historical: whether you want historic data; this is the only working data at this moment
+        :param spoor_cache_location: filepath as in MapservicesData class
         """
         logger.info('Initiating PUICMapservices object in order to obtain '
                     'spoor, wissel and kruisingbeen data from '
                     'Geleidingsystemen mapservices api.')
 
-        MapservicesData.__init__(self, cache_location)
+        featureserver = FeatureServerOverview()
+        if historical:
+            self.spoor_query = MapServicesQuery("https://mapservices.prorail.nl/arcgis/rest/services/Geleidingssysteem_007/FeatureServer/13/")
+            self.wisselkruisingbeen_query = MapServicesQuery("https://mapservices.prorail.nl/arcgis/rest/services/Geleidingssysteem_007/FeatureServer/12/")
+        else:
+            logger.warning('PUICMapservices does not work yet for recent data; try rerunning with historical=True')
+            self.spoor_query = featureserver.search_for('spoortakdeel', exact=True)
+            self.wisselkruisingbeen_query = featureserver.search_for('wissel kruisingbeen', exact=True)
 
-        self.spoor_url = config['spoor_url']
-
-        self.wisselkruisingbeen_url = config['wisselkruisingbeen_url']
+        if spoor_cache_location:
+            self.spoor_query.write_gpkg(spoor_cache_location)
+        if wisselkruisingbeen_cache_location:
+            self.wisselkruisingbeen_query.write_gpkg(wisselkruisingbeen_cache_location)
 
         self.spoordata_columns = config['spoordata_columns']
 
-
-    def _download_data(self):
+    def load_data(self, *args, **kwargs):
         """
         Return combined spoortak, wissel and kruising data from
         self.spoor_url and self.wisselkruisingbeen_url
         """
-        spoor_gdf = self._load_all_features_to_gdf(self.spoor_url, None)
+        spoor_gdf = self.spoor_query.load_data()
         spoor_gdf = self._prep_spoor_gdf(spoor_gdf)
 
-        wisselkruisingbeen_gdf = self._load_all_features_to_gdf(
-            self.wisselkruisingbeen_url, None
-        )
+        wisselkruisingbeen_gdf = self.wisselkruisingbeen_query.load_data()
         wisselkruisingbeen_gdf = self._prep_wisselkruisingbeen_gdf(
             wisselkruisingbeen_gdf
         )

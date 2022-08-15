@@ -1,11 +1,11 @@
 import geopandas as gpd
 import pandas as pd
-from openspoor.mapservices import MapservicesData
+from openspoor.mapservices import MapServicesQuery
 from shapely.geometry import Point, LineString, Polygon
 
 class Test:
     def test_transform_dict_to_gdf_point(self):
-        mapservices_data = MapservicesData()
+        mapservices_data = MapServicesQuery()
         input_data = {'geometryType': 'esriGeometryPoint',
                       'features': [{'attributes': {'attribute1': 'ABC', 'attribute2': 123},
                                     'geometry': {'x': 1, 'y': 2}},
@@ -19,7 +19,7 @@ class Test:
         pd.testing.assert_frame_equal(output_data, expected_output)
 
     def test_transform_dict_to_gdf_poly_line(self):
-        mapservices_data = MapservicesData()
+        mapservices_data = MapServicesQuery()
         input_data = {'geometryType': 'esriGeometryPolyline',
                       'features': [{'attributes': {'attribute1': 'ABC', 'attribute2': 123},
                                     'geometry': {'paths': [[[123, 456], [234, 567], [345, 678]]]}},
@@ -34,7 +34,7 @@ class Test:
         pd.testing.assert_frame_equal(output_data, expected_output)
 
     def test_transform_dict_to_gdf_polygon(self):
-        mapservices_data = MapservicesData()
+        mapservices_data = MapServicesQuery()
         input_data = {'geometryType': 'esriGeometryPolygon',
                       'features': [{'attributes': {'attribute1': 'ABC', 'attribute2': 123},
                                     'geometry': {'rings': [[[0, 0], [1, 0], [1, 1]]]}},

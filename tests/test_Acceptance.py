@@ -3,11 +3,14 @@ import geopandas as gpd
 import pandas as pd
 from unittest import mock
 
+from shapely.geometry import LineString
+
 from openspoor.transformers import TransformerCoordinatesToSpoor, TransformerGeocodeToCoordinates, \
     TransformerSpoortakToCoordinates
-from openspoor.mapservices import PUICMapservices, SpoortakMapservices, MapservicesData
+from openspoor.mapservices import PUICMapservices, MapServicesQuery
+from openspoor.utils.common import read_config
 
-from shapely.geometry import LineString, Point
+config = read_config()
 
 
 class Test:
@@ -296,13 +299,13 @@ class Test:
         crs="epsg:28992",
     )
 
-    @mock.patch("openspoor.mapservices.SpoortakMapservices._download_data")
-    def test_caching_spoortakmapservices(self, mocked_load, tmp_path):
+    @mock.patch("openspoor.mapservices.MapServicesQuery._load_all_features_to_gdf")
+    def test_caching_singlequery(self, mocked_load, tmp_path):
         mocked_load.return_value = self.spoortak_mock_output
         cache_path = tmp_path / "spoortak.p"
 
         assert ~os.path.exists(cache_path)
-        spoortak_mapservices = SpoortakMapservices(cache_location=cache_path)
+        spoortak_mapservices = MapServicesQuery(url=config['spoor_url'], cache_location=cache_path)
 
         spoortak_mapservices.load_data()
         assert os.path.exists(cache_path)
@@ -318,18 +321,18 @@ class Test:
         )
         assert all(output.geometry.geom_almost_equals(expected_output.geometry, 6))
 
-    @mock.patch("openspoor.mapservices.PUICMapservices._download_data")
+    @mock.patch("openspoor.mapservices.MapServicesQuery._load_all_features_to_gdf")
     def test_caching_puicmapservices(self, mocked_load, tmp_path):
         mocked_load.return_value = self.puic_mock_output
         cache_path = tmp_path / "puic.p"
 
         assert ~os.path.exists(cache_path)
-        puic_mapservices = PUICMapservices(cache_location=cache_path)
-        puic_mapservices.load_data()
+        puic_mapservices = PUICMapservices(spoor_cache_location=cache_path, wisselkruisingbeen_cache_location=cache_path)
+        puic_mapservices.spoor_query.load_data()
         assert os.path.exists(cache_path)
 
         # Load a second time to actually use cached file
-        output = puic_mapservices.load_data()
+        output = puic_mapservices.spoor_query.load_data()
 
         expected_output = self.puic_mock_output
 
@@ -653,11 +656,10 @@ class Test:
         pd.testing.assert_frame_equal(output, expected_output)
 
     def test_acceptance_query_functionality(self):
-        data = MapservicesData()
-        input_base_url = "http://mapservices.prorail.nl/arcgis/rest/services/Kadastraal_004/MapServer/5"
+        data = MapServicesQuery(url="http://mapservices.prorail.nl/arcgis/rest/services/Kadastraal_004/MapServer/5")
         query_dict = {'KADSLEUTEL': ['ANM00G3774', 'ANM00G3775', 'ANM00H483'], 'KADGEM': ['ANM00']}
 
-        output = data._load_all_features_to_gdf(input_base_url, dict_query=query_dict)
+        output = data._load_all_features_to_gdf(dict_query=query_dict)
 
         assert (
                 (output['KADSLEUTEL'][0] in ['ANM00G3774', 'ANM00G3775', 'ANM00H483']) \

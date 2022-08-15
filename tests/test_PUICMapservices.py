@@ -2,12 +2,18 @@ import geopandas as gpd
 import pandas as pd
 from openspoor.mapservices import PUICMapservices
 from shapely.geometry import Point, LineString
+import pytest
+
+
+@pytest.fixture(scope='session')
+def puic_mapservices():
+    return PUICMapservices()
 
 
 class Test:
     def test_transform_spoor_and_wisselkruisingbeen_to_polygons_simple_example(
-            self):
-        puic_mapservices = PUICMapservices()
+            self, puic_mapservices):
+        # puic_mapservices = PUICMapservices()
         spoor_gdf = gpd.GeoDataFrame(
             {'SPOOR_ID': ['ABC'],
              'SPOOR_PUIC': [123],
@@ -61,8 +67,8 @@ class Test:
              'geometry']]
         pd.testing.assert_frame_equal(output, expected_output)
 
-    def test_prep_spoortaken_gdf_minimal_example_with_one_none(self):
-        puic_mapservices = PUICMapservices()
+    def test_prep_spoortaken_gdf_minimal_example_with_one_none(self, puic_mapservices):
+        # puic_mapservices = PUICMapservices()
         spoor_gdf = gpd.GeoDataFrame(
             {'NAAM_LANG': ['ABC', None, 'DEF'],
              'REF_FYS_SPOORTAK_PUIC': [123, 456, 789]
@@ -84,8 +90,8 @@ class Test:
         pd.testing.assert_frame_equal(output, expected_output)
 
     def test_prep_wisselkruisingbeen_gdf_minimal_example_with_both_wisselbeen_and_kruisingbeen(
-            self):
-        puic_mapservices = PUICMapservices()
+            self, puic_mapservices):
+        # puic_mapservices = PUICMapservices()
         wisselkruisingbeen_gdf = gpd.GeoDataFrame(
             {'REF_WISSEL_KRUISING_PUIC': [123, 456, 789],
              'TYPE_WISSELKRUISINGBEEN': ['Wisselbeen', 'Kruisingbeen',
