@@ -1,1 +1,1 @@
-from .trackmap import TrackMap, PlottingDataFrame, PlottingLineStrings
+from .trackmap import TrackMap, PlottingPoints, PlottingLinestrings, PlottingAreas, plottable

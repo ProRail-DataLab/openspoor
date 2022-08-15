@@ -1,6 +1,6 @@
 import os
 import pytest
-from openspoor.visualisations.trackmap import TrackMap, PlottingDataFrame
+from openspoor.visualisations.trackmap import TrackMap, PlottingPoints
 
 
 @pytest.fixture(scope='session')
@@ -10,7 +10,7 @@ def emptytrackmap():
 
 @pytest.fixture(scope='session')
 def example_plottingdataframe():
-    return PlottingDataFrame({'lat': [52.45, 52.5], 'lon': [5.15, 5.2], 'name': ['ABC', 'DEF']})
+    return PlottingPoints({'lat': [52.45, 52.5], 'lon': [5.15, 5.2], 'name': ['ABC', 'DEF']})
 
 
 @pytest.fixture()
