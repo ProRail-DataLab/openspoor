@@ -14,6 +14,21 @@ from abc import ABC, abstractmethod
 config = read_config()
 
 
+def _convert_pandas_to_geopandas(df):
+    # If this is a pandas dataframe with Rijksdriehoek in it, convert it to GPS
+    first_coord = df.geometry.values[0].split('(')[1].split(' ')[0]
+    if float(first_coord) > 180:
+        expected_crs = 'EPSG:28992'
+    else:
+        expected_crs = 'EPSG:4326'
+    return (
+        df
+            .assign(geometry=lambda d: d.geometry.apply(wkt.loads))
+            .pipe(gpd.GeoDataFrame, geometry='geometry', crs=expected_crs)
+            .assign(geometry=lambda d: d.geometry.to_crs('EPSG:4326'))
+    )
+
+
 class PlotObject(ABC):
     """
     A parent class for every object that can be plotted on a TrackMap
@@ -27,20 +42,6 @@ class PlotObject(ABC):
         :return: None
         """
         raise NotImplementedError('This needs to be set in implementation classes')
-
-    def _convert_pandas_to_geopandas(self, df):
-        # If this is a pandas dataframe with Rijksdriehoek in it, convert it to GPS
-        first_coord = df.geometry.values[0].split('(')[1].split(' ')[0]
-        if float(first_coord) > 180:
-            expected_crs = 'EPSG:28992'
-        else:
-            expected_crs = 'EPSG:4326'
-        return (
-            df
-                .assign(geometry=lambda d: d.geometry.apply(wkt.loads))
-                .pipe(gpd.GeoDataFrame, geometry='geometry', crs=expected_crs)
-                .assign(geometry=lambda d: d.geometry.to_crs('EPSG:4326'))
-        )
 
 
 class TrackMap(folium.Map):
@@ -165,7 +166,7 @@ class PlottingPoints(pd.DataFrame, PlotObject):
 
         if 'geometry' in df.columns and isinstance(df, pd.DataFrame)\
                 and not isinstance(df, gpd.geodataframe.GeoDataFrame):
-            df = self._convert_pandas_to_geopandas(df)
+            df = _convert_pandas_to_geopandas(df)
         elif isinstance(df, gpd.GeoDataFrame):
             df = df.to_crs('EPSG:4326')
 
@@ -380,31 +381,6 @@ class PlottingAreas(PlotObject):
         if self.popup:
             self.data = self.data.set_index(popup)
 
-    def add_areas_to_map(self, geometry_data: gpd.GeoDataFrame, folium_map: TrackMap) ->TrackMap:
-        """
-        Add a single element to a TrackMap object.
-
-        :param geometry_data: One linestring to plot
-        :param folium_map: The map to add the objects to
-        :return: The updated map
-        """
-        if self.popup:
-            indexnames = geometry_data.index.names
-
-        for index, r in geometry_data.iterrows():
-            geo_j = gpd.GeoSeries(r['geometry']).simplify(tolerance=0.00001).to_json()
-            geo_j = folium.GeoJson(data=geo_j,
-                                   style_function=lambda x: {'fillColor': self.color,
-                                                             'stroke': self.stroke})
-            if self.popup:
-                if not isinstance(index, tuple):
-                    index = (index)
-                popupname = '<br>'.join([': '.join([str(i), str(j)]) for i, j in list(zip(indexnames, index))])
-
-                folium.Popup(popupname).add_to(geo_j)
-            folium_map.add_child(geo_j)
-        return folium_map
-
     def add_to(self, folium_map: TrackMap) -> TrackMap:
         """
         Add the areas to a TrackMap object
@@ -412,6 +388,8 @@ class PlottingAreas(PlotObject):
         :param folium_map: The map to add the objects to
         :return: The updated map
         """
+        if self.popup:
+            indexnames = self.data.index.names
 
         for index, r in self.data.iterrows():
             sim_geo = gpd.GeoSeries(r['geometry']).simplify(tolerance=0.00001)
@@ -419,10 +397,10 @@ class PlottingAreas(PlotObject):
             geo_j = folium.GeoJson(data=geo_j,
                                    style_function=lambda x: {'fillColor': self.color,
                                                              'stroke': self.stroke})
-            if self.data.index.names[0] is not None:
-                indexnames = self.data.index.names
+
+            if self.popup:
                 if not isinstance(index, tuple):
-                    index = [index]
+                    index = (index)
                 popupname = '<br>'.join([': '.join([str(i), str(j)]) for i, j in list(zip(indexnames, index))])
 
                 folium.Popup(popupname).add_to(geo_j)
