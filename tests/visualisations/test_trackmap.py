@@ -71,9 +71,9 @@ def areas_geodataframe():
 def test_add_to_trackmap(tmp_path, points_dataframe, lines_geodataframe, areas_geodataframe):
     m = TrackMap()
 
-    PlottingPoints(points_dataframe, popup=['name']).add_to(m)
-    PlottingLinestrings(lines_geodataframe, popup=['name']).add_to(m)
-    PlottingAreas(areas_geodataframe, popup=['name']).add_to(m)
+    PlottingPoints(points_dataframe, popup=['name2']).add_to(m)
+    PlottingLinestrings(lines_geodataframe, popup=['name2']).add_to(m)
+    PlottingAreas(areas_geodataframe, popup=['name2']).add_to(m)
     total_objects = len(points_dataframe) + len(lines_geodataframe) + len(areas_geodataframe)
 
     assert len(m._children) == total_objects, "Invalid number of items added"
@@ -129,7 +129,7 @@ def test_fix_zoom(prefilled_trackmap):
 
 
 def test_makesmaller(prefilled_trackmap):
-    assert type(prefilled_trackmap.show(makesmaller=False)) is not type(prefilled_trackmap.show(makesmaller=True))
+    assert type(prefilled_trackmap.show(notebook=False)) is not type(prefilled_trackmap.show(notebook=True))
 
 
 def test_save_trackmap(prefilled_trackmap, tmpdir):

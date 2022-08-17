@@ -1,3 +1,4 @@
+from __future__ import annotations
 import pandas as pd
 import folium
 from loguru import logger
@@ -21,12 +22,11 @@ def _convert_pandas_to_geopandas(df):
         expected_crs = 'EPSG:28992'
     else:
         expected_crs = 'EPSG:4326'
-    return (
-        df
+    return (df
             .assign(geometry=lambda d: d.geometry.apply(wkt.loads))
             .pipe(gpd.GeoDataFrame, geometry='geometry', crs=expected_crs)
             .assign(geometry=lambda d: d.geometry.to_crs('EPSG:4326'))
-    )
+            )
 
 
 class PlotObject(ABC):
@@ -34,10 +34,29 @@ class PlotObject(ABC):
     A parent class for every object that can be plotted on a TrackMap
     """
 
+    def __init__(self, data, popup):
+        if popup is None or isinstance(popup, list):
+            self.popup = popup
+        elif isinstance(popup, str):
+            self.popup = [popup]
+        else:
+            TypeError('Unknown type for popup in linestrings')
+
+        if isinstance(data, gpd.GeoDataFrame):
+            self.data = data
+        elif isinstance(data, str):
+            self.data = gpd.read_file(data)
+        else:
+            raise TypeError('Provide either a geopandas dataframe or a file location of a csv to show')
+        self.data = self.data.to_crs('EPSG:4326')
+        if self.popup:
+            self.data = self.data.set_index(self.popup)
+
     @abstractmethod
     def add_to(self, m) -> None:
         """
         A base function that should be overwritten with logic for every plottable object.
+
         :param m: A TrackMap object, to which this element should be added.
         :return: None
         """
@@ -47,15 +66,15 @@ class PlotObject(ABC):
 class TrackMap(folium.Map):
     """
     Plotting functionality based on folium maps, designed for plotting objects on the Dutch railways.
-    Plotable objects are based on geopandas GeoDataFrames; with the function plottable they can be converted to
+    Plottable objects are based on geopandas GeoDataFrames; with the function plottable they can be converted to
     a PlotObject that can be used for this class.
-    Outputs are automatically zoomed in on what data is requested andinclude an aerial photograph of the Netherlands.
+    Outputs are automatically zoomed in on what data is requested and include an aerial photograph of the Netherlands.
     Maps can be shown directly, or saved as .html files.
     """
 
     def __init__(self, objects: List[PlotObject] = [], **kwargs):
         """
-        Set up a TrackMap object
+        Set up a TrackMap object.
 
         :param objects: A list of plottable objects that can be pre-defined outside the context manager of the
         TrackMap
@@ -85,7 +104,7 @@ class TrackMap(folium.Map):
 
     def _fix_zoom(self) -> None:
         """
-        Set the zoom level so all of the plotted objects fit neatly within the initial view of the output.
+        Set the zoom level so all the plotted objects fit neatly within the initial view of the output.
 
         :return: None
         """
@@ -103,22 +122,22 @@ class TrackMap(folium.Map):
             bounds = [min(map(lambda x: x[i], bboxes)) if i < 2 else max(map(lambda x: x[i], bboxes)) for i in range(4)]
             self.fit_bounds([bounds[:2], bounds[2:]])
 
-    def add(self, plotobject):
+    def add(self, plotobject) -> TrackMap:
         plotobject.add_to(self)
         return self
 
-    def show(self, makesmaller: bool = False):
+    def show(self, notebook: bool = False) -> Union[TrackMap, folium.Figure]:
         """
-        Fix the map so it is zoomed to a nice level and is displayed at a suitable size.
+        Show the map zoomed to a nice level and displayed at a suitable size.
 
-        :param makesmaller: A boolean for decreasing the size of the final plot. Designed for Databricks Notebooks
+        :param notebook: A boolean for decreasing the size of the final plot. Designed for use in Notebooks
         :return:
         """
         self._fix_zoom()
-        if makesmaller:
-            self.superfigure = folium.Figure(1000, 400)
-            self.add_to(self.superfigure)
-            return self.superfigure
+        if notebook:
+            figure = folium.Figure(1000, 400)
+            self.add_to(figure)
+            return figure
         else:
             return self
 
@@ -138,7 +157,7 @@ class PlottingPoints(pd.DataFrame, PlotObject):
     Add functionalities to a Pandas DataFrame, so it can be plotted in a nice manner.
     """
 
-    def __init__(self, df, popup: Optional[Union[str, List[str]]] = None,
+    def __init__(self, data, popup: Optional[Union[str, List[str]]] = None,
                  lat_column: str = 'lat', lon_column: str = 'lon',
                  colors: Dict[str, Dict[Tuple[float, float], str]] = None,
                  markertype: Optional[str] = None, marker_column: str = None, color_column: str = None,
@@ -146,7 +165,7 @@ class PlottingPoints(pd.DataFrame, PlotObject):
         """
         Initialize a PlottingPoints object, used for plotting a list of markers on a map of the Netherlands.
 
-        :param df: The Pandas DataFrame that should be plotted. GeoPandas dataframes are also partially supported
+        :param data: The Pandas DataFrame that should be plotted. GeoPandas dataframes are also partially supported
         :param lat_column: A column including latitudes
         :param lon_column: A column name including longitudes
         :param popup: A column or list of columns whose values should be mentioned when an object is clicked on
@@ -161,30 +180,30 @@ class PlottingPoints(pd.DataFrame, PlotObject):
         :param url_column: A column including an url that is displayed in the popup
         """
 
-        if not isinstance(df, pd.DataFrame):
-            df = pd.DataFrame(df)
+        if not isinstance(data, pd.DataFrame):
+            data = pd.DataFrame(data)
 
-        if 'geometry' in df.columns and isinstance(df, pd.DataFrame)\
-                and not isinstance(df, gpd.geodataframe.GeoDataFrame):
-            df = _convert_pandas_to_geopandas(df)
-        elif isinstance(df, gpd.GeoDataFrame):
-            df = df.to_crs('EPSG:4326')
+        if 'geometry' in data.columns and isinstance(data, pd.DataFrame) \
+                and not isinstance(data, gpd.geodataframe.GeoDataFrame):
+            data = _convert_pandas_to_geopandas(data)
+        elif isinstance(data, gpd.GeoDataFrame):
+            data = data.to_crs('EPSG:4326')
 
-        super().__init__(df)
+        super().__init__(data)
 
         self.attrs['lat'] = lat_column
         self.attrs['lon'] = lon_column
-        if isinstance(df, gpd.GeoDataFrame):
-            if isinstance(df.geometry.iloc[0], point.Point):
-                df = df.to_crs('EPSG:4326')
-                self[self.attrs['lat']] = df.geometry.apply(lambda d: d.y)
-                self[self.attrs['lon']] = df.geometry.apply(lambda d: d.x)
+        if isinstance(data, gpd.GeoDataFrame):
+            if isinstance(data.geometry.iloc[0], point.Point):
+                data = data.to_crs('EPSG:4326')
+                self[self.attrs['lat']] = data.geometry.apply(lambda d: d.y)
+                self[self.attrs['lon']] = data.geometry.apply(lambda d: d.x)
             else:
-                NotImplementedError(f"Unimplemented geometry: {df.geometry.iloc[0]}")
+                NotImplementedError(f"Unimplemented geometry: {data.geometry.iloc[0]}")
 
         self.color_column = color_column
         if self.color_column is not None:
-            self[self.color_column+"_factorized"] = pd.factorize(self[self.color_column])[0]
+            self[self.color_column + "_factorized"] = pd.factorize(self[self.color_column])[0]
 
         if popup is None or isinstance(popup, list):
             self.attrs['popup'] = popup
@@ -231,7 +250,7 @@ class PlottingPoints(pd.DataFrame, PlotObject):
                 colorset = ['purple', 'lightblue', 'darkgreen', 'blue', 'darkred', 'black',
                             'pink', 'cadetblue', 'lightgray', 'lightred', 'green',
                             'beige', 'darkblue', 'darkpurple', 'orange', 'lightgreen', 'red']
-                marker_color = colorset[int(row[self.color_column+"_factorized"]) % len(colorset)]
+                marker_color = colorset[int(row[self.color_column + "_factorized"]) % len(colorset)]
             elif self.attrs['colors'] is not None:
                 if isinstance(self.attrs['colors'], str):
                     marker_color = self.attrs['colors']
@@ -281,23 +300,10 @@ class PlottingLinestrings(PlotObject):
         :param buffersize: The size of the buffer around the linestrings on the map.
         """
 
+        super().__init__(data, popup)
         self.color = color
 
-        if popup is None or isinstance(popup, list):
-            self.popup = popup
-        elif isinstance(popup, str):
-            self.popup = [popup]
-        else:
-            TypeError('Unknown type for popup in linestrings')
-
         self.buffersize = buffersize  # In meters
-        if isinstance(data, gpd.GeoDataFrame):
-            self.data = data
-        elif isinstance(data, str):
-            self.data = gpd.read_file(data)
-        else:
-            raise TypeError('Provide either a geopandas dataframe or a file location of a gpkg to show')
-        self.data = self.data.to_crs('EPSG:4326')
 
     def _make_tooltip(self):
         return folium.features.GeoJsonTooltip(
@@ -306,7 +312,7 @@ class PlottingLinestrings(PlotObject):
             style="background-color: white; color: #333333; font-family: arial; font-size: 12px; padding: 10px;"
         )
 
-    def add_to(self, folium_map: TrackMap) ->TrackMap:
+    def add_to(self, folium_map: TrackMap) -> TrackMap:
         """
         Add Linestrings to a TrackMap object
 
@@ -348,6 +354,7 @@ class PlottingAreas(PlotObject):
     indicating an item to show.
 
     """
+
     def __init__(self, data: Union[gpd.GeoDataFrame, str],
                  popup: Optional[Union[str, List[str]]] = None,
                  color: str = 'orange',
@@ -361,25 +368,9 @@ class PlottingAreas(PlotObject):
         :param stroke: Whether to include a border for each area or not
         """
 
+        super().__init__(data, popup)
         self.color = color
         self.stroke = stroke
-        if isinstance(data, gpd.GeoDataFrame):
-            self.data = data
-        elif isinstance(data, str):
-            self.data = gpd.read_file(data)
-        else:
-            raise TypeError('Provide either a geopandas dataframe or a file location of a csv to show')
-        self.data = self.data.to_crs('EPSG:4326')
-
-        if popup is None or isinstance(popup, list):
-            self.popup = popup
-        elif isinstance(popup, str):
-            self.popup = [popup]
-        else:
-            TypeError('Unknown type for popup in linestrings')
-
-        if self.popup:
-            self.data = self.data.set_index(popup)
 
     def add_to(self, folium_map: TrackMap) -> TrackMap:
         """
@@ -400,7 +391,7 @@ class PlottingAreas(PlotObject):
 
             if self.popup:
                 if not isinstance(index, tuple):
-                    index = (index, )
+                    index = (index,)
                 popupname = '<br>'.join([': '.join([str(i), str(j)]) for i, j in list(zip(indexnames, index))])
 
                 folium.Popup(popupname).add_to(geo_j)
