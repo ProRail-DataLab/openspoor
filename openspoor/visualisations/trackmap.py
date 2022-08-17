@@ -400,7 +400,7 @@ class PlottingAreas(PlotObject):
 
             if self.popup:
                 if not isinstance(index, tuple):
-                    index = (index)
+                    index = (index, )
                 popupname = '<br>'.join([': '.join([str(i), str(j)]) for i, j in list(zip(indexnames, index))])
 
                 folium.Popup(popupname).add_to(geo_j)
