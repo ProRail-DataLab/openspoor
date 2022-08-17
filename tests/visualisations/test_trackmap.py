@@ -3,7 +3,7 @@ import os
 import pandas as pd
 import geopandas as gpd
 import pytest
-from openspoor.visualisations.trackmap import TrackMap, PlottingPoints, PlottingLinestrings, PlottingAreas, plottable
+from openspoor.visualisations.trackmap import TrackMap, PlottingPoints, PlottingLineStrings, PlottingAreas, plottable
 
 from shapely.geometry import Point, LineString, Polygon
 from shapely import wkt
@@ -78,7 +78,7 @@ def test_add_to_trackmap(tmp_path, points_dataframe, lines_geodataframe, areas_g
     m = TrackMap()
 
     PlottingPoints(points_dataframe, popup=['name2']).add_to(m)
-    PlottingLinestrings(lines_geodataframe, popup=['name2']).add_to(m)
+    PlottingLineStrings(lines_geodataframe, popup=['name2']).add_to(m)
     PlottingAreas(areas_geodataframe, popup=['name2']).add_to(m)
     total_objects = len(points_dataframe) + len(lines_geodataframe) + len(areas_geodataframe)
 
@@ -104,7 +104,7 @@ def test_add_to_trackmap(tmp_path, points_dataframe, lines_geodataframe, areas_g
     # Popup is a list with 2 elements, and test some additional settings for linestrings and areas
     r = TrackMap()
     PlottingPoints(points_dataframe, popup=['name', 'name2']).add_to(r)
-    PlottingLinestrings(lines_geodataframe, popup=['name', 'name2'], color='blue').add_to(r)
+    PlottingLineStrings(lines_geodataframe, popup=['name', 'name2'], color='blue').add_to(r)
     PlottingAreas(areas_geodataframe, popup=['name', 'name2'], color='orange').add_to(r)
     r.save(tmp_path / 'test_output3.html')
 

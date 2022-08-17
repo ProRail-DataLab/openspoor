@@ -267,7 +267,7 @@ class PlottingPoints(PlotObject):
         return folium_map
 
 
-class PlottingLinestrings(PlotObject):
+class PlottingLineStrings(PlotObject):
     """
     An object that can be plotted on a TrackMap. This is based on a geopandas dataframe or a file with every row
     indicating an item to show.
@@ -397,7 +397,7 @@ def plottable(data: Union[gpd.GeoDataFrame, pd.DataFrame], popup=None, *args, **
         if isinstance(firstentry, polygon.Polygon):
             return PlottingAreas(data, popup, *args, **kwargs)
         elif isinstance(firstentry, linestring.LineString):
-            return PlottingLinestrings(data, popup, *args, **kwargs)
+            return PlottingLineStrings(data, popup, *args, **kwargs)
         elif isinstance(firstentry, point.Point):
             return PlottingPoints(data, popup, *args, **kwargs)
         else:
