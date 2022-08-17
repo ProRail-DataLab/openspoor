@@ -5,7 +5,6 @@ from loguru import logger
 
 from shapely.geometry import point, polygon, linestring
 import geopandas as gpd
-from shapely import wkt
 from typing import List, Optional, Dict, Tuple, Union
 from pathlib import Path
 from urllib.parse import quote
@@ -13,20 +12,6 @@ from ..utils.common import read_config
 from abc import ABC, abstractmethod
 
 config = read_config()
-
-
-def _convert_pandas_to_geopandas(df):
-    # If this is a pandas dataframe with Rijksdriehoek in it, convert it to GPS
-    first_coord = df.geometry.values[0].split('(')[1].split(' ')[0]
-    if float(first_coord) > 180:
-        expected_crs = 'EPSG:28992'
-    else:
-        expected_crs = 'EPSG:4326'
-    return (df
-            .assign(geometry=lambda d: d.geometry.apply(wkt.loads))
-            .pipe(gpd.GeoDataFrame, geometry='geometry', crs=expected_crs)
-            .assign(geometry=lambda d: d.geometry.to_crs('EPSG:4326'))
-            )
 
 
 class PlotObject(ABC):
@@ -82,20 +67,20 @@ class TrackMap(folium.Map):
         """
 
         super().__init__(location=[52, 5], zoom_start=8, max_zoom=30, max_native_zoom=30, tiles=None, **kwargs)
-        self._add_luchtfoto()
+        self._add_aerial_photograph()
 
         # TODO: Remove this altogether?
         for obj in objects:
             assert issubclass(type(obj), PlotObject), f'Unable to plot {obj}, not defined as plottable object'
             self.add(obj)
 
-    def _add_luchtfoto(self) -> None:
+    def _add_aerial_photograph(self) -> None:
         """
-        Add the most recent ProRail luchtfoto to the map.
+        Add the most recent ProRail aerial photograph to the map.
 
         :return: None
         """
-        fg = folium.FeatureGroup(name=f"luchtfoto", max_zoom=30, max_native_zoom=30)
+        fg = folium.FeatureGroup(name=f"aerial_photograph", max_zoom=30, max_native_zoom=30)
         folium.WmsTileLayer(url='https://luchtfoto.prorail.nl/erdas-iws/ogc/wms/Luchtfoto', layers='meest_recent',
                             transparent=True, overlay=False,
                             maxZoom=30, maxNativeZoom=30).add_to(fg)
@@ -152,7 +137,7 @@ class TrackMap(folium.Map):
         super(TrackMap, self).save(save_name)
 
 
-class PlottingPoints(pd.DataFrame, PlotObject):
+class PlottingPoints(PlotObject):
     """
     Add functionalities to a Pandas DataFrame, so it can be plotted in a nice manner.
     """
@@ -180,69 +165,69 @@ class PlottingPoints(pd.DataFrame, PlotObject):
         :param url_column: A column including an url that is displayed in the popup
         """
 
-        if not isinstance(data, pd.DataFrame):
+        # Do some pre-processing for the cases the data is not a geodataframe
+        if isinstance(data, dict):
             data = pd.DataFrame(data)
 
-        if 'geometry' in data.columns and isinstance(data, pd.DataFrame) \
-                and not isinstance(data, gpd.geodataframe.GeoDataFrame):
-            data = _convert_pandas_to_geopandas(data)
-        elif isinstance(data, gpd.GeoDataFrame):
-            data = data.to_crs('EPSG:4326')
+        if isinstance(data, pd.DataFrame) and not isinstance(data, gpd.geodataframe.GeoDataFrame):
+            data = (
+                gpd.GeoDataFrame(data, geometry=gpd.points_from_xy(data[lon_column], data[lat_column]), crs='EPSG:4326')
+            )
+        if rotation_column:
+            data[rotation_column + '_for_plotting'] = data[rotation_column]
+        self.color_column = color_column
+        if self.color_column is not None:
+            data[self.color_column + "_factorized"] = pd.factorize(data[self.color_column])[0]
 
-        super().__init__(data)
+        super().__init__(data, popup)
 
-        self.attrs['lat'] = lat_column
-        self.attrs['lon'] = lon_column
+        self.lat = lat_column
+        self.lon = lon_column
+
         if isinstance(data, gpd.GeoDataFrame):
             if isinstance(data.geometry.iloc[0], point.Point):
                 data = data.to_crs('EPSG:4326')
-                self[self.attrs['lat']] = data.geometry.apply(lambda d: d.y)
-                self[self.attrs['lon']] = data.geometry.apply(lambda d: d.x)
+                self.data['lat'] = data.geometry.apply(lambda d: d.y)
+                self.data['lon'] = data.geometry.apply(lambda d: d.x)
             else:
                 NotImplementedError(f"Unimplemented geometry: {data.geometry.iloc[0]}")
 
-        self.color_column = color_column
-        if self.color_column is not None:
-            self[self.color_column + "_factorized"] = pd.factorize(self[self.color_column])[0]
-
-        if popup is None or isinstance(popup, list):
-            self.attrs['popup'] = popup
-        elif isinstance(popup, str):
-            self.attrs['popup'] = [popup]
-        else:
-            TypeError('Unknown type for popup in dataframe')
-
         # TODO: Automatically do this by looping through args?
-        self.attrs['markertype'] = markertype
-        self.attrs['colors'] = colors
-        self.attrs['marker'] = marker_column
-        self.attrs['rotation'] = rotation_column
-        self.attrs['radius'] = radius_column
-        self.attrs['url_column'] = url_column
+        self.markertype = markertype
+        self.colors = colors
+        self.marker = marker_column
+        self.rotation = rotation_column
+        self.radius = radius_column
+        self.url_column = url_column
 
     def add_to(self, folium_map):
-        for i, row in self.iterrows():
-            location = list(row[[self.attrs['lat'], self.attrs['lon']]].values)
-            if self.attrs['popup']:
+        for i, row in self.data.iterrows():
+            if isinstance(i, tuple):
+                indexnames = i
+            else:
+                indexnames = (i,)
+            location = row.geometry.y, row.geometry.x
+            if self.popup:
                 popup_text = ''
-                for col in self.attrs['popup']:
-                    if col == self.attrs['url_column']:
+                for indexvalue, col in zip(indexnames, self.popup):
+                    if col == self.url_column:
                         url = quote(row[col], safe='/:?=&')  # Replaces characters unsuitable for URL's
                         popup_text = popup_text + f"{col}: <a href={url}>Hyperlink</a><br>",
                     else:
-                        popup_text = popup_text + f'{col}: {row[col]}<br>'
+                        popup_text = popup_text + f'{col}: {indexvalue}<br>'
             else:
                 popup_text = None
 
-            if self.attrs['rotation'] is not None:
-                rotation = int(row[self.attrs['rotation']])
+            if self.rotation is not None:
+                rotation = int(row[self.rotation + '_for_plotting'])
                 marker = 'arrow-up'
             else:
                 rotation = 0
-                if self.attrs['marker'] is not None:
-                    marker = row[self.attrs['marker']]
-                elif self.attrs['markertype'] is not None:
-                    marker = self.attrs['markertype']
+
+                if self.marker is not None:
+                    marker = row[self.marker]
+                elif self.markertype is not None:
+                    marker = self.markertype
                 else:
                     marker = config['default_marker']
 
@@ -251,20 +236,20 @@ class PlottingPoints(pd.DataFrame, PlotObject):
                             'pink', 'cadetblue', 'lightgray', 'lightred', 'green',
                             'beige', 'darkblue', 'darkpurple', 'orange', 'lightgreen', 'red']
                 marker_color = colorset[int(row[self.color_column + "_factorized"]) % len(colorset)]
-            elif self.attrs['colors'] is not None:
-                if isinstance(self.attrs['colors'], str):
-                    marker_color = self.attrs['colors']
+
+            elif self.colors is not None:
+                if isinstance(self.colors, str):
+                    marker_color = self.colors
                 else:
-                    for column, colormap in self.attrs['colors'].items():
+                    for column, colormap in self.colors.items():
                         for bounds, color in colormap.items():
                             if min(bounds) <= row[column] <= max(bounds):
                                 marker_color = color
             else:
                 marker_color = config['default_color']
-
-            if self.attrs['markertype'] == 'circle':
-                if self.attrs['radius'] is not None:
-                    radius = row[self.attrs['radius']]
+            if self.markertype == 'circle':
+                if self.radius is not None:
+                    radius = row[self.radius]
                 else:
                     radius = config['default_radius']
                 folium.Circle(

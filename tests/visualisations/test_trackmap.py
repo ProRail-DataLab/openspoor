@@ -3,11 +3,12 @@ import os
 import pandas as pd
 import geopandas as gpd
 import pytest
-from openspoor.visualisations.trackmap import TrackMap, PlottingPoints, PlottingLinestrings, PlottingAreas, plottable, _convert_pandas_to_geopandas
+from openspoor.visualisations.trackmap import TrackMap, PlottingPoints, PlottingLinestrings, PlottingAreas, plottable
 
 from shapely.geometry import Point, LineString, Polygon
 from shapely import wkt
 import folium
+
 
 @pytest.fixture(scope='session')
 def emptytrackmap():
@@ -28,7 +29,7 @@ def test_TrackMap(emptytrackmap, prefilled_trackmap, example_plottingdataframe):
     objects_in_empty = len(emptytrackmap.__dict__['_children'])
     objects_in_nonempty = len(prefilled_trackmap.__dict__['_children'])
     assert objects_in_empty == 1, 'Should contain only the aerial photo'
-    assert objects_in_nonempty == 1 + len(example_plottingdataframe), 'Should contain the aerial photo and some markers'
+    assert objects_in_nonempty == 1 + len(example_plottingdataframe.data), 'Should contain the aerial photo and some markers'
 
 
 @pytest.fixture
@@ -55,6 +56,7 @@ def lines_geodataframe():
         .assign(geometry=lambda d: d.geometry.to_crs('EPSG:4326'))
     )
 
+
 @pytest.fixture
 def areas_geodataframe():
     area1 = Polygon([Point(5.0, 52.0), Point(5.1, 52.0), Point(5.1, 52.1), Point(5.0, 52.1)]).wkt
@@ -71,7 +73,7 @@ def areas_geodataframe():
 def test_add_to_trackmap(tmp_path, points_dataframe, lines_geodataframe, areas_geodataframe):
     m = TrackMap()
 
-    PlottingPoints(points_dataframe, popup=['name2']).add_to(m)
+    PlottingPoints(points_dataframe, popup=['name', 'name2']).add_to(m)
     PlottingLinestrings(lines_geodataframe, popup=['name2']).add_to(m)
     PlottingAreas(areas_geodataframe, popup=['name2']).add_to(m)
     total_objects = len(points_dataframe) + len(lines_geodataframe) + len(areas_geodataframe)
@@ -94,7 +96,6 @@ def test_add_to_trackmap(tmp_path, points_dataframe, lines_geodataframe, areas_g
 
     for m_child, q_child in zip(m._children, q._children):
         assert type(m_child) == type(q_child), 'Unequal type'
-
 
     # Type is established with plottable, and popup is a list with 2 elements
     r = TrackMap()
@@ -160,5 +161,3 @@ def test_colors(points_dataframe):
             for _, grandchild in child._children.items():
                 markercolors.append(grandchild.options['markerColor'])
     assert markercolors == ['green', 'orange', 'orange', 'red'], 'Incorrect colors for points'
-
-
