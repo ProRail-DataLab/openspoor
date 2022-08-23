@@ -11,7 +11,7 @@ import folium
 
 
 @pytest.fixture(scope='session')
-def emptytrackmap():
+def base_trackmap():
     return TrackMap()
 
 
@@ -27,11 +27,11 @@ def prefilled_trackmap(example_plottingdataframe):
     return TrackMap(objects=[example_plottingdataframe])
 
 
-def test_TrackMap(emptytrackmap, prefilled_trackmap, example_plottingdataframe):
-    objects_in_empty = len(emptytrackmap._children)
-    objects_in_nonempty = len(prefilled_trackmap._children)
-    assert objects_in_empty == 1, 'Should contain only the aerial photo'
-    assert objects_in_nonempty == 1 + len(
+def test_TrackMap(base_trackmap, prefilled_trackmap, example_plottingdataframe):
+    objects_in_base_trackmap = len(base_trackmap._children)
+    objects_in_prefilled_trackmap = len(prefilled_trackmap._children)
+    assert objects_in_base_trackmap == 1, 'Should contain only the aerial photo'
+    assert objects_in_prefilled_trackmap == 1 + len(
         example_plottingdataframe.data), 'Should contain the aerial photo and some markers'
 
 
