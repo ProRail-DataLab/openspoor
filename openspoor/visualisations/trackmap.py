@@ -95,18 +95,20 @@ class TrackMap(folium.Map):
 
         :return: None
         """
+        # Bboxes are stored as a List of [min_lat, min_lon, max_lat, max_lon]
         bboxes = []
 
         for _, item in self._children.items():
             if isinstance(item, folium.features.Choropleth):  # For linestrings
                 bboxes.extend(feature['bbox'][::-1] for feature in item.geojson.data['features'])
-            if isinstance(item, folium.features.GeoJson):  # For areas
+            if isinstance(item, folium.features.GeoJson):  # For linestrings and areas
                 bboxes.append([i for coords in item.get_bounds() for i in coords])
             if isinstance(item, folium.map.Marker):  # For markers
                 bboxes.append(item.location * 2)  # Min and max bound are equal for points, hence the repeat
 
         if bboxes:  # Fit only if there are some items to show
             bounds = [min(map(lambda x: x[i], bboxes)) if i < 2 else max(map(lambda x: x[i], bboxes)) for i in range(4)]
+            # Convert into [[min_lat, min_lon], [max_lat, max_lon]]
             self.fit_bounds([bounds[:2], bounds[2:]])
 
     def add(self, plotobject) -> TrackMap:
@@ -154,8 +156,8 @@ class PlottingPoints(PlotObject):
         Initialize a PlottingPoints object, used for plotting a list of markers on a map of the Netherlands.
 
         :param data: The Pandas DataFrame that should be plotted. GeoPandas dataframes are also partially supported
-        :param lat_column: A column including latitudes. Not required if data is a geopandas geodataframe
-        :param lon_column: A column name including longitudes. Not required if data is a geopandas geodataframe
+        :param lat_column: A column including latitudes. Not required if data is a geopandas GeoDataFrame
+        :param lon_column: A column name including longitudes. Not required if data is a geopandas GeoDataFrame
         :param popup: A column or list of columns whose values should be mentioned when an object is clicked on
         :param colors: A dictionary, noting on what column to base the colors on and what values they should take
         depending on the registered value.
@@ -168,7 +170,7 @@ class PlottingPoints(PlotObject):
         :param url_column: A column including an url that is displayed in the popup
         """
 
-        # Do some pre-processing for the cases the data is not a geodataframe
+        # Do some pre-processing for the cases the data is not a GeoDataFrame
         if isinstance(data, dict):
             data = pd.DataFrame(data)
 

@@ -74,13 +74,20 @@ def areas_geodataframe():
     )
 
 
-def test_add_to_trackmap(tmp_path, points_dataframe, lines_geodataframe, areas_geodataframe):
-    m = TrackMap()
+@pytest.mark.parametrize("add_aerial", [True, False])
+def test_add_to_trackmap(tmp_path, add_aerial, points_dataframe, lines_geodataframe, areas_geodataframe):
+    m = TrackMap(add_aerial=add_aerial)
 
     PlottingPoints(points_dataframe, popup=['name2']).add_to(m)
     PlottingLineStrings(lines_geodataframe, popup=['name2']).add_to(m)
     PlottingAreas(areas_geodataframe, popup=['name2']).add_to(m)
-    total_objects = len(points_dataframe) + len(lines_geodataframe) + len(areas_geodataframe)
+
+    # For the points and areas, 1 child is added for every row in the dataframe
+    # 1 child always exists when the aerial photograph is added
+    aerial_photograph_children = add_aerial
+    # Linestrings always add 2 objects; one for the hover, and one for the lines themselves
+    linestring_children = 2
+    total_objects = len(points_dataframe) + linestring_children + len(areas_geodataframe) + aerial_photograph_children
 
     assert len(m._children) == total_objects, "Invalid number of items added"
 
@@ -108,8 +115,8 @@ def test_add_to_trackmap(tmp_path, points_dataframe, lines_geodataframe, areas_g
     PlottingAreas(areas_geodataframe, popup=['name', 'name2'], color='orange').add_to(r)
     r.save(tmp_path / 'test_output3.html')
 
-    for q_child, r_child in zip(q._children, r._children):
-        assert type(q_child) == type(r_child), 'Unequal type'
+    for m_child, r_child in zip(m._children, r._children):
+        assert type(m_child) == type(r_child), 'Unequal type'
 
 
 def test_plottingpoint_settings(points_dataframe, tmp_path):
