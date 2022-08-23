@@ -37,7 +37,8 @@ def test_TrackMap(base_trackmap, prefilled_trackmap, example_plottingdataframe):
 
 @pytest.fixture
 def points_dataframe():
-    return pd.DataFrame(data={'lat': [52.45, 52.5, 52.55, 52.6], 'lon': [5.15, 5.2, 5.3, 5.4],
+    return pd.DataFrame(data={'lat': [52.45, 52.5, 52.55, 52.6],
+                              'lon': [5.15, 5.2, 5.3, 5.4],
                               'name': ['A', 'B', "C", 'D'],
                               'name2': ['AA', 'BB', "CC", 'DD'],
                               'value': [1, 2, 3, 4],
@@ -65,9 +66,13 @@ def lines_geodataframe():
 def areas_geodataframe():
     area1 = Polygon([Point(5.0, 52.0), Point(5.1, 52.0), Point(5.1, 52.1), Point(5.0, 52.1)]).wkt
     area2 = Polygon([Point(5.5, 52.0), Point(5.6, 52.0), Point(5.6, 52.1), Point(5.5, 52.1)]).wkt
+    area3 = Polygon([Point(6.0, 53.0), Point(6.1, 53.0), Point(6.1, 53.1), Point(6.0, 53.1)]).wkt
+    area4 = Polygon([Point(6.5, 53.0), Point(6.6, 53.0), Point(6.6, 53.1), Point(6.5, 53.1)]).wkt
 
     return (
-        pd.DataFrame(data={'name': ['M', 'N'], 'name2': ['MM', 'NN'], 'geometry': [area1, area2]})
+        pd.DataFrame(data={'name': ['M', 'N', 'O', 'P'],
+                           'name2': ['MM', 'NN', 'OO', 'PP'],
+                           'geometry': [area1, area2, area3, area4]})
         .assign(geometry=lambda d: d.geometry.apply(wkt.loads))
         .pipe(gpd.GeoDataFrame, geometry='geometry', crs='EPSG:4326')
         .assign(geometry=lambda d: d.geometry.to_crs('EPSG:4326'))
