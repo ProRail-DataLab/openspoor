@@ -34,7 +34,7 @@ class PlotObject(ABC):
         else:
             raise TypeError('Provide either a geopandas dataframe or a file location of a csv to show')
         self.data = self.data.to_crs('EPSG:4326')
-        if self.popup:
+        if self.popup is not None:
             self.data = self.data.set_index(self.popup)
 
     @abstractmethod
@@ -57,17 +57,19 @@ class TrackMap(folium.Map):
     Maps can be shown directly, or saved as .html files.
     """
 
-    def __init__(self, objects: List[PlotObject] = [], **kwargs):
+    def __init__(self, objects: List[PlotObject] = [], add_aerial=True, **kwargs):
         """
         Set up a TrackMap object.
 
         :param objects: A list of plottable objects that can be pre-defined outside the context manager of the
         TrackMap
+        :param add_aerial: Whether you want to include the ProRail aerial photograph or not
         :return: A TrackMap object
         """
 
         super().__init__(location=[52, 5], zoom_start=8, max_zoom=30, max_native_zoom=30, tiles=None, **kwargs)
-        self._add_aerial_photograph()
+        if add_aerial:
+            self._add_aerial_photograph()
 
         # TODO: Remove this altogether?
         for obj in objects:
@@ -120,6 +122,7 @@ class TrackMap(folium.Map):
         """
         self._fix_zoom()
         if notebook:
+            # Add a folium map inside a folium figure. This is the easiest way to change the figure size
             figure = folium.Figure(1000, 400)
             self.add_to(figure)
             return figure
@@ -143,7 +146,7 @@ class PlottingPoints(PlotObject):
     """
 
     def __init__(self, data, popup: Optional[Union[str, List[str]]] = None,
-                 lat_column: str = 'lat', lon_column: str = 'lon',
+                 lat_column: Optional[str] = 'lat', lon_column: Optional[str] = 'lon',
                  colors: Dict[str, Dict[Tuple[float, float], str]] = None,
                  markertype: Optional[str] = None, marker_column: str = None, color_column: str = None,
                  rotation_column: str = None, radius_column: str = None, url_column: str = None):
@@ -151,8 +154,8 @@ class PlottingPoints(PlotObject):
         Initialize a PlottingPoints object, used for plotting a list of markers on a map of the Netherlands.
 
         :param data: The Pandas DataFrame that should be plotted. GeoPandas dataframes are also partially supported
-        :param lat_column: A column including latitudes
-        :param lon_column: A column name including longitudes
+        :param lat_column: A column including latitudes. Not required if data is a geopandas geodataframe
+        :param lon_column: A column name including longitudes. Not required if data is a geopandas geodataframe
         :param popup: A column or list of columns whose values should be mentioned when an object is clicked on
         :param colors: A dictionary, noting on what column to base the colors on and what values they should take
         depending on the registered value.
@@ -180,9 +183,6 @@ class PlottingPoints(PlotObject):
             data[self.color_column + "_factorized"] = pd.factorize(data[self.color_column])[0]
 
         super().__init__(data, popup)
-
-        self.lat = lat_column
-        self.lon = lon_column
 
         if isinstance(data, gpd.GeoDataFrame):
             if isinstance(data.geometry.iloc[0], point.Point):
@@ -275,7 +275,7 @@ class PlottingLineStrings(PlotObject):
     """
 
     def __init__(self, data: Union[gpd.GeoDataFrame, str], popup: Optional[Union[str, List[str]]] = None,
-                 color='blue', buffersize: int = 3):
+                 color: str = 'blue', buffersize: int = 3):
         """
         Initialize a PlottingLineStrings object.
 
