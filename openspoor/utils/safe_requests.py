@@ -4,6 +4,7 @@ import certifi
 import urllib3
 from typing import Optional
 import logging
+from requests.exceptions import SSLError
 
 from openspoor.utils.singleton import Singleton
 
@@ -50,6 +51,9 @@ class SafeRequest(Singleton):
                 else:
                     raise ConnectionError(f'Status {request.status} received at {url} instead of 200')
 
+            except SSLError:
+                logging.warning("Removing certificates. Please be aware of the security risks.")
+                self.pool = urllib3.PoolManager()
             except Exception as error:
                 count += 1
                 logging.warning(f'Error encountered performing attempt {count} out of {self.max_retry}')
