@@ -20,7 +20,7 @@ def all_featureserver_layers():
 def test_get_all_featureserver_layers(all_featureserver_layers):
     out = all_featureserver_layers.df
     assert out.shape[0] > 0, 'No featureservices found'
-    assert out.shape[1] == 2, 'Unexpected number of columns'
+    assert out.shape[1] == 4, 'Unexpected number of columns'
 
 
 def test_get_layers_in_featureservers(all_featureserver_layers):
@@ -47,8 +47,8 @@ def test_search_for(all_featureserver_layers):
     out_hek = all_featureserver_layers.search_for('hek')
     out_spoor = all_featureserver_layers.search_for('spoor')
     assert out_spoor.shape[0] > out_hek.shape[0], 'Spoor does not occur more often than hek'
-    assert out_hek.shape[1] == 2, 'Invalid number of columns'
-    assert out_spoor.shape[1] == 2, 'Invalid number of columns'
+    assert out_hek.shape[1] == 4, 'Invalid number of columns'
+    assert out_spoor.shape[1] == 4, 'Invalid number of columns'
 
 
 @pytest.fixture()
