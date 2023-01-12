@@ -370,7 +370,7 @@ class Test:
             geometry=gpd.points_from_xy(xy_test_df["x"], xy_test_df["y"]),
             crs="epsg:28992",
         )
-        coordinates_transformer = TransformerCoordinatesToSpoor(buffer_distance=5.0)
+        coordinates_transformer = TransformerCoordinatesToSpoor(buffer_distance=3.0)
         coordinates_transformer = coordinates_transformer.fit(
             self.puic_mock_output, self.spoortak_mock_output
         )
