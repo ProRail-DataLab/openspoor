@@ -8,7 +8,7 @@ requirements = [
     "loguru",
     "requests",
     "rtree",
-    "pyproj",
+    "pyproj<3",
     "pandas",
     "shapely",
     "folium"

@@ -3,7 +3,7 @@ loguru==0.6.*
 pytest==7.2.*
 requests==2.27.*
 rtree==1.0.*
-pyproj==3.2.1
+pyproj==2.6.*
 pyyaml==6.0.*
 folium==0.13.0
 pandas==1.4.*
