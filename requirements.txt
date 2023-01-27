@@ -3,7 +3,7 @@ loguru
 pytest
 requests
 rtree
-pyproj
+pyproj==2.*
 pyyaml
 folium
 pandas
