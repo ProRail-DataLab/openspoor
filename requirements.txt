@@ -2,7 +2,7 @@ geopandas==0.12.2
 loguru==0.6.0
 requests==2.28.2
 rtree==1.0.1
-pyproj==2.6.1
+pyproj==2.6.1.post1
 pyyaml==6.0
 folium==0.14.0
 pandas==1.5.3
