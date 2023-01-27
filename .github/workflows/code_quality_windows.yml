@@ -1,6 +1,6 @@
 # This workflow will install Python dependencies, run tests and lint with a single version of Python
 # For more information see: https://help.github.com/actions/language-and-framework-guides/using-python-with-github-actions
-name: Code Quality
+name: Code Quality Windows
 
 on:
   pull_request:
@@ -8,12 +8,8 @@ on:
 
 jobs:
   build:
-    name: Code Quality ${{ matrix.os }}
-    runs-on: ${{ matrix.os }}
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [ "ubuntu-latest", "windows-latest" ]
+    name: Code Quality Windows
+    runs-on: "windows-latest"
 
     steps:
       - uses: actions/checkout@v2
@@ -31,4 +27,4 @@ jobs:
 
       - name: Test with pytest
         run: |
-          pytest --junitxml=junit/test-results.xml --cov=openspoor --cov-fail-under=50 tests/
+          pytest --junitxml=junit/test-results.xml --nbmake --nbmake-kernel=python3 --cov=openspoor --cov-fail-under=50 tests/ demo_notebook/
