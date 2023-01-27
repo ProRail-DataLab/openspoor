@@ -64,7 +64,7 @@ Installation using anaconda
 - In the root directory of the repository, execute the command:
   - `pip install -e .[dev]`
 - In the root directory of the repository, execute the command:
-  - `python -m pytest`
+  - `pytest --nbmake --nbmake-kernel=python3`
 - If all the test succeed, the openspoor package is ready to use and you are on the right "track"!
 
 #### Linux
@@ -85,7 +85,7 @@ Installation using anaconda
 - In the root directory of the repository, execute the command:
   - `pip install -e .[dev]`
 - In the root directory of the repository, execute the command:
-  - `pytest --nbmake`
+  - `pytest --nbmake --nbmake-kernel=python3`
 - If all the test succeed, the openspoor package is ready to use and you are on the right "track"!
 
 ### Demonstration notebook
