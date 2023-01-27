@@ -18,7 +18,8 @@ class MapServicesQuery:
     Class to allow easy access to mapservices.prorail.nl. Mainly used as
     abstract parent class to other mapservices classes
     """
-    def __init__(self, url: Optional[str] = None, cache_location: Optional[Path] = None):
+
+    def __init__(self, url: Optional[str] = None, cache_location: Optional[Path] = None, return_m=False):
         """
         :param url: An url of a mapservices.prorail.nl feature server to download from.
                 this is the part of the url until /query?
@@ -26,7 +27,8 @@ class MapServicesQuery:
         :param cache_location: filepath where pickle file of data will be loaded from (or saved to if file is absent)
         """
 
-        self.standard_featureserver_query = config['standard_featureserver_query']
+        self.standard_featureserver_query = config['standard_featureserver_query'] + \
+                                            ('&returnM=true&returnZ=false' if return_m else '')
         self.url = url
         self.crs = config['crs']
         self.cache_location = cache_location

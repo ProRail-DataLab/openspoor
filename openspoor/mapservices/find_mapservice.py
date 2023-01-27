@@ -11,11 +11,12 @@ from openspoor.utils.singleton import Singleton
 
 class FeatureSearchResults(pd.DataFrame):
 
-    def load_data(self, entry_number: int = 0) -> gpd.GeoDataFrame:
+    def load_data(self, entry_number: int = 0, return_m: bool = False) -> gpd.GeoDataFrame:
         """
         Prepare the data for analysis
 
         :param entry_number: The row giving the url to query
+        :param return_m : Whether to return m values (used in some layers)
         :return: A geopandas dataframe
         """
         if len(self) <= entry_number:
@@ -24,7 +25,7 @@ class FeatureSearchResults(pd.DataFrame):
 
         url = self.layer_url.values[entry_number]
 
-        return MapServicesQuery(url).load_data()
+        return MapServicesQuery(url, return_m=return_m).load_data()
 
     def write_gpkg(self, output_dir: Path, entry_number: int = 0) -> None:
         """
@@ -79,7 +80,9 @@ class FeatureServerOverview(Singleton):
         featureserver_urls = [f'{self.prefix}{redirect}' for redirect in featureserver_redirects]
         return (
             pd.concat(self._get_layers_in_featureservers(url) for url in featureserver_urls)
-            .drop_duplicates('description', keep='last')  # Keep only the most recent data
+            .assign(server=lambda d: d.layer_url.str.split('/').str[-3].str.split("_").str[0])
+            .assign(version=lambda d: d.layer_url.str.split('/').str[-3].str.split("_").str[1])
+            .drop_duplicates(['description', 'server'], keep='last')
             .reset_index(drop=True)
         )
 
