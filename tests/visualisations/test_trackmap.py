@@ -64,10 +64,10 @@ def lines_geodataframe():
 
 @pytest.fixture
 def areas_geodataframe():
-    area1 = Polygon([Point(5.0, 52.0), Point(5.1, 52.0), Point(5.1, 52.1), Point(5.0, 52.1)]).wkt
-    area2 = Polygon([Point(5.5, 52.0), Point(5.6, 52.0), Point(5.6, 52.1), Point(5.5, 52.1)]).wkt
-    area3 = Polygon([Point(6.0, 53.0), Point(6.1, 53.0), Point(6.1, 53.1), Point(6.0, 53.1)]).wkt
-    area4 = Polygon([Point(6.5, 53.0), Point(6.6, 53.0), Point(6.6, 53.1), Point(6.5, 53.1)]).wkt
+    area1 = Polygon([Point(5.0, 52.0), Point(5.1, 52.0), Point(5.1, 52.1), Point(5.0, 52.1), Point(5.0, 52.0)]).wkt
+    area2 = Polygon([Point(5.5, 52.0), Point(5.6, 52.0), Point(5.6, 52.1), Point(5.5, 52.1), Point(5.5, 52.0)]).wkt
+    area3 = Polygon([Point(6.0, 53.0), Point(6.1, 53.0), Point(6.1, 53.1), Point(6.0, 53.1), Point(6.0, 53.0)]).wkt
+    area4 = Polygon([Point(6.5, 53.0), Point(6.6, 53.0), Point(6.6, 53.1), Point(6.5, 53.1), Point(6.5, 53.0)]).wkt
 
     return (
         pd.DataFrame(data={'name': ['M', 'N', 'O', 'P'],
