@@ -370,7 +370,7 @@ class Test:
             geometry=gpd.points_from_xy(xy_test_df["x"], xy_test_df["y"]),
             crs="epsg:28992",
         )
-        coordinates_transformer = TransformerCoordinatesToSpoor()
+        coordinates_transformer = TransformerCoordinatesToSpoor(buffer_distance=3.0)
         coordinates_transformer = coordinates_transformer.fit(
             self.puic_mock_output, self.spoortak_mock_output
         )
@@ -484,8 +484,8 @@ class Test:
         gps_test_df = pd.DataFrame(
             {
                 "x": [
-                    4.7673844619138706,
-                    4.7673844619138706,
+                    4.767384394447763,
+                    4.767384394447763,
                     4.767355509869135,
                     4.766587672621954,
                     4.525246659701094,
@@ -493,8 +493,8 @@ class Test:
                     4.5250881382855095,
                 ],
                 "y": [
-                    52.313976549824126,
-                    52.313976549824126,
+                    52.31397654888525,
+                    52.31397654888525,
                     52.31394943442051,
                     52.31323228145257,
                     51.88685477188099,
