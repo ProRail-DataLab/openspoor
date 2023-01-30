@@ -3,7 +3,7 @@ from pathlib import Path
 
 requirements = [
     "importlib_metadata",
-    "geopandas",
+    "geopandas<=0.11.1",
     "pyyaml",
     "loguru",
     "requests",
@@ -17,11 +17,13 @@ requirements = [
 dev_packages = [
     "pytest",
     "pytest-cov",
-    "parameterized"
+    "pytest-xdist",
+    "parameterized",
+    "nbmake",
 ]
 
 setup(name='openspoor',
-      version='0.2.3',
+      version='0.2.4',
       description='Open source project to allow translations between different spoor referential systems',
       long_description=(Path(__file__).parent / "README.md").read_text(),
       long_description_content_type='text/markdown',

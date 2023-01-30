@@ -47,6 +47,9 @@ class PlotObject(ABC):
         """
         raise NotImplementedError('This needs to be set in implementation classes')
 
+    def show(self):
+        return TrackMap([self]).show()
+
 
 class TrackMap(folium.Map):
     """

@@ -4,6 +4,7 @@ import certifi
 import urllib3
 from typing import Optional
 import logging
+import ssl
 from requests.exceptions import SSLError
 
 from openspoor.utils.singleton import Singleton
@@ -21,9 +22,15 @@ class SafeRequest(Singleton):
         :param max_retry: The maximum amount of times a request is attempted
         :param time_between: The minimum time between two consecutive queries
         """
-        self.pool = urllib3.PoolManager(ca_certs=certifi.where())
+
+        # Hotfix: Updates to SSL certificates were required.
+        # See https://stackoverflow.com/questions/71603314/ssl-error-unsafe-legacy-renegotiation-disabled
+        ctx = ssl.create_default_context(ssl.Purpose.SERVER_AUTH)
+        ctx.options |= 0x4
+        self.pool = urllib3.PoolManager(ca_certs=certifi.where(), ssl_context=ctx)
         self.max_retry = max_retry
         self.time_between = time_between
+
 
     def _request_with_retry(self, request_type: str, url: str, body: Optional[dict] = None)\
             -> urllib3.response.HTTPResponse:

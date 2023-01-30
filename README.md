@@ -50,6 +50,8 @@ have a M1 chip, then `pip install openspoor` should suffice.
 
 ### Installation - development
 
+#### Windows
+
 Installation using anaconda
 - Clone the "openspoor" repository
   - `git clone https://github.com/ProRail-DataLab/openspoor.git`
@@ -62,7 +64,28 @@ Installation using anaconda
 - In the root directory of the repository, execute the command:
   - `pip install -e .[dev]`
 - In the root directory of the repository, execute the command:
-  - `python -m pytest`
+  - `pytest --nbmake --nbmake-kernel=python3`
+- If all the test succeed, the openspoor package is ready to use and you are on the right "track"!
+
+#### Linux
+
+Installation using anaconda
+
+- Clone the "openspoor" repository
+  - `git clone https://github.com/ProRail-DataLab/openspoor.git`
+- create an environment in your preferred way in Python 3.8 and activate. For example:
+  - `python3 -m venv venv`
+  - `source ./venv/bin/activate`
+- activate the environment:
+  - `conda activate openspoorenv`
+- update pip:
+  - `pip install --upgrade pip`
+- install dependencies:
+  - `pip install -r requirements.txt`
+- In the root directory of the repository, execute the command:
+  - `pip install -e .[dev]`
+- In the root directory of the repository, execute the command:
+  - `pytest --nbmake --nbmake-kernel=python3`
 - If all the test succeed, the openspoor package is ready to use and you are on the right "track"!
 
 ### Demonstration notebook
