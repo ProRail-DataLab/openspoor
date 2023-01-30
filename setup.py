@@ -3,7 +3,7 @@ from pathlib import Path
 
 requirements = [
     "importlib_metadata",
-    "geopandas",
+    "geopandas<=0.11.1",
     "pyyaml",
     "loguru",
     "requests",
@@ -17,6 +17,7 @@ requirements = [
 dev_packages = [
     "pytest",
     "pytest-cov",
+    "pytest-xdist",
     "parameterized",
     "nbmake",
 ]
