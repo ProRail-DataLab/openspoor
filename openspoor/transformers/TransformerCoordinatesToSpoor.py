@@ -1,7 +1,7 @@
 import numpy as np
 import geopandas as gpd
 from loguru import logger
-from functools import lru_cache
+from functools import cache
 
 from openspoor.utils.common import read_config
 from openspoor.mapservices import FeatureServerOverview
@@ -31,7 +31,7 @@ class TransformerCoordinatesToSpoor:
         # Buffer style prevents overflow into next segment; buffer has straight edges at the end
         self.buffered_stgk = self.stgk.assign(geometry=lambda x: x.geometry.buffer(self.buffer_distance, cap_style=2))
 
-    @lru_cache
+    @cache
     def _get_spoortak_met_geokm(self):
         return FeatureServerOverview().search_for('Spoortakdeel met geocode kilometrering') \
             .load_data(return_m=True)

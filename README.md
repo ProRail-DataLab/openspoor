@@ -40,7 +40,7 @@ Use conda to install Fiona and GDAL:
 
 #### Mac
 
-- `conda create -n [env_name] python=3.8`
+- `conda create -n [env_name] python=3.11`
 - `conda install -c conda-forge proj=7.0.0`
 - `conda install -c conda-forge pyproj=2.6.0`
 - `pip install openspoor`
@@ -56,11 +56,11 @@ Installation using anaconda
 - Clone the "openspoor" repository
   - `git clone https://github.com/ProRail-DataLab/openspoor.git`
 - create an environment:
-  - `conda create -n openspoorenv python==3.8`
+  - `conda create -n openspoorenv python==3.11`
 - activate the environment:
   - `conda activate openspoorenv`
 - install dependencies:
-  - `conda install -c conda-forge --file requirements.txt`
+  - `pip install -r requirements.txt`
 - In the root directory of the repository, execute the command:
   - `pip install -e .[dev]`
 - In the root directory of the repository, execute the command:
