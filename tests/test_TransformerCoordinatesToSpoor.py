@@ -50,7 +50,7 @@ def far_points_gdf():
                                       Point(0, 30.5)])  # Should be in another segment
 
 
-@mock.patch("openspoor.transformers.TransformerCoordinatesToSpoor.get_spoortak_met_geokm")
+@mock.patch("openspoor.transformers.TransformerCoordinatesToSpoor._get_spoortak_met_geokm")
 def test_transform(mocked_load, points_gdf, lines_gdf):
     mocked_load.return_value = lines_gdf
 
@@ -63,7 +63,7 @@ def test_transform(mocked_load, points_gdf, lines_gdf):
     pd.testing.assert_frame_equal(out, expected_out)
 
 
-@mock.patch("openspoor.transformers.TransformerCoordinatesToSpoor.get_spoortak_met_geokm")
+@mock.patch("openspoor.transformers.TransformerCoordinatesToSpoor._get_spoortak_met_geokm")
 def test_transform_far_points(mocked_load, far_points_gdf, lines_gdf):
     mocked_load.return_value = lines_gdf
 

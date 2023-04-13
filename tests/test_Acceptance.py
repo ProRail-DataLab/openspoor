@@ -94,7 +94,7 @@ mock_spoordata_gdf = gpd.GeoDataFrame({
 
 
 @pytest.fixture
-@mock.patch("openspoor.transformers.TransformerCoordinatesToSpoor.get_spoortak_met_geokm")
+@mock.patch("openspoor.transformers._get_spoortak_met_geokm")
 def coordinates_transformer(mocked_load):
     mocked_load.return_value = mock_spoordata_gdf
     return TransformerCoordinatesToSpoor()
@@ -358,7 +358,7 @@ class Test:
         expected_output_df["x"] = gps_test_gdf["x"]
         expected_output_df["y"] = gps_test_gdf["y"]
         pd.testing.assert_frame_equal(
-            output_df, expected_output_df, check_less_precise=3
+            output_df, expected_output_df, atol=1e-3
         )
 
     def test_acceptance_TransformerCoordinatesToSpoor_intersecting_tracks(self, coordinates_transformer):
