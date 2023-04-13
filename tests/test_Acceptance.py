@@ -94,7 +94,7 @@ mock_spoordata_gdf = gpd.GeoDataFrame({
 
 
 @pytest.fixture
-@mock.patch("openspoor.transformers.TransformerCoordinatesToSpoor._get_spoortak_met_geokm")
+@mock.patch("openspoor.transformers.TransformerCoordinatesToSpoor.get_spoortak_met_geokm")
 def coordinates_transformer(mocked_load):
     mocked_load.return_value = mock_spoordata_gdf
     return TransformerCoordinatesToSpoor()

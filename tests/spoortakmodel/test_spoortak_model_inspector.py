@@ -50,7 +50,6 @@ class TestSpoortakModelInspector(unittest.TestCase):
 
         sut = SpoortakModelInspector(SpoortakModelsData(MODELS_DATA_DIR))
         sut.inspect('927_3325R_904.6')
-        mock_pprint.assert_called()
         self.assertEqual(expected_spoortak_model_rows, len(mock_pprint.call_args_list[0][0][0]), )
         self.assertEqual(expected_bericht_rows, len(mock_pprint.call_args_list[1][0][0]))
 

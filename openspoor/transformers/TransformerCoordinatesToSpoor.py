@@ -27,12 +27,12 @@ class TransformerCoordinatesToSpoor:
         )
 
         self.buffer_distance = buffer_distance
-        self.stgk = self._get_spoortak_met_geokm()
+        self.stgk = self.get_spoortak_met_geokm()
         # Buffer style prevents overflow into next segment; buffer has straight edges at the end
         self.buffered_stgk = self.stgk.assign(geometry=lambda x: x.geometry.buffer(self.buffer_distance, cap_style=2))
 
     @cache
-    def _get_spoortak_met_geokm(self):
+    def get_spoortak_met_geokm(self):
         return FeatureServerOverview().search_for('Spoortakdeel met geocode kilometrering') \
             .load_data(return_m=True)
 
