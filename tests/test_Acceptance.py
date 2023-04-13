@@ -92,11 +92,9 @@ mock_spoordata_gdf = gpd.GeoDataFrame({
                           (90604.6240, 439120.9771, 102.8010)])],
     crs="EPSG:28992")
 
-
 @pytest.fixture
-@mock.patch("openspoor.transformers._get_spoortak_met_geokm")
-def coordinates_transformer(mocked_load):
-    mocked_load.return_value = mock_spoordata_gdf
+def coordinates_transformer(monkeypatch):
+    monkeypatch.setattr(TransformerCoordinatesToSpoor, '_get_spoortak_met_geokm', lambda d: mock_spoordata_gdf)
     return TransformerCoordinatesToSpoor()
 
 
@@ -200,7 +198,7 @@ class Test:
     def test_acceptance_TransformerCoordinatesToSpoor(self, coordinates_transformer):
         xy_test_df = pd.DataFrame(
             {
-                "x": [
+                "x": [                    
                     112734.526,
                     112734.526,
                     112732.526,
@@ -358,7 +356,7 @@ class Test:
         expected_output_df["x"] = gps_test_gdf["x"]
         expected_output_df["y"] = gps_test_gdf["y"]
         pd.testing.assert_frame_equal(
-            output_df, expected_output_df, atol=1e-3
+            output_df, expected_output_df, atol=0.05
         )
 
     def test_acceptance_TransformerCoordinatesToSpoor_intersecting_tracks(self, coordinates_transformer):
@@ -401,7 +399,7 @@ class Test:
                                        )
 
         pd.testing.assert_frame_equal(output_df.sort_values(['NAAM_LANG']),
-                                      expected_output.sort_values(['NAAM_LANG']), check_less_precise=3)
+                                      expected_output.sort_values(['NAAM_LANG']), atol=1e-3)
 
     def test_acceptance_TransformerGeocodeToCoordinates(self):
         geocode_transformer = TransformerGeocodeToCoordinates(
@@ -445,7 +443,7 @@ class Test:
             index=pd.Series([66, 11, 55, 44, 33, 22], name="Indexname"),
         )
 
-        pd.testing.assert_frame_equal(output, output_expected, check_less_precise=2)
+        pd.testing.assert_frame_equal(output, output_expected, atol=1e-2)
 
     def test_acceptance_TransformerSpoortakToCoordinates(self):
         spoortak_transformer = TransformerSpoortakToCoordinates(

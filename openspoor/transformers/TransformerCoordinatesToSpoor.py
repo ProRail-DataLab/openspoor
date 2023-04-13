@@ -28,8 +28,6 @@ class TransformerCoordinatesToSpoor:
 
         self.buffer_distance = buffer_distance
         self.stgk = self._get_spoortak_met_geokm()
-        # Buffer style prevents overflow into next segment; buffer has straight edges at the end
-        self.buffered_stgk = self.stgk.assign(geometry=lambda x: x.geometry.buffer(self.buffer_distance, cap_style=2))
 
     @cache
     def _get_spoortak_met_geokm(self):
@@ -63,6 +61,9 @@ class TransformerCoordinatesToSpoor:
          even if no match could be made.
         """
         # Coordinates used are RD in the below.
+        # Buffer style prevents overflow into next segment; buffer has straight edges at the end
+        self.buffered_stgk = self.stgk.assign(geometry=lambda x: x.geometry.buffer(self.buffer_distance, cap_style=2))
+        
         starting_crs = gdf_points.crs
         gdf_points = gdf_points.to_crs('EPSG:28992')
         close_geocodes = self.buffered_stgk.sjoin(gdf_points)
