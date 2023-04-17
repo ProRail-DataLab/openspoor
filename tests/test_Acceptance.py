@@ -152,18 +152,14 @@ class Test:
     )
 
     @mock.patch("openspoor.mapservices.MapServicesQuery._load_all_features_to_gdf")
-    def test_caching_singlequery(self, mocked_load, tmp_path):
+    def test_singlequery(self, mocked_load, tmp_path):
         mocked_load.return_value = self.spoortak_mock_output
         cache_path = tmp_path / "spoortak.p"
 
         assert ~os.path.exists(cache_path)
         spoortak_mapservices = MapServicesQuery(url=config['spoor_url'], cache_location=cache_path)
-
-        spoortak_mapservices.load_data()
-        assert os.path.exists(cache_path)
-
-        # Load a second time to actually use cached file
         output = spoortak_mapservices.load_data()
+        assert os.path.exists(cache_path)
 
         expected_output = self.spoortak_mock_output
 
@@ -174,17 +170,13 @@ class Test:
         assert all(output.geometry.geom_almost_equals(expected_output.geometry, 6))
 
     @mock.patch("openspoor.mapservices.MapServicesQuery._load_all_features_to_gdf")
-    def test_caching_puicmapservices(self, mocked_load, tmp_path):
+    def test_puicmapservices(self, mocked_load, tmp_path):
         mocked_load.return_value = self.puic_mock_output
         cache_path = tmp_path / "puic.p"
 
         assert ~os.path.exists(cache_path)
         puic_mapservices = PUICMapservices(spoor_cache_location=cache_path,
                                            wisselkruisingbeen_cache_location=cache_path)
-        puic_mapservices.spoor_query.load_data()
-        assert os.path.exists(cache_path)
-
-        # Load a second time to actually use cached file
         output = puic_mapservices.spoor_query.load_data()
 
         expected_output = self.puic_mock_output

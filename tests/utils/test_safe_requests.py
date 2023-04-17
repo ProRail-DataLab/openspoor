@@ -30,7 +30,7 @@ def geocode_to_xy_url():
 
 @pytest.fixture
 def base_safe_requests():
-    return safe_requests.SafeRequest(max_retry=3, time_between=1.0)
+    return safe_requests.SafeRequest(max_retry=3, time_between=0.5)
 
 
 def test_get_string_failure(invalid_url):
