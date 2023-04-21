@@ -1,8 +1,8 @@
 import pytest
-from unittest import mock
 import pandas as pd
 import geopandas as gpd
 from glob import glob
+from geopandas.testing import assert_geodataframe_equal
 
 from shapely.geometry import Point
 from pathlib import Path
@@ -65,14 +65,10 @@ class TestFeatureSearchResults:
                                                       Point(112622.47399999946, 480681.72399999946)],
                                             crs="epsg:28992")
 
-    @mock.patch("openspoor.mapservices.MapServicesQuery._load_all_features_to_gdf")
-    def test_FeatureSearchResults(self, mocked_load, search_results, tmpdir):
+    def test_FeatureSearchResults(self, monkeypatch, search_results, tmpdir):
+        monkeypatch.setattr("openspoor.mapservices.MapServicesQuery._load_all_features_to_gdf", lambda d: self.spoortak_mock_output)
         out_gdf = FeatureSearchResults(search_results).load_data(0)
-        gpd.testing.assert_geodataframe_equal(out_gdf, mocked_load), 'Incorrecting loading of data'
-
-    @mock.patch("openspoor.mapservices.MapServicesQuery._load_all_features_to_gdf")
-    def test_FeatureSearchResults(self, mocked_load, search_results, tmpdir):
-        mocked_load.return_value = self.spoortak_mock_output
+        assert_geodataframe_equal(out_gdf, self.spoortak_mock_output), 'Incorrecting loading of data'
 
         output_dir = Path(tmpdir) / 'outputs'
         FeatureSearchResults(search_results).write_gpkg(output_dir, 0)

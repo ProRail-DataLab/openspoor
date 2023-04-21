@@ -151,9 +151,8 @@ class Test:
         crs="epsg:28992",
     )
 
-    @mock.patch("openspoor.mapservices.MapServicesQuery._load_all_features_to_gdf")
-    def test_singlequery(self, mocked_load, tmp_path):
-        mocked_load.return_value = self.spoortak_mock_output
+    def test_singlequery(self, monkeypatch, tmp_path):     
+        monkeypatch.setattr("openspoor.mapservices.MapServicesQuery._load_all_features_to_gdf", lambda d: self.spoortak_mock_output)
         cache_path = tmp_path / "spoortak.p"
 
         assert ~os.path.exists(cache_path)
@@ -169,9 +168,8 @@ class Test:
         )
         assert all(output.geometry.geom_almost_equals(expected_output.geometry, 6))
 
-    @mock.patch("openspoor.mapservices.MapServicesQuery._load_all_features_to_gdf")
-    def test_puicmapservices(self, mocked_load, tmp_path):
-        mocked_load.return_value = self.puic_mock_output
+    def test_puicmapservices(self, monkeypatch, tmp_path):
+        monkeypatch.setattr("openspoor.mapservices.MapServicesQuery._load_all_features_to_gdf", lambda d: self.puic_mock_output)
         cache_path = tmp_path / "puic.p"
 
         assert ~os.path.exists(cache_path)
