@@ -96,7 +96,7 @@ def test_add_to_trackmap(tmp_path, add_aerial, points_dataframe, lines_geodatafr
 
     assert len(m._children) == total_objects, "Invalid number of items added"
 
-    m.save(tmp_path / 'test_output.html')
+    m.save(str(tmp_path / 'test_output.html'))
     # One more bounds fitted object
     assert len(m._children) == 1 + total_objects, "Invalid number of items added"
 
@@ -108,7 +108,7 @@ def test_add_to_trackmap(tmp_path, add_aerial, points_dataframe, lines_geodatafr
     plottable(points_dataframe, popup='name').add_to(q)
     plottable(lines_geodataframe, popup='name').add_to(q)
     plottable(areas_geodataframe, popup='name').add_to(q)
-    q.save(tmp_path / 'test_output2.html')
+    q.save(str(tmp_path / 'test_output2.html'))
 
     for m_child, q_child in zip(m._children, q._children):
         assert type(m_child) == type(q_child), 'Unequal type'
@@ -118,7 +118,7 @@ def test_add_to_trackmap(tmp_path, add_aerial, points_dataframe, lines_geodatafr
     PlottingPoints(points_dataframe, popup=['name', 'name2']).add_to(r)
     PlottingLineStrings(lines_geodataframe, popup=['name', 'name2'], color='blue').add_to(r)
     PlottingAreas(areas_geodataframe, popup=['name', 'name2'], color='orange').add_to(r)
-    r.save(tmp_path / 'test_output3.html')
+    r.save(str(tmp_path / 'test_output3.html'))
 
     for m_child, r_child in zip(m._children, r._children):
         assert type(m_child) == type(r_child), 'Unequal type'

@@ -3,12 +3,12 @@ from pathlib import Path
 
 requirements = [
     "importlib_metadata",
-    "geopandas<=0.11.1",
+    "geopandas",
     "pyyaml",
     "loguru",
     "requests",
     "rtree",
-    "pyproj<3",
+    "pyproj",
     "pandas",
     "shapely",
     "folium"
@@ -23,7 +23,7 @@ dev_packages = [
 ]
 
 setup(name='openspoor',
-      version='0.2.4',
+      version='0.2.5',
       description='Open source project to allow translations between different spoor referential systems',
       long_description=(Path(__file__).parent / "README.md").read_text(),
       long_description_content_type='text/markdown',

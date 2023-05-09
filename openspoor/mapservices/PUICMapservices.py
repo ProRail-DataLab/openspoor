@@ -1,6 +1,6 @@
 import pandas as pd
 from loguru import logger
-from .MapservicesQuery import MapServicesQuery
+from functools import cache
 from .find_mapservice import FeatureServerOverview
 from ..utils.common import read_config
 
@@ -30,6 +30,7 @@ class PUICMapservices:
 
         self.spoordata_columns = config['spoordata_columns']
 
+    @cache
     def load_data(self, *args, **kwargs):
         """
         Return combined spoortak, wissel and kruising data from

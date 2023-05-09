@@ -3,6 +3,7 @@ import re
 from loguru import logger
 from pathlib import Path
 import geopandas as gpd
+from functools import cache
 
 from ..utils.safe_requests import SafeRequest
 from openspoor.mapservices.MapservicesQuery import MapServicesQuery
@@ -68,6 +69,7 @@ class FeatureServerOverview(Singleton):
         featureservers = [[f'{self.prefix}{fs}', description] for fs, description in featureservers]
         return pd.DataFrame(featureservers, columns=['layer_url', 'description'])
 
+    @cache
     def get_all_featureserver_layers(self) -> pd.DataFrame:
         """
         Find all available layers within the mapservices featureservers.

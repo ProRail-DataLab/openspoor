@@ -14,7 +14,7 @@ class SafeRequest(Singleton):
 
     last_request = 0  # Use a class attribute, as we use the Singleton pattern
 
-    def __init__(self, max_retry: int = 5, time_between: float = 1.0):
+    def __init__(self, max_retry: int = 5, time_between: float = 0.3):
         """
         Create a package from where we can make requests. The requests are done using certificates and a sleep is
         built in to guarantee that there is some time between every API call.

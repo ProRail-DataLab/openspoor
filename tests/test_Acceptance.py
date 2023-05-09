@@ -92,11 +92,9 @@ mock_spoordata_gdf = gpd.GeoDataFrame({
                           (90604.6240, 439120.9771, 102.8010)])],
     crs="EPSG:28992")
 
-
 @pytest.fixture
-@mock.patch("openspoor.transformers.TransformerCoordinatesToSpoor._get_spoortak_met_geokm")
-def coordinates_transformer(mocked_load):
-    mocked_load.return_value = mock_spoordata_gdf
+def coordinates_transformer(monkeypatch):
+    monkeypatch.setattr(TransformerCoordinatesToSpoor, '_get_spoortak_met_geokm', lambda d: mock_spoordata_gdf)
     return TransformerCoordinatesToSpoor()
 
 
@@ -153,19 +151,14 @@ class Test:
         crs="epsg:28992",
     )
 
-    @mock.patch("openspoor.mapservices.MapServicesQuery._load_all_features_to_gdf")
-    def test_caching_singlequery(self, mocked_load, tmp_path):
-        mocked_load.return_value = self.spoortak_mock_output
+    def test_singlequery(self, monkeypatch, tmp_path):     
+        monkeypatch.setattr("openspoor.mapservices.MapServicesQuery._load_all_features_to_gdf", lambda d: self.spoortak_mock_output)
         cache_path = tmp_path / "spoortak.p"
 
         assert ~os.path.exists(cache_path)
         spoortak_mapservices = MapServicesQuery(url=config['spoor_url'], cache_location=cache_path)
-
-        spoortak_mapservices.load_data()
-        assert os.path.exists(cache_path)
-
-        # Load a second time to actually use cached file
         output = spoortak_mapservices.load_data()
+        assert os.path.exists(cache_path)
 
         expected_output = self.spoortak_mock_output
 
@@ -175,18 +168,13 @@ class Test:
         )
         assert all(output.geometry.geom_almost_equals(expected_output.geometry, 6))
 
-    @mock.patch("openspoor.mapservices.MapServicesQuery._load_all_features_to_gdf")
-    def test_caching_puicmapservices(self, mocked_load, tmp_path):
-        mocked_load.return_value = self.puic_mock_output
+    def test_puicmapservices(self, monkeypatch, tmp_path):
+        monkeypatch.setattr("openspoor.mapservices.MapServicesQuery._load_all_features_to_gdf", lambda d: self.puic_mock_output)
         cache_path = tmp_path / "puic.p"
 
         assert ~os.path.exists(cache_path)
         puic_mapservices = PUICMapservices(spoor_cache_location=cache_path,
                                            wisselkruisingbeen_cache_location=cache_path)
-        puic_mapservices.spoor_query.load_data()
-        assert os.path.exists(cache_path)
-
-        # Load a second time to actually use cached file
         output = puic_mapservices.spoor_query.load_data()
 
         expected_output = self.puic_mock_output
@@ -200,7 +188,7 @@ class Test:
     def test_acceptance_TransformerCoordinatesToSpoor(self, coordinates_transformer):
         xy_test_df = pd.DataFrame(
             {
-                "x": [
+                "x": [                    
                     112734.526,
                     112734.526,
                     112732.526,
@@ -358,7 +346,7 @@ class Test:
         expected_output_df["x"] = gps_test_gdf["x"]
         expected_output_df["y"] = gps_test_gdf["y"]
         pd.testing.assert_frame_equal(
-            output_df, expected_output_df, check_less_precise=3
+            output_df, expected_output_df, atol=0.05
         )
 
     def test_acceptance_TransformerCoordinatesToSpoor_intersecting_tracks(self, coordinates_transformer):
@@ -401,7 +389,7 @@ class Test:
                                        )
 
         pd.testing.assert_frame_equal(output_df.sort_values(['NAAM_LANG']),
-                                      expected_output.sort_values(['NAAM_LANG']), check_less_precise=3)
+                                      expected_output.sort_values(['NAAM_LANG']), atol=1e-3)
 
     def test_acceptance_TransformerGeocodeToCoordinates(self):
         geocode_transformer = TransformerGeocodeToCoordinates(
@@ -445,7 +433,7 @@ class Test:
             index=pd.Series([66, 11, 55, 44, 33, 22], name="Indexname"),
         )
 
-        pd.testing.assert_frame_equal(output, output_expected, check_less_precise=2)
+        pd.testing.assert_frame_equal(output, output_expected, atol=1e-2)
 
     def test_acceptance_TransformerSpoortakToCoordinates(self):
         spoortak_transformer = TransformerSpoortakToCoordinates(

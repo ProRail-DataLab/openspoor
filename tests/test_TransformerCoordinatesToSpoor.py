@@ -50,22 +50,21 @@ def far_points_gdf():
                                       Point(0, 30.5)])  # Should be in another segment
 
 
-@mock.patch("openspoor.transformers.TransformerCoordinatesToSpoor._get_spoortak_met_geokm")
-def test_transform(mocked_load, points_gdf, lines_gdf):
-    mocked_load.return_value = lines_gdf
-
-    out = TransformerCoordinatesToSpoor().transform(points_gdf)
+def test_transform(monkeypatch, points_gdf, lines_gdf):
+    
+    monkeypatch.setattr(TransformerCoordinatesToSpoor, '_get_spoortak_met_geokm', lambda q: lines_gdf)
+    transformer = TransformerCoordinatesToSpoor()
+    out = transformer.transform(points_gdf)
+    # print(mock_transformer.stgk)
 
     expected_out = pd.concat([points_gdf, points_gdf.iloc[2:, :]])
     for col in ['linename', 'GEOCODE', 'SUBCODE', 'NAAM_LANG', 'KM_GEOCODE_VAN', 'KM_GEOCODE_TOT']:
         expected_out[col] = list(lines_gdf[col].values) * 2
     expected_out['geocode_kilometrering'] = [26.0, 8.0, 35.0, 5.0]
     pd.testing.assert_frame_equal(out, expected_out)
-
-
-@mock.patch("openspoor.transformers.TransformerCoordinatesToSpoor._get_spoortak_met_geokm")
-def test_transform_far_points(mocked_load, far_points_gdf, lines_gdf):
-    mocked_load.return_value = lines_gdf
+    
+def test_transform_far_points(monkeypatch, far_points_gdf, lines_gdf):    
+    monkeypatch.setattr(TransformerCoordinatesToSpoor, '_get_spoortak_met_geokm', lambda q: lines_gdf)
 
     out = TransformerCoordinatesToSpoor().transform(far_points_gdf)
 
