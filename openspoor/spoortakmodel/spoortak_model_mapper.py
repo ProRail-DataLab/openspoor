@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, List
 
 import numpy as np
 import pandas as pd
@@ -156,6 +156,8 @@ class SpoortakModelMapper:
             related_segments = self.map(spoortak_subsection, _ignore_list + [spoortak_subsection.identification])
             found_subsections.extend(related_segments)
 
+        #Add spoortak V2.0
+
         limited = self._limit_start_end(found_subsections, spoortak_subsection.kilometrering_start,
                                         spoortak_subsection.kilometrering_end)
         cleaned = self._remove_duplicates(limited)
@@ -163,6 +165,28 @@ class SpoortakModelMapper:
         ordered = sorted(cleaned, key=lambda x: (x.spoortak_model_version, x.kilometrering_start))
 
         return ordered
+    
+    def map_section_to_v2(self, spoortak_subsection: SpoortakSubsection) -> List[SpoortakSubsection]:
+        """ Maps a spoortak subsection to a specific model version """
+
+        # TODO: Alles
+    
+    def find_in_spoortak_v2(self, spoortak_subsection: SpoortakSubsection, kilometrering_van: float, kilometrering_tot: float) -> List[SpoortakSubsection]:
+        """
+        Map a spoortak subsection to a specific model version and find the relevant subsections in the spoortak v2.0
+
+        :param spoortak_subsection: subsection to map
+        :param kilometrering_van: start of the section
+        :param kilometrering_tot: end of the section
+        """
+
+        possible_subsections = self.map_section_to_v2(spoortak_subsection)
+        relevant_subsections = []
+        for subsection in possible_subsections:
+            if subsection.kilometrering_start <= kilometrering_van and subsection.kilometrering_end >= kilometrering_tot:
+                relevant_subsections.append(subsection)
+        return relevant_subsections
+
 
     def map_to(self, spoortak_subsection: SpoortakSubsection, model_version: int) -> [SpoortakSubsection]:
         """ Maps a spoortak subsection to a specific model version """

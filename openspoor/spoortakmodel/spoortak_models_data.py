@@ -65,11 +65,15 @@ class SpoortakModelsData(Singleton):
             log.info('loading data...')
 
             self.models = dict()
+            self.new_models = dict()
 
             self.model_version_numbers = self._get_model_numbers(data_path)
             unsupported_version_start = 18
             self.model_version_numbers = [version for version in self.model_version_numbers if
                                           version < unsupported_version_start]
+            self.new_style_model_versions = [version for version in self.model_version_numbers if
+                                          version >= unsupported_version_start]
+
 
             try:
                 for model_version in self.model_version_numbers:
@@ -92,6 +96,32 @@ class SpoortakModelsData(Singleton):
                                                              )
 
                     self._replace_km_columns(self.models[model_version])
+            except ValueError:
+                log.error(f'Failed to read model {model_version}')
+                raise
+
+            try:
+                for model_version in self.new_style_model_versions:
+                    #TODO: Deze inleesfunctie moet compleet anders
+                    self.new_models[model_version] = pd.read_csv(os.path.join(data_path,
+                                                                          f'Versie_{model_version:02d}',
+                                                                          f'SPOORTAK_{model_version}.csv'),
+                                                             delimiter=';',
+                                                             header=0,
+                                                             converters={
+                                                                 'KM_BEGIN': lambda km: self._km_to_meters(
+                                                                     self._convert_dutch_number(km)),
+                                                                 'KM_EIND': lambda km: self._km_to_meters(
+                                                                     self._convert_dutch_number(km)),
+                                                                 'LENGTE': lambda km: self._km_to_meters(
+                                                                     self._convert_dutch_number(
+                                                                         km))
+                                                             },
+                                                             index_col='SPOORTAK_IDENTIFICATIE',
+                                                             encoding='latin1',
+                                                             )
+
+                    self._replace_km_columns(self.new_models[model_version])
             except ValueError:
                 log.error(f'Failed to read model {model_version}')
                 raise
