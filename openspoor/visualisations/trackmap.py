@@ -47,9 +47,6 @@ class PlotObject(ABC):
         """
         raise NotImplementedError('This needs to be set in implementation classes')
 
-    def show(self):
-        return TrackMap([self]).show()
-
 
 class TrackMap(folium.Map):
     """
@@ -60,12 +57,12 @@ class TrackMap(folium.Map):
     Maps can be shown directly, or saved as .html files.
     """
 
-    def __init__(self, objects: List[PlotObject] = [], add_aerial=True, **kwargs):
+    def __init__(self, objects: Union[PlotObject, List[PlotObject]] = [], add_aerial=True, **kwargs):
         """
         Set up a TrackMap object.
 
-        :param objects: A list of plottable objects that can be pre-defined outside the context manager of the
-        TrackMap
+        :param objects: A single plottable object or list of plottable objects that can be pre-defined 
+        outside the context manager of the TrackMap
         :param add_aerial: Whether you want to include the ProRail aerial photograph or not
         :return: A TrackMap object
         """
@@ -74,7 +71,10 @@ class TrackMap(folium.Map):
         if add_aerial:
             self._add_aerial_photograph()
 
-        # TODO: Remove this altogether?
+        if not isinstance(objects, list):
+            self.add(objects)
+            return
+
         for obj in objects:
             assert issubclass(type(obj), PlotObject), f'Unable to plot {obj}, not defined as plottable object'
             self.add(obj)
@@ -123,7 +123,7 @@ class TrackMap(folium.Map):
         Show the map zoomed to a nice level and displayed at a suitable size.
 
         :param notebook: A boolean for decreasing the size of the final plot. Designed for use in Notebooks
-        :return:
+        :return: self if notebook is False, a folium Figure if notebook is True
         """
         self._fix_zoom()
         if notebook:
@@ -152,7 +152,7 @@ class PlottingPoints(PlotObject):
 
     def __init__(self, data, popup: Optional[Union[str, List[str]]] = None,
                  lat_column: Optional[str] = 'lat', lon_column: Optional[str] = 'lon',
-                 colors: Dict[str, Dict[Tuple[float, float], str]] = None,
+                 colors: Union[str, Tuple[str, Dict[Tuple[float, float]]]] = None,
                  markertype: Optional[str] = None, marker_column: str = None, color_column: str = None,
                  rotation_column: str = None, radius_column: str = None, url_column: str = None):
         """
@@ -162,7 +162,7 @@ class PlottingPoints(PlotObject):
         :param lat_column: A column including latitudes. Not required if data is a geopandas GeoDataFrame
         :param lon_column: A column name including longitudes. Not required if data is a geopandas GeoDataFrame
         :param popup: A column or list of columns whose values should be mentioned when an object is clicked on
-        :param colors: A dictionary, noting on what column to base the colors on and what values they should take
+        :param colors: A string or a tuple, noting on what column to base the colors on and what values they should take
         depending on the registered value.
         :param markertype: 'circle' if circles are required, or an icon name found in
         # https://fontawesome.com/v4/icons/
@@ -205,23 +205,45 @@ class PlottingPoints(PlotObject):
         self.radius = radius_column
         self.url_column = url_column
 
+    def _get_marker_color(self, row):
+            if self.color_column is not None:
+                colorset = ['purple', 'lightblue', 'darkgreen', 'blue', 'darkred', 'black',
+                            'pink', 'cadetblue', 'lightgray', 'lightred', 'green',
+                            'beige', 'darkblue', 'darkpurple', 'orange', 'lightgreen', 'red']
+                return colorset[int(row[self.color_column + "_factorized"]) % len(colorset)]
+            
+            if self.colors is None:
+                return config['default_color']
+
+            if isinstance(self.colors, str):
+                return self.colors
+            
+            column, colormap = self.colors
+            for bounds, color in colormap.items():
+                if min(bounds) <= row[column] < max(bounds):
+                    return color
+            
+    def _get_popup_text(self, i, row):
+        if isinstance(i, tuple):
+            indexnames = i
+        else:
+            indexnames = (i,)
+        if self.popup:
+            popup_text = ''
+            for indexvalue, col in zip(indexnames, self.popup):
+                if col == self.url_column:
+                    url = quote(row[col], safe='/:?=&')  # Replaces characters unsuitable for URL's
+                    popup_text = popup_text + f"{col}: <a href={url}>Hyperlink</a><br>",
+                else:
+                    popup_text = popup_text + f'{col}: {indexvalue}<br>'
+            return popup_text
+        else:
+            return None
+
     def add_to(self, folium_map):
         for i, row in self.data.iterrows():
-            if isinstance(i, tuple):
-                indexnames = i
-            else:
-                indexnames = (i,)
+
             location = row.geometry.y, row.geometry.x
-            if self.popup:
-                popup_text = ''
-                for indexvalue, col in zip(indexnames, self.popup):
-                    if col == self.url_column:
-                        url = quote(row[col], safe='/:?=&')  # Replaces characters unsuitable for URL's
-                        popup_text = popup_text + f"{col}: <a href={url}>Hyperlink</a><br>",
-                    else:
-                        popup_text = popup_text + f'{col}: {indexvalue}<br>'
-            else:
-                popup_text = None
 
             if self.rotation is not None:
                 rotation = int(row[self.rotation + '_for_plotting'])
@@ -236,22 +258,6 @@ class PlottingPoints(PlotObject):
                 else:
                     marker = config['default_marker']
 
-            if self.color_column is not None:
-                colorset = ['purple', 'lightblue', 'darkgreen', 'blue', 'darkred', 'black',
-                            'pink', 'cadetblue', 'lightgray', 'lightred', 'green',
-                            'beige', 'darkblue', 'darkpurple', 'orange', 'lightgreen', 'red']
-                marker_color = colorset[int(row[self.color_column + "_factorized"]) % len(colorset)]
-
-            elif self.colors is not None:
-                if isinstance(self.colors, str):
-                    marker_color = self.colors
-                else:
-                    for column, colormap in self.colors.items():
-                        for bounds, color in colormap.items():
-                            if min(bounds) <= row[column] <= max(bounds):
-                                marker_color = color
-            else:
-                marker_color = config['default_color']
             if self.markertype == 'circle':
                 if self.radius is not None:
                     radius = row[self.radius]
@@ -260,14 +266,14 @@ class PlottingPoints(PlotObject):
                 folium.Circle(
                     radius=radius,
                     location=location,
-                    popup=popup_text,
-                    color=marker_color,
+                    popup=self._get_popup_text(i, row),
+                    color=self._get_marker_color(row),
                     fill=False,
                 ).add_to(folium_map)
             else:
                 folium.Marker(location,
-                              popup=popup_text,
-                              icon=folium.Icon(color=marker_color, prefix='fa', icon=marker, angle=rotation)).add_to(
+                              popup=self._get_popup_text(i, row),
+                              icon=folium.Icon(color=self._get_marker_color(row), prefix='fa', icon=marker, angle=rotation)).add_to(
                     folium_map)
         return folium_map
 
@@ -287,13 +293,20 @@ class PlottingLineStrings(PlotObject):
         :param data: A geopandas dataframe or a file location of a csv file
         :param popup: The column(s) whose values are shown when hovering over a linestring
         :param color: The color in which the linestrings should be shown on the map
-        :param buffersize: The size of the buffer around the linestrings on the map.
+        :param buffersize: The size of the buffer around the linestrings on the map
         """
 
-        super().__init__(data, popup)
-        self.color = color
-
+        data = data.copy()
+        if color not in data.columns:
+            self.color = color
+        else:
+            self.color_by_column = 'color_by_column'
+            assert self.color_by_column not in data.columns, f"Column name {self.color_by_column} already exists in data; please rename"
+            data[self.color_by_column] = data[color]
+            popup = [color] + popup if isinstance(popup, list) else [color, popup]
         self.buffersize = buffersize  # In meters
+        
+        super().__init__(data, popup)
 
     def _make_tooltip(self):
         return folium.features.GeoJsonTooltip(
@@ -309,7 +322,25 @@ class PlottingLineStrings(PlotObject):
         :param folium_map: The map to add the objects to
         :return: The updated map
         """
-        # Add lines
+        if 'color_by_column' in self.data.columns:
+            colors = ["black", "pink", "darkblue", "darkred", "gray", "green", "lightblue", "darkgreen", "lightgray",
+                        "lightgreen", "orange", "purple", "red", "beige"]
+                                    
+            if self.data['color_by_column'].nunique() > len(colors):
+                logger.warning("More groups than colors, some groups will have the same color")
+                if self.data['color_by_column'].nunique() > len(colors) * 100:
+                    raise ValueError(f"Too many groups to color by; reduce the number of elements in the {self.color} column below {len(colors) * 100}")
+                
+            if len(self.data.loc[lambda d: d['color_by_column'].isin(colors)])  < len(self.data):
+                self.data['color_by_column'] = self.data['color_by_column'].map(
+                    dict(zip(self.data['color_by_column'].unique(), colors * 100))
+                )
+
+            for color, group in self.data.reset_index().groupby('color_by_column'):
+                to_plot = PlottingLineStrings(group.drop(['color_by_column'], axis=1), popup=self.popup, color=color, buffersize=self.buffersize)
+                to_plot.add_to(folium_map)
+            return folium_map
+
         folium.Choropleth(
             self.data['geometry'],
             line_weight=3,
@@ -389,14 +420,17 @@ class PlottingAreas(PlotObject):
         return folium_map
 
 
-def plottable(data: Union[gpd.GeoDataFrame, pd.DataFrame], popup=None, *args, **kwargs) -> PlotObject:
+def plottable(data: Union[gpd.GeoDataFrame, pd.DataFrame, PlotObject], popup=None, *args, **kwargs) -> PlotObject:
     """
-    Infer the type of data to be plotted and make sure it can be added to a TrackMap
+    Infer the type of data to be plotted and make sure it can be added to a TrackMap.
+    This function is idempotent, so it can be used on objects that are already plottable.
 
     :param data: The data that needs to be plotted
     :param popup: The columns that define the data
     :return: The data, transformed as a plottable object
     """
+    if isinstance(data, PlotObject):  # Objects that are already plottable
+        return data
     if isinstance(data, gpd.GeoDataFrame):
         firstentry = data.geometry.values[0]
         if isinstance(firstentry, polygon.Polygon):
@@ -410,3 +444,20 @@ def plottable(data: Union[gpd.GeoDataFrame, pd.DataFrame], popup=None, *args, **
     elif isinstance(data, pd.DataFrame):  # Whenever data is a dataframe, it is probably points
         logger.info('Interpreting data as dataframe')
         return PlottingPoints(data, popup, *args, **kwargs)
+
+
+def quick_plot(*args, notebook=False, **kwargs) -> TrackMap:
+    """
+    A quick way to plot a list of objects on a map. This is a wrapper around the TrackMap class.
+
+    :param args: A list of PlotObjects
+    :return: A TrackMap object
+    """
+    objects = []
+    for arg in args:
+        try:
+            objects.append(plottable(arg, **kwargs))
+        except TypeError:
+            logger.info(f'Unable to plot {arg} with these arguments, plot these without arguments.')
+            objects.append(plottable(**kwargs))
+    return TrackMap(objects).show(notebook=notebook)

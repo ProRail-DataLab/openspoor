@@ -184,7 +184,7 @@ def test_colors(points_dataframe):
     # Create map with colors based on numeric values in a given column
     q = TrackMap()
     PlottingPoints(points_dataframe,
-                   colors={'value': {(-1, 2.0): 'green', (2.0, 3.5): 'orange', (3.5, 10): 'red'}}).add_to(q)
+                   colors=('value', {(-1, 2.0): 'green', (2.0, 3.5): 'orange', (3.5, 10): 'red'})).add_to(q)
 
     markercolors = []
     for _, child in q._children.items():
