@@ -10,6 +10,7 @@ requirements = [
     "rtree",
     "pyproj",
     "pandas",
+    "polars",
     "shapely",
     "folium"
 ]

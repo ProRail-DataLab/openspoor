@@ -1,0 +1,578 @@
+GEOCODE;GEOSUBCODE;GEOCODE_NR;NAAM;VERKORTING;VERSIE_DATUM;VERSIE_GELDIG;VERSIE_NUMMER
+470;470_h;470;Botlek;Bot;20221206;C;20
+470;470_g;470;Botlek;Bot;20221206;C;20
+470;470_l;470;Botlek;Bot;20221206;C;20
+470;470_k;470;Botlek;Bot;20221206;C;20
+470;470_c;470;Botlek;Bot;20221206;C;20
+470;470_a;470;Botlek;Bot;20221206;C;20
+950;950_a;950;Barendrecht Vork - Rotterdam Maasvlakte;Brdv-Mvt;20221206;C;20
+950;950_d;950;Barendrecht Vork - Rotterdam Maasvlakte;Brdv-Mvt;20221206;C;20
+470;470_n;470;Botlek;Bot;20221206;C;20
+470;470_e;470;Botlek;Bot;20221206;C;20
+470;470_m;470;Botlek;Bot;20221206;C;20
+470;470_j;470;Botlek;Bot;20221206;C;20
+470;470_i;470;Botlek;Bot;20221206;C;20
+470;470_b;470;Botlek;Bot;20221206;C;20
+950;950_e;950;Barendrecht Vork - Rotterdam Maasvlakte;Brdv-Mvt;20221206;C;20
+469;469_e;469;Pernis;Ps;20221206;C;20
+469;469_a;469;Pernis;Ps;20221206;C;20
+469;469_f;469;Pernis;Ps;20221206;C;20
+469;469_b;469;Pernis;Ps;20221206;C;20
+469;469_d;469;Pernis;Ps;20221206;C;20
+952;952__;952;Botlektunnel;Bott;20221206;C;20
+469;469_g;469;Pernis;Ps;20221206;C;20
+476;476_c;476;Rotterdam Europoort 2;Re2;20221206;C;20
+476;476_b;476;Rotterdam Europoort 2;Re2;20221206;C;20
+476;476_a;476;Rotterdam Europoort 2;Re2;20221206;C;20
+602;602_b;602;Herfte Aansl.;Hea;20221206;C;20
+204;204__;204;Herfte Aansl. - Mariënberg;Hea-Mrb;20221206;C;20
+602;602_a;602;Herfte Aansl.;Hea;20221206;C;20
+013;013__;13;Herfte Aansl. - Meppel;Hea-Mp;20221206;C;20
+014;014__;14;Zwolle - Herfte Aansl.;Zl-Hea;20221206;C;20
+603;603_f;603;Zwolle;Zl;20221206;C;20
+603;603_c;603;Zwolle;Zl;20221206;C;20
+603;603_e;603;Zwolle;Zl;20221206;C;20
+603;603_d;603;Zwolle;Zl;20221206;C;20
+603;603_b;603;Zwolle;Zl;20221206;C;20
+603;603_a;603;Zwolle;Zl;20221206;C;20
+018;018__;18;Deventer - Zwolle;Dv-Zl;20221206;C;20
+206;206__;206;Zwolle - Wierden;Zl-Wdn;20221206;C;20
+604;604_b;604;Hattemerbroek;Htba;20221206;C;20
+604;604_a;604;Hattemerbroek;Htba;20221206;C;20
+926;926__;926;Zwolle Rangeerterrein;Zlr;20221206;C;20
+055;055__;55;Blerick - Eindhoven;Br-Ehv;20221206;C;20
+855;855__;855;Venlo Tradeport;Vltp;20221206;C;20
+516;516_b;516;Blerick;Br;20221206;C;20
+052;052__;52;Beugen - Blerick;Bug-Br;20221206;C;20
+516;516_a;516;Blerick;Br;20221206;C;20
+520;520_b;520;Maastricht;Mt;20221206;C;20
+520;520_c;520;Maastricht;Mt;20221206;C;20
+520;520_a;520;Maastricht;Mt;20221206;C;20
+072;072_a;72;Maastricht - Maastricht Grens;Mt-Mtg;20221206;C;20
+063;063__;63;Maastricht - Sittard;Mt-Std;20221206;C;20
+072;072_b;72;Maastricht - Maastricht Grens;Mt-Mtg;20221206;C;20
+144;144_b;144;Duivendrecht - Amsterdam Riekerpolder;Dvd-Asra;20221206;C;20
+144;144_a;144;Duivendrecht - Amsterdam Riekerpolder;Dvd-Asra;20221206;C;20
+535;535_b;535;Amsterdam Bijlmer Arena;Asb;20221206;C;20
+589;589_d;589;Duivendrecht;Dvd;20221206;C;20
+096;096_a;96;Amsterdam Muiderpoort - Duivendrecht;Asdm-Dvd;20221206;C;20
+535;535_c;535;Amsterdam Bijlmer Arena;Asb;20221206;C;20
+027;027__;27;Diemen - Duivendrecht;Dmn-Dvd;20221206;C;20
+589;589_b;589;Duivendrecht;Dvd;20221206;C;20
+589;589_e;589;Duivendrecht;Dvd;20221206;C;20
+096;096_b;96;Amsterdam Muiderpoort - Duivendrecht;Asdm-Dvd;20221206;C;20
+535;535_a;535;Amsterdam Bijlmer Arena;Asb;20221206;C;20
+589;589_a;589;Duivendrecht;Dvd;20221206;C;20
+589;589_c;589;Duivendrecht;Dvd;20221206;C;20
+561;561__;561;Den Haag Laan van NOI;Laa;20221206;C;20
+536;536__;536;Den Haag HS;Gv;20221206;C;20
+564;564_a;564;Den Haag Binckhorst;Bkh;20221206;C;20
+564;564_f;564;Den Haag Binckhorst;Bkh;20221206;C;20
+564;564_d;564;Den Haag Binckhorst;Bkh;20221206;C;20
+564;564_c;564;Den Haag Binckhorst;Bkh;20221206;C;20
+564;564_b;564;Den Haag Binckhorst;Bkh;20221206;C;20
+560;560_b;560;Den Haag Centraal;Gvc;20221206;C;20
+560;560_a;560;Den Haag Centraal;Gvc;20221206;C;20
+611;611_b;611;Zevenaar;Zv;20221206;C;20
+611;611_c;611;Zevenaar;Zv;20221206;C;20
+611;611_a;611;Zevenaar;Zv;20221206;C;20
+039;039__;39;Zevenaar - Zevenaar Grens;Zv-Zvg;20221206;C;20
+212;212__;212;Winterswijk - Zevenaar;Ww-Zv;20221206;C;20
+549;549_a;549;Haren;Hrn;20221206;C;20
+530;530_a;530;Den Dolder;Dld;20221206;C;20
+557;557_g;557;Terneuzen Aansl.;Tnza;20221206;C;20
+817;817_b;817;Vlissingen Sloehaven;Sloe;20221206;C;20
+435;435__;435;Hoorn - Medemblik;Hn-Mbk;20221206;C;20
+507;507_a;507;Velperbroek Aansl.;Va;20221206;C;20
+533;533__;533;Woerden;Wd;20221206;C;20
+046;046__;46;Meteren Aansl. - s Hertogenbosch;Mtna-Ht;20221206;C;20
+543;543_b;543;Hengelo;Hgl;20221206;C;20
+509;509_b;509;Baarn;Brn;20221206;C;20
+026;026__;26;Hengelo - Oldenzaal Grens;Hgl-Odzg;20221206;C;20
+069;069__;69;Simpelveld - Schin op Geul;Spv-Sog;20221206;C;20
+477;477_a;477;Rotterdam Europoort 3;Re3;20221206;C;20
+585;585__;585;Diemen Aansl.;Dmna;20221206;C;20
+666;666_e;666;Meteren Aansl.;Mtna;20221206;C;20
+667;667_b;667;Prinsenbeek;Pb;20221206;C;20
+522;522_a;522;Uitgeest;Utg;20221206;C;20
+167;167__;167;Zevenbergschenhoek Aansluiting;Zha;20221206;C;20
+851;851_c;851;Born Franciscushaven;Bonfh;20221206;C;20
+468;468_a;468;Rotterdam Eemhaven;Reh;20221206;C;20
+562;562_a;562;De Haar Aansl.;Har;20221206;C;20
+124;124_b;124;Tilburg - Vught Aansl.;Tb-Vga;20221206;C;20
+606;606_a;606;Almelo;Aml;20221206;C;20
+010;010__;10;Haren - Groningen Losplaats;Hrn-Gnl;20221206;C;20
+079;079__;79;Zaandam - Hoorn;Zd-Hn;20221206;C;20
+781;781_a;781;Aachen (D) - Herzogenrath (D);A-Hz;20221206;C;20
+020;020__;20;Amersfoort Aansl. - Barneveld Noord;Ama-Bnn;20221206;C;20
+521;521_a;521;Schin op Geul;Sog;20221206;C;20
+823;823_b;823;Oosterhout Weststad;Otw;20221206;C;20
+618;618_b;618;Eindhoven;Ehv;20221206;C;20
+089;089__;89;Amersfoort - Amersfoort Aansl.;Amf-Ama;20221206;C;20
+023;023__;23;Apeldoorn - Deventer;Apd-Dv;20221206;C;20
+200;200__;200;Winsum - Roodeschool;Wsm-Rd;20221206;C;20
+541;541_d;541;Weesp Aansl.;Wpa;20221206;C;20
+617;617_b;617;Boxtel;Btl;20221206;C;20
+021;021__;21;Barneveld Noord - Apeldoorn;Bnn-Apd;20221206;C;20
+073;073__;73;Den Helder - Heerhugowaard;Hdr-Hwd;20221206;C;20
+600;600_b;600;Sauwerd;Swd;20221206;C;20
+938;938__;938;CUP Valburg;Cup;20221206;C;20
+817;817_a;817;Vlissingen Sloehaven;Sloe;20221206;C;20
+822;822_b;822;Zwijndrecht Groote Lindt;Zwdi;20221206;C;20
+075;075__;75;Alkmaar - Uitgeest;Amr-Utg;20221206;C;20
+817;817_g;817;Vlissingen Sloehaven;Sloe;20221206;C;20
+555;555__;555;Rotterdam Centraal;Rtd;20221206;C;20
+309;309__;309;Landgraaf - Simpelveld;Lg-Spv;20221206;C;20
+094;094__;94;Utrecht Centraal - Blauwkapel;Ut-Bkp;20221206;C;20
+817;817_l;817;Vlissingen Sloehaven;Sloe;20221206;C;20
+139;139__;139;Zaandam - Amsterdam Sloterdijk;Zd-Ass;20221206;C;20
+121;121_a;121;Breda - Lage Zwaluwe;Bd-Zlw;20221206;C;20
+526;526_a;526;Amsterdam Muiderpoort;Asdm;20221206;C;20
+490;490_d;490;Amsterdam Houtrakpolder (gebied);Hrp;20221206;C;20
+474;474_a;474;Rotterdam Europoort 1;Re1;20221206;C;20
+851;851_a;851;Born Franciscushaven;Bonfh;20221206;C;20
+031;031_b;31;Zutphen - Hengelo;Zp-Hgl;20221206;C;20
+091;091__;91;Den Dolder - Baarn;Dld-Brn;20221206;C;20
+126;126_a;126;Roosendaal - Roosendaal Grens;Rsd-Rsdg;20221206;C;20
+008;008__;8;Leeuwarden - Stavoren;Lw-Stv;20221206;C;20
+166;166__;166;Rotterdam Westelijke Splitsing - Nieuw Vennep;Wspl-Nvp;20221206;C;20
+503;503_c;503;Deventer;Dv;20221206;C;20
+527;527_b;527;Haarlem;Hlm;20221206;C;20
+527;527_f;527;Haarlem;Hlm;20221206;C;20
+553;553_b;553;Sittard;Std;20221206;C;20
+100;100__;100;Utrecht Centraal - Harmelen Aansl.;Ut-Hmla;20221206;C;20
+532;532__;532;Harmelen Aansl.;Hmla;20221206;C;20
+490;490_e;490;Amsterdam Houtrakpolder (gebied);Hrp;20221206;C;20
+606;606_b;606;Almelo;Aml;20221206;C;20
+623;623__;623;Alphen a/d Rijn;Apn;20221206;C;20
+477;477_e;477;Rotterdam Europoort 3;Re3;20221206;C;20
+205;205__;205;Mariënberg - Almelo;Mrb-Aml;20221206;C;20
+818;818_b;818;Terneuzen Dow Chemical;Trzdow;20221206;C;20
+085;085__;85;Haarlem - Warmond;Hlm-Wmd;20221206;C;20
+076;076__;76;Santpoort Noord - Uitgeest;Sptn-Utg;20221206;C;20
+006;006__;6;Groningen - Sauwerd;Gn-Swd;20221206;C;20
+097;097__;97;Nieuwersluis=Loenen - Breukelen;Nws-Bkl;20221206;C;20
+549;549_b;549;Haren;Hrn;20221206;C;20
+820;820__;820;Almelo Dollegoor;Amldol;20221206;C;20
+034;034__;34;Velperbroek Aansl. - Dieren;Va-Dr;20221206;C;20
+927;927__;927;Watergraafsmeer;Wgm;20221206;C;20
+143;143__;143;Leidschenveen - Leidschendam Lijnwerkplaats;Ldvn-Ldvwpl;20221206;C;20
+506;506_c;506;Amersfoort;Amf;20221206;C;20
+037;037__;37;Arnhem - Velperbroek Aansl.;Ah-Va;20221206;C;20
+132;132__;132;Moordrecht Aansl. - Rotterdam Kleiweg;Mda-Rtkw;20221206;C;20
+815;815_c;815;Roodeschool Eemshaven;Rde;20221206;C;20
+121;121_b;121;Breda - Lage Zwaluwe;Bd-Zlw;20221206;C;20
+522;522_b;522;Uitgeest;Utg;20221206;C;20
+024;024__;24;Deventer - Wierden;Dv-Wdn;20221206;C;20
+822;822_a;822;Zwijndrecht Groote Lindt;Zwdi;20221206;C;20
+552;552_b;552;Groningen Losplaats;Gnl;20221206;C;20
+553;553_a;553;Sittard;Std;20221206;C;20
+801;801_f;801;Moerdijk Industrieterrein;Mdki;20221206;C;20
+503;503_a;503;Deventer;Dv;20221206;C;20
+620;620__;620;Alkmaar;Amr;20221206;C;20
+041;041__;41;Arnhem - Elst;Ah-Est;20221206;C;20
+557;557_d;557;Terneuzen Aansl.;Tnza;20221206;C;20
+817;817_k;817;Vlissingen Sloehaven;Sloe;20221206;C;20
+605;605__;605;Wierden;Wdn;20221206;C;20
+015;015__;15;Zwolle - Kampen;Zl-Kpn;20221206;C;20
+053;053__;53;Vught Aansl. - Boxtel;Vga-Btl;20221206;C;20
+621;621__;621;Nieuwersluis=Loenen;Nws;20221206;C;20
+527;527_c;527;Haarlem;Hlm;20221206;C;20
+587;587_d;587;Diemen;Dmn;20221206;C;20
+612;612_a;612;Barneveld Noord;Bnn;20221206;C;20
+553;553_c;553;Sittard;Std;20221206;C;20
+080;080__;80;Amsterdam Bijlmer - Nieuwersluis=Loenen;Asb-Nws;20221206;C;20
+095;095__;95;Hilversum - Blauwkapel;Hvs-Bkp;20221206;C;20
+133;133_a;133;Amsterdam Riekerpolder - Warmond;Asra-Wmd;20221206;C;20
+831;831_a;831;Oss Racc. Elzenburg;Oelz;20221206;C;20
+044;044__;44;Ressen=Bemmel - Nijmegen;Rsb-Nm;20221206;C;20
+551;551_b;551;Tilburg;Tb;20221206;C;20
+609;609__;609;Zutphen;Zp;20221206;C;20
+545;545_a;545;Roosendaal;Rsd;20221206;C;20
+058;058__;58;Budel Grens - Weert;Bdlg-Wt;20221206;C;20
+588;588__;588;Amsterdam Dijksgracht;Dgr;20221206;C;20
+606;606_c;606;Almelo;Aml;20221206;C;20
+049;049__;49;Nijmegen - Beugen;Nm-Bug;20221206;C;20
+626;626_a;626;Hoorn;Hn;20221206;C;20
+017;017__;17;Amersfoort Aansl. - Hattemerbroek;Ama-Htba;20221206;C;20
+514;514_a;514;Nijmegen;Nm;20221206;C;20
+654;654__;654;Assen;Asn;20221206;C;20
+519;519_b;519;Roermond;Rm;20221206;C;20
+485;485_k;485;Amsterdam Hemhaven (gebied);Asdh;20221206;C;20
+485;485_h;485;Amsterdam Hemhaven (gebied);Asdh;20221206;C;20
+485;485_g;485;Amsterdam Hemhaven (gebied);Asdh;20221206;C;20
+485;485_c;485;Amsterdam Hemhaven (gebied);Asdh;20221206;C;20
+485;485_m;485;Amsterdam Hemhaven (gebied);Asdh;20221206;C;20
+485;485_f;485;Amsterdam Hemhaven (gebied);Asdh;20221206;C;20
+485;485_a;485;Amsterdam Hemhaven (gebied);Asdh;20221206;C;20
+542;542_a;542;Dordrecht;Ddr;20221206;C;20
+129;129__;129;Terneuzen Aansl. - Terneuzen;Tnza-Tnz;20221206;C;20
+667;667_a;667;Prinsenbeek;Pb;20221206;C;20
+801;801_k;801;Moerdijk Industrieterrein;Mdki;20221206;C;20
+490;490_g;490;Amsterdam Houtrakpolder (gebied);Hrp;20221206;C;20
+092;092__;92;Baarn - Amersfoort;Brn-Amf;20221206;C;20
+099;099__;99;Breukelen - Harmelen Aansl.;Bkl-Hmla;20221206;C;20
+400;400__;400;Emmen - Weerdinge;Emn-Wdg;20221206;C;20
+490;490_h;490;Amsterdam Houtrakpolder (gebied);Hrp;20221206;C;20
+120;120_b;120;Lage Zwaluwe - Roosendaal;Zlw-Rsd;20221206;C;20
+485;485_l;485;Amsterdam Hemhaven (gebied);Asdh;20221206;C;20
+486;486_f;486;Amsterdam Westhaven (gebied);Awhv;20221206;C;20
+486;486_r;486;Amsterdam Westhaven (gebied);Awhv;20221206;C;20
+486;486_a;486;Amsterdam Westhaven (gebied);Awhv;20221206;C;20
+486;486_k;486;Amsterdam Westhaven (gebied);Awhv;20221206;C;20
+525;525_c;525;Amsterdam Singelgracht Aansl.;Sgra;20221206;C;20
+525;525_a;525;Amsterdam Singelgracht Aansl.;Sgra;20221206;C;20
+486;486_c;486;Amsterdam Westhaven (gebied);Awhv;20221206;C;20
+486;486_d;486;Amsterdam Westhaven (gebied);Awhv;20221206;C;20
+523;523_c;523;Amsterdam Sloterdijk;Ass;20221206;C;20
+523;523_b;523;Amsterdam Sloterdijk;Ass;20221206;C;20
+523;523_a;523;Amsterdam Sloterdijk;Ass;20221206;C;20
+507;507_c;507;Velperbroek Aansl.;Va;20221206;C;20
+065;065__;65;Heerlen - Landgraaf;Hrl-Lg;20221206;C;20
+801;801_g;801;Moerdijk Industrieterrein;Mdki;20221206;C;20
+503;503_b;503;Deventer;Dv;20221206;C;20
+490;490_c;490;Amsterdam Houtrakpolder (gebied);Hrp;20221206;C;20
+071;071__;71;Eijsden - Maastricht;Edn-Mt;20221206;C;20
+528;528_a;528;Hilversum;Hvs;20221206;C;20
+557;557_c;557;Terneuzen Aansl.;Tnza;20221206;C;20
+823;823_a;823;Oosterhout Weststad;Otw;20221206;C;20
+524;524_a;524;Zaandam;Zd;20221206;C;20
+478;478_b;478;Rotterdam Europoort 4;Re4;20221206;C;20
+479;479_a;479;Maasvlakte 2;Mvt2;20221206;C;20
+478;478_d;478;Rotterdam Europoort 4;Re4;20221206;C;20
+475;475_c;475;Rotterdam Maasvlakte;Mvt;20221206;C;20
+810;810_a;810;Dordrecht Industrieterrein Aansl. De Staart;Ddri;20221206;C;20
+817;817_f;817;Vlissingen Sloehaven;Sloe;20221206;C;20
+661;661_b;661;Landgraaf;Lg;20221206;C;20
+802;802__;802;Utrecht Industrieterrein Lage Weide;Utilw;20221206;C;20
+540;540_g;540;Rotterdam Westelijke Splitsing;Wspl;20221206;C;20
+544;544_a;544;Breda;Bd;20221206;C;20
+501;501__;501;Groningen;Gn;20221206;C;20
+084;084__;84;Amsterdam Sloterdijk - Haarlem;Ass-Hlm;20221206;C;20
+529;529__;529;Breukelen;Bkl;20221206;C;20
+478;478_c;478;Rotterdam Europoort 4;Re4;20221206;C;20
+607;607_a;607;Winterswijk;Ww;20221206;C;20
+607;607_b;607;Winterswijk;Ww;20221206;C;20
+201;201__;201;Sauwerd - Delfzijl;Swd-Dz;20221206;C;20
+803;803_j;803;Delfzijl Stamlijn Havenschap;Dzsh;20221206;C;20
+803;803_n;803;Delfzijl Stamlijn Havenschap;Dzsh;20221206;C;20
+803;803_k;803;Delfzijl Stamlijn Havenschap;Dzsh;20221206;C;20
+803;803_l;803;Delfzijl Stamlijn Havenschap;Dzsh;20221206;C;20
+803;803_f;803;Delfzijl Stamlijn Havenschap;Dzsh;20221206;C;20
+803;803_g;803;Delfzijl Stamlijn Havenschap;Dzsh;20221206;C;20
+803;803_i;803;Delfzijl Stamlijn Havenschap;Dzsh;20221206;C;20
+803;803_a;803;Delfzijl Stamlijn Havenschap;Dzsh;20221206;C;20
+803;803_e;803;Delfzijl Stamlijn Havenschap;Dzsh;20221206;C;20
+531;531_d;531;Utrecht Centraal;Ut;20221206;C;20
+117;117__;117;Lunetten - Geldermalsen;Ln-Gdm;20221206;C;20
+547;547_c;547;Lunetten Aansl.;Utln;20221206;C;20
+531;531_c;531;Utrecht Centraal;Ut;20221206;C;20
+035;035__;35;Lunetten - De Haar Aansl.;Ln-Har;20221206;C;20
+664;664_a;664;Rotterdam Lombardijen;Rlb;20221206;C;20
+663;663_b;663;Rotterdam Barendrecht;Brd;20221206;C;20
+116;116_b;116;Dordrecht - Rotterdam Barendrecht;Ddr-Brd;20221206;C;20
+116;116_a;116;Dordrecht - Rotterdam Barendrecht;Ddr-Brd;20221206;C;20
+116;116_c;116;Dordrecht - Rotterdam Barendrecht;Ddr-Brd;20221206;C;20
+663;663_d;663;Rotterdam Barendrecht;Brd;20221206;C;20
+664;664_b;664;Rotterdam Lombardijen;Rlb;20221206;C;20
+663;663_g;663;Rotterdam Barendrecht;Brd;20221206;C;20
+779;779__;779;Emmerich (D) - Zevenaar Grens;Em-Zvg;20221206;C;20
+537;537_b;537;Moordrecht Aansl.;Mda;20221206;C;20
+624;624_a;624;Gouda;Gd;20221206;C;20
+537;537_a;537;Moordrecht Aansl.;Mda;20221206;C;20
+106;106__;106;Gouda - Moordrecht Aansl. Noord;Gd-Mdan;20221206;C;20
+105;105__;105;Woerden - Gouda;Wd-Gd;20221206;C;20
+624;624_b;624;Gouda;Gd;20221206;C;20
+115;115_a;115;Schiedam Centrum - Vlaardingen Vulcaanhaven;Sdm-Vdgvch;20221206;C;20
+539;539__;539;Schiedam Centrum;Sdm;20221206;C;20
+112;112__;112;Den Haag HS - Schiedam Centrum;Gv-Sdm;20221206;C;20
+505;505_b;505;Amersfoort Aansl.;Ama;20221206;C;20
+818;818_c;818;Terneuzen Dow Chemical;Trzdow;20221206;C;20
+054;054_a;54;Boxtel - Eindhoven;Btl-Ehv;20221206;C;20
+082;082__;82;Haarlem - Santpoort Noord;Hlm-Sptn;20221206;C;20
+781;781_b;781;Aachen (D) - Herzogenrath (D);A-Hz;20221206;C;20
+805;805_d;805;Dordrecht Zeehaventerrein;Ddrz;20221206;C;20
+527;527_a;527;Haarlem;Hlm;20221206;C;20
+505;505_a;505;Amersfoort Aansl.;Ama;20221206;C;20
+556;556__;556;Santpoort Noord;Sptn;20221206;C;20
+145;145__;145;Amsterdam Sloterdijk - Amsterdam Riekerpolder;Ass-Asra;20221206;C;20
+817;817_c;817;Vlissingen Sloehaven;Sloe;20221206;C;20
+515;515_b;515;Vught Aansl.;Vga;20221206;C;20
+087;087__;87;Weesp Aansl. - Hilversum;Wpa-Hvs;20221206;C;20
+054;054_b;54;Boxtel - Eindhoven;Btl-Ehv;20221206;C;20
+528;528_b;528;Hilversum;Hvs;20221206;C;20
+815;815_a;815;Roodeschool Eemshaven;Rde;20221206;C;20
+540;540_b;540;Rotterdam Westelijke Splitsing;Wspl;20221206;C;20
+118;118__;118;Geldermalsen - Dordrecht;Gdm-Ddr;20221206;C;20
+661;661_a;661;Landgraaf;Lg;20221206;C;20
+474;474_c;474;Rotterdam Europoort 1;Re1;20221206;C;20
+508;508__;508;Arnhem;Ah;20221206;C;20
+515;515_a;515;Vught Aansl.;Vga;20221206;C;20
+119;119_b;119;Lage Zwaluwe - Dordrecht;Zlw-Ddr;20221206;C;20
+108;108__;108;De Haar Aansl. - Ede=Wageningen;Har-Ed;20221206;C;20
+030;030__;30;Zutphen - Deventer;Zp-Dv;20221206;C;20
+155;155_b;155;Meteren Aansl. - Ressen = Bemmel;Mtna-Rsb;20221206;C;20
+822;822_c;822;Zwijndrecht Groote Lindt;Zwdi;20221206;C;20
+565;565_a;565;Leidschenveen;Ldvn;20221206;C;20
+666;666_d;666;Meteren Aansl.;Mtna;20221206;C;20
+164;164__;164;Prinsenbeek - Hazeldonk Grens;Pb-Bdgr;20221206;C;20
+048;048__;48;Nijmegen Grens - Nijmegen;Nmg-Nm;20221206;C;20
+613;613__;613;Ede=Wageningen;Ed;20221206;C;20
+600;600_a;600;Sauwerd;Swd;20221206;C;20
+050;050__;50;Amsterdam Muiderpoort - Diemen;Asdm-Dmn;20221206;C;20
+751;751__;751;Mariënberg;Mrb;20221206;C;20
+801;801_e;801;Moerdijk Industrieterrein;Mdki;20221206;C;20
+001;001_b;1;Harlingen Haven - Leeuwarden;Hlgh-Lw;20221206;C;20
+587;587_b;587;Diemen;Dmn;20221206;C;20
+502;502_b;502;Meppel;Mp;20221206;C;20
+810;810_c;810;Dordrecht Industrieterrein Aansl. De Staart;Ddri;20221206;C;20
+031;031_a;31;Zutphen - Hengelo;Zp-Hgl;20221206;C;20
+477;477_b;477;Rotterdam Europoort 3;Re3;20221206;C;20
+900;900__;900;Amersfoort Hoofdwerkplaats;Amfwph;20221206;C;20
+666;666_c;666;Meteren Aansl.;Mtna;20221206;C;20
+467;467_c;467;Rotterdam Waalhaven Oost;Who;20221206;C;20
+625;625_b;625;Lage Zwaluwe;Zlw;20221206;C;20
+011;011__;11;Assen - Haren;Asn-Hrn;20221206;C;20
+805;805_a;805;Dordrecht Zeehaventerrein;Ddrz;20221206;C;20
+543;543_c;543;Hengelo;Hgl;20221206;C;20
+517;517_a;517;Venlo;Vl;20221206;C;20
+074;074__;74;Heerhugowaard - Alkmaar;Hwd-Amr;20221206;C;20
+468;468_c;468;Rotterdam Eemhaven;Reh;20221206;C;20
+852;852_c;852;Axel Axelse Vlakte;Axavl;20221206;C;20
+541;541_a;541;Weesp Aansl.;Wpa;20221206;C;20
+801;801_r;801;Moerdijk Industrieterrein;Mdki;20221206;C;20
+152;152_a;152;Kijfhoek - Meteren Aansl.;Kfh-Mtna;20221206;C;20
+801;801_a;801;Moerdijk Industrieterrein;Mdki;20221206;C;20
+552;552_a;552;Groningen Losplaats;Gnl;20221206;C;20
+801;801_p;801;Moerdijk Industrieterrein;Mdki;20221206;C;20
+078;078__;78;Uitgeest - Zaandam;Utg-Zd;20221206;C;20
+618;618_a;618;Eindhoven;Ehv;20221206;C;20
+513;513_c;513;Geldermalsen;Gdm;20221206;C;20
+924;924_a;924;Kijfhoek;Kfh;20221206;C;20
+541;541_b;541;Weesp Aansl.;Wpa;20221206;C;20
+653;653_a;653;Zuidbroek;Zb;20221206;C;20
+540;540_d;540;Rotterdam Westelijke Splitsing;Wspl;20221206;C;20
+512;512_c;512;Ressen = Bemmel;Rsb;20221206;C;20
+538;538__;538;Rotterdam Kleiweg;Rtkw;20221206;C;20
+152;152_b;152;Kijfhoek - Meteren Aansl.;Kfh-Mtna;20221206;C;20
+801;801_i;801;Moerdijk Industrieterrein;Mdki;20221206;C;20
+756;756__;756;Beugen;Bug;20221206;C;20
+817;817_i;817;Vlissingen Sloehaven;Sloe;20221206;C;20
+817;817_e;817;Vlissingen Sloehaven;Sloe;20221206;C;20
+614;614_c;614;s Hertogenbosch;Ht;20221206;C;20
+437;437_b;437;Arnhem Goederenstation - Velperbroek Aansl.;Ahg-Va;20221206;C;20
+548;548__;548;Waterhuizen Aansl.;Wha;20221206;C;20
+216;216__;216;Heerhugowaard - Hoorn;Hwd-Hn;20221206;C;20
+033;033__;33;Dieren - Zutphen;Dr-Zp;20221206;C;20
+559;559__;559;Warmond;Wmd;20221206;C;20
+626;626_b;626;Hoorn;Hn;20221206;C;20
+513;513_b;513;Geldermalsen;Gdm;20221206;C;20
+534;534_a;534;Leiden Centraal;Ledn;20221206;C;20
+047;047__;47;s Hertogenbosch - Nijmegen;Ht-Nm;20221206;C;20
+801;801_b;801;Moerdijk Industrieterrein;Mdki;20221206;C;20
+787;787__;787;Hazeldonk Grens - Noorderkempen (B);Bdgr-Ndkp;20221206;C;20
+130;130_c;130;Axel Aansl. - Terneuzen Aansl.;Axa-Tnza;20221206;C;20
+519;519_a;519;Roermond;Rm;20221206;C;20
+104;104__;104;Leiden Centraal - Den Haag Mariahoeve;Ledn-Gvm;20221206;C;20
+801;801_h;801;Moerdijk Industrieterrein;Mdki;20221206;C;20
+115;115_d;115;Schiedam Centrum - Vlaardingen Vulcaanhaven;Sdm-Vdgvch;20221206;C;20
+131;131__;131;Sas van Gent Grens - Terneuzen Aansl.;Svgg-Tnza;20221206;C;20
+512;512_d;512;Ressen = Bemmel;Rsb;20221206;C;20
+124;124_a;124;Tilburg - Vught Aansl.;Tb-Vga;20221206;C;20
+512;512_a;512;Ressen = Bemmel;Rsb;20221206;C;20
+851;851_d;851;Born Franciscushaven;Bonfh;20221206;C;20
+951;951__;951;Waalhaven Zuid aansl. Noord - Waalhaven Zuid;Whzan-Whz;20221206;C;20
+922;922__;922;Leidschendam Lijnwerkplaats;Ldvwpl;20221206;C;20
+490;490_b;490;Amsterdam Houtrakpolder (gebied);Hrp;20221206;C;20
+161;161__;161;Lelystad Industrieterrein - Hattemerbroek;Llsi-Htba;20221206;C;20
+125;125__;125;Tilburg - Boxtel;Tb-Btl;20221206;C;20
+128;128__;128;Diemen Aansl. - Weesp Aansl.;Dmna-Wpa;20221206;C;20
+514;514_b;514;Nijmegen;Nm;20221206;C;20
+837;837__;837;Alphen a/d Rijn Industrieterrein Rijnhaven;Apnir;20221206;C;20
+857;857_a;857;Almelo Gem. Stamlijn;Gsalm;20221206;C;20
+064;064__;64;Sittard - Heerlen;Std-Hrl;20221206;C;20
+850;850__;850;Roosendaal Borchwerf;Rsdbw;20221206;C;20
+789;789__;789;Zelzate (B) - Sas van Gent Grens;Fsz-Svgg;20221206;C;20
+103;103__;103;Alphen a/d Rijn - Leiden Centraal;Apn-Ledn;20221206;C;20
+517;517_b;517;Venlo;Vl;20221206;C;20
+228;228__;228;Lage Zwaluwe - s Hertogenbosch;Zlw-Ht;20221206;C;20
+040;040__;40;Leusden - Amersfoort;Lsd-Amf;20221206;C;20
+123;123__;123;Breda - Tilburg;Bd-Tb;20221206;C;20
+038;038__;38;Velperbroek Aansl. - Zevenaar;Va-Zv;20221206;C;20
+158;158__;158;Ressen = Bemmel - Zevenaar;Rsb-Zv;20221206;C;20
+485;485_b;485;Amsterdam Hemhaven (gebied);Asdh;20221206;C;20
+485;485_e;485;Amsterdam Hemhaven (gebied);Asdh;20221206;C;20
+485;485_j;485;Amsterdam Hemhaven (gebied);Asdh;20221206;C;20
+485;485_d;485;Amsterdam Hemhaven (gebied);Asdh;20221206;C;20
+544;544_b;544;Breda;Bd;20221206;C;20
+032;032__;32;Blauwkapel - Lunetten;Bkp-Ln;20221206;C;20
+510;510_a;510;Elst;Est;20221206;C;20
+530;530_b;530;Den Dolder;Dld;20221206;C;20
+005;005__;5;Zuidbroek - Nieuweschans Grens;Zb-Nscg;20221206;C;20
+805;805_b;805;Dordrecht Zeehaventerrein;Ddrz;20221206;C;20
+587;587_c;587;Diemen;Dmn;20221206;C;20
+534;534_b;534;Leiden Centraal;Ledn;20221206;C;20
+550;550__;550;Leeuwarden;Lw;20221206;C;20
+468;468_f;468;Rotterdam Eemhaven;Reh;20221206;C;20
+007;007__;7;Sauwerd - Winsum;Swd-Wsm;20221206;C;20
+801;801_d;801;Moerdijk Industrieterrein;Mdki;20221206;C;20
+121;121_c;121;Breda - Lage Zwaluwe;Bd-Zlw;20221206;C;20
+114;114_a;114;Rotterdam Kleiweg - Rotterdam Westelijke Splitsing;Rtkw-Wspl;20221206;C;20
+130;130_d;130;Axel Aansl. - Terneuzen Aansl.;Axa-Tnza;20221206;C;20
+088;088__;88;Hilversum - Baarn;Hvs-Brn;20221206;C;20
+107;107__;107;Moordrecht Aansl. - Den Haag Binckhorst;Mda-Bkh;20221206;C;20
+525;525_b;525;Amsterdam Singelgracht Aansl.;Sgra;20221206;C;20
+486;486_e;486;Amsterdam Westhaven (gebied);Awhv;20221206;C;20
+081;081__;81;Zaandam - Amsterdam Singelgracht Aansl.;Zd-Sgra;20221206;C;20
+523;523_f;523;Amsterdam Sloterdijk;Ass;20221206;C;20
+001;001_a;1;Harlingen Haven - Leeuwarden;Hlgh-Lw;20221206;C;20
+486;486_b;486;Amsterdam Westhaven (gebied);Awhv;20221206;C;20
+478;478_a;478;Rotterdam Europoort 4;Re4;20221206;C;20
+475;475_b;475;Rotterdam Maasvlakte;Mvt;20221206;C;20
+475;475_a;475;Rotterdam Maasvlakte;Mvt;20221206;C;20
+479;479_b;479;Maasvlakte 2;Mvt2;20221206;C;20
+852;852_a;852;Axel Axelse Vlakte;Axavl;20221206;C;20
+127;127_a;127;Roosendaal - Vlissingen;Rsd-Vs;20221206;C;20
+019;019__;19;Wierden - Almelo;Wdn-Aml;20221206;C;20
+818;818_a;818;Terneuzen Dow Chemical;Trzdow;20221206;C;20
+586;586__;586;Amsterdam Centraal;Asd;20221206;C;20
+817;817_h;817;Vlissingen Sloehaven;Sloe;20221206;C;20
+012;012__;12;Meppel - Assen;Mp-Asn;20221206;C;20
+042;042__;42;Vork - Kesteren;Vrk-Ktr;20221206;C;20
+817;817_m;817;Vlissingen Sloehaven;Sloe;20221206;C;20
+127;127_b;127;Roosendaal - Vlissingen;Rsd-Vs;20221206;C;20
+557;557_b;557;Terneuzen Aansl.;Tnza;20221206;C;20
+051;051__;51;s Hertogenbosch - Vught Aansl.;Ht-Vga;20221206;C;20
+059;059__;59;Weert - Roermond;Wt-Rm;20221206;C;20
+924;924_b;924;Kijfhoek;Kfh;20221206;C;20
+056;056__;56;Venlo Grens - Venlo;Vlgr-Vl;20221206;C;20
+614;614_a;614;s Hertogenbosch;Ht;20221206;C;20
+002;002__;2;Leeuwarden - Groningen;Lw-Gn;20221206;C;20
+009;009__;9;Meppel - Leeuwarden;Mp-Lw;20221206;C;20
+210;210__;210;Zutphen - Winterswijk;Zp-Ww;20221206;C;20
+803;803_h;803;Delfzijl Stamlijn Havenschap;Dzsh;20221206;C;20
+803;803_m;803;Delfzijl Stamlijn Havenschap;Dzsh;20221206;C;20
+531;531_a;531;Utrecht Centraal;Ut;20221206;C;20
+547;547_a;547;Lunetten Aansl.;Utln;20221206;C;20
+663;663_a;663;Rotterdam Barendrecht;Brd;20221206;C;20
+663;663_c;663;Rotterdam Barendrecht;Brd;20221206;C;20
+134;134__;134;Gouda - Moordrecht Aansl.;Gd-Mda;20221206;C;20
+537;537_c;537;Moordrecht Aansl.;Mda;20221206;C;20
+513;513_a;513;Geldermalsen;Gdm;20221206;C;20
+135;135__;135;Weesp Aansl. - Lelystad Industrieterrein;Wpa-Llsi;20221206;C;20
+003;003__;3;Groningen Losplaats - Waterhuizen Aansl.;Gnl-Wha;20221206;C;20
+120;120_a;120;Lage Zwaluwe - Roosendaal;Zlw-Rsd;20221206;C;20
+122;122__;122;Roosendaal - Breda;Rsd-Bd;20221206;C;20
+518;518__;518;Weert;Wt;20221206;C;20
+209;209__;209;Dieren - Apeldoorn;Dr-Apd;20221206;C;20
+093;093__;93;Blauwkapel - Den Dolder;Bkp-Dld;20221206;C;20
+083;083__;83;Haarlem - Zandvoort aan Zee;Hlm-Zvt;20221206;C;20
+512;512_b;512;Ressen = Bemmel;Rsb;20221206;C;20
+545;545_b;545;Roosendaal;Rsd;20221206;C;20
+509;509_a;509;Baarn;Brn;20221206;C;20
+165;165__;165;Kijfhoek - Moerdijkbrug;Kfh-Mdbr;20221206;C;20
+130;130_a;130;Axel Aansl. - Terneuzen Aansl.;Axa-Tnza;20221206;C;20
+061;061__;61;Roermond - Vlodrop Grens;Rm-Vdpg;20221206;C;20
+467;467_b;467;Rotterdam Waalhaven Oost;Who;20221206;C;20
+617;617_a;617;Boxtel;Btl;20221206;C;20
+814;814_a;814;Maastricht Racc. Beatrixhaven;Mttrix;20221206;C;20
+004;004__;4;Waterhuizen Aansl. - Zuidbroek;Wha-Zb;20221206;C;20
+155;155_a;155;Meteren Aansl. - Ressen = Bemmel;Mtna-Rsb;20221206;C;20
+608;608_b;608;Apeldoorn;Apd;20221206;C;20
+823;823_c;823;Oosterhout Weststad;Otw;20221206;C;20
+558;558_b;558;Amsterdam Riekerpolder;Asra;20221206;C;20
+541;541_c;541;Weesp Aansl.;Wpa;20221206;C;20
+610;610__;610;Dieren;Dr;20221206;C;20
+608;608_a;608;Apeldoorn;Apd;20221206;C;20
+940;940__;940;Amersfoort Bokkeduinen;Bkd;20221206;C;20
+126;126_b;126;Roosendaal - Roosendaal Grens;Rsd-Rsdg;20221206;C;20
+036;036__;36;Ede=Wageningen - Arnhem;Ed-Ah;20221206;C;20
+653;653_b;653;Zuidbroek;Zb;20221206;C;20
+211;211__;211;Barneveld Noord - Ede=Wageningen;Bnn-Ed;20221206;C;20
+057;057__;57;Eindhoven - Weert;Ehv-Wt;20221206;C;20
+305;305__;305;Stadskanaal Hoofdstation - Zuidbroek;Skn-Zb;20221206;C;20
+619;619__;619;Heerhugowaard;Hwd;20221206;C;20
+558;558_a;558;Amsterdam Riekerpolder;Asra;20221206;C;20
+060;060__;60;Roermond - Venlo;Rm-Vl;20221206;C;20
+612;612_b;612;Barneveld Noord;Bnn;20221206;C;20
+226;226__;226;Gouda - Alphen a/d Rijn;Gd-Apn;20221206;C;20
+510;510_b;510;Elst;Est;20221206;C;20
+805;805_e;805;Dordrecht Zeehaventerrein;Ddrz;20221206;C;20
+208;208__;208;Apeldoorn - Zutphen;Apd-Zp;20221206;C;20
+502;502_a;502;Meppel;Mp;20221206;C;20
+526;526_b;526;Amsterdam Muiderpoort;Asdm;20221206;C;20
+563;563__;563;Den Haag Mariahoeve;Gvm;20221206;C;20
+666;666_a;666;Meteren Aansl.;Mtna;20221206;C;20
+067;067__;67;Heerlen - Schin op Geul;Hrl-Sog;20221206;C;20
+815;815_b;815;Roodeschool Eemshaven;Rde;20221206;C;20
+818;818_f;818;Terneuzen Dow Chemical;Trzdow;20221206;C;20
+625;625_a;625;Lage Zwaluwe;Zlw;20221206;C;20
+433;433__;433;Sittard - Born;Std-Bon;20221206;C;20
+090;090__;90;Den Dolder - Amersfoort;Dld-Amf;20221206;C;20
+098;098__;98;Breukelen - Utrecht Centraal;Bkl-Ut;20221206;C;20
+857;857_b;857;Almelo Gem. Stamlijn;Gsalm;20221206;C;20
+504;504_b;504;Heerlen;Hrl;20221206;C;20
+587;587_a;587;Diemen;Dmn;20221206;C;20
+562;562_b;562;De Haar Aansl.;Har;20221206;C;20
+625;625_c;625;Lage Zwaluwe;Zlw;20221206;C;20
+217;217__;217;Hoorn - Enkhuizen;Hn-Ekz;20221206;C;20
+468;468_b;468;Rotterdam Eemhaven;Reh;20221206;C;20
+666;666_b;666;Meteren Aansl.;Mtna;20221206;C;20
+507;507_b;507;Velperbroek Aansl.;Va;20221206;C;20
+043;043__;43;Kesteren - Geldermalsen;Ktr-Gdm;20221206;C;20
+119;119_a;119;Lage Zwaluwe - Dordrecht;Zlw-Ddr;20221206;C;20
+114;114_b;114;Rotterdam Kleiweg - Rotterdam Westelijke Splitsing;Rtkw-Wspl;20221206;C;20
+540;540_c;540;Rotterdam Westelijke Splitsing;Wspl;20221206;C;20
+814;814_b;814;Maastricht Racc. Beatrixhaven;Mttrix;20221206;C;20
+511;511__;511;Vork;Vrk;20221206;C;20
+543;543_a;543;Hengelo;Hgl;20221206;C;20
+025;025__;25;Almelo - Hengelo;Aml-Hgl;20221206;C;20
+163;163__;163;Rotterdam Lombardijen - Rotterdam Centraal;Rlb-Rtd;20221206;C;20
+818;818_e;818;Terneuzen Dow Chemical;Trzdow;20221206;C;20
+437;437_a;437;Arnhem Goederenstation - Velperbroek Aansl.;Ahg-Va;20221206;C;20
+542;542_b;542;Dordrecht;Ddr;20221206;C;20
+546;546_c;546;Blauwkapel;Bkp;20221206;C;20
+626;626_c;626;Hoorn;Hn;20221206;C;20
+054;054_c;54;Boxtel - Eindhoven;Btl-Ehv;20221206;C;20
+022;022__;22;Haren - Waterhuizen Aansl.;Hrn-Wha;20221206;C;20
+102;102__;102;Woerden - Alphen a/d Rijn;Wd-Apn;20221206;C;20
+521;521_b;521;Schin op Geul;Sog;20221206;C;20
+203;203__;203;Mariënberg - Emmen;Mrb-Emn;20221206;C;20
+817;817_d;817;Vlissingen Sloehaven;Sloe;20221206;C;20
+810;810_b;810;Dordrecht Industrieterrein Aansl. De Staart;Ddri;20221206;C;20
+618;618_c;618;Eindhoven;Ehv;20221206;C;20
+817;817_j;817;Vlissingen Sloehaven;Sloe;20221206;C;20
+524;524_b;524;Zaandam;Zd;20221206;C;20
+066;066_a;66;Landgraaf - Haanrade Grens;Lg-Hang;20221206;C;20
+546;546_g;546;Blauwkapel;Bkp;20221206;C;20
+110;110__;110;Den Haag Ypenburg - Leidschenveen;Ypb-Ldvn;20221206;C;20
+468;468_g;468;Rotterdam Eemhaven;Reh;20221206;C;20
+557;557_f;557;Terneuzen Aansl.;Tnza;20221206;C;20
+805;805_c;805;Dordrecht Zeehaventerrein;Ddrz;20221206;C;20
+506;506_b;506;Amersfoort;Amf;20221206;C;20
+801;801_m;801;Moerdijk Industrieterrein;Mdki;20221206;C;20
+546;546_b;546;Blauwkapel;Bkp;20221206;C;20
+801;801_c;801;Moerdijk Industrieterrein;Mdki;20221206;C;20
+551;551_a;551;Tilburg;Tb;20221206;C;20
+557;557_e;557;Terneuzen Aansl.;Tnza;20221206;C;20
+062;062__;62;Sittard - Roermond;Std-Rm;20221206;C;20
+801;801_l;801;Moerdijk Industrieterrein;Mdki;20221206;C;20
+819;819__;819;Etten=Leur Gem. Industrieterrein;Etni;20221206;C;20
+146;146__;146;Warmond - Leiden Centraal;Wmd-Ledn;20221206;C;20
+066;066_b;66;Landgraaf - Haanrade Grens;Lg-Hang;20221206;C;20
+101;101__;101;Harmelen Aansl. - Woerden;Hmla-Wd;20221206;C;20
+504;504_a;504;Heerlen;Hrl;20221206;C;20
+851;851_b;851;Born Franciscushaven;Bonfh;20221206;C;20
+801;801_q;801;Moerdijk Industrieterrein;Mdki;20221206;C;20
+109;109__;109;Rhenen - De Haar Aansl.;Rhn-Har;20221206;C;20
+467;467_a;467;Rotterdam Waalhaven Oost;Who;20221206;C;20
+546;546_a;546;Blauwkapel;Bkp;20221206;C;20
+565;565_b;565;Leidschenveen;Ldvn;20221206;C;20
+070;070__;70;Schin op Geul - Maastricht;Sog-Mt;20221206;C;20
+831;831_b;831;Oss Racc. Elzenburg;Oelz;20221206;C;20
+133;133_b;133;Amsterdam Riekerpolder - Warmond;Asra-Wmd;20221206;C;20
+818;818_d;818;Terneuzen Dow Chemical;Trzdow;20221206;C;20
+474;474_b;474;Rotterdam Europoort 1;Re1;20221206;C;20
+557;557_a;557;Terneuzen Aansl.;Tnza;20221206;C;20
+028;028__;28;Hengelo - Enschede Grens;Hgl-Esg;20221206;C;20
+213;213__;213;Boxtel - Uden;Btl-Ud;20221206;C;20
