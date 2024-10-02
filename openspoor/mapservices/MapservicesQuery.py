@@ -4,8 +4,8 @@ import geopandas as gpd
 from typing import Optional
 from pathlib import Path
 from loguru import logger
-from shapely.geometry import Point, LineString, Polygon
 import pickle
+from shapely.geometry import shape
 
 from ..utils.safe_requests import SafeRequest
 from ..utils.common import read_config
@@ -135,20 +135,7 @@ class MapServicesQuery:
         map_services.prorail.nl
         :return: geopandas dataframe
         """
-        attribute_list = [feature['attributes'] for feature in data['features']]
-        if data['geometryType'] == 'esriGeometryPoint':
-            geometry_list = [Point((f['geometry'])['x'], (f['geometry'])['y'])
-                             for f in data['features']]
-        elif data['geometryType'] == 'esriGeometryPolyline':
-            geometry_list = [LineString([tuple(p) for p in
-                                         f['geometry']['paths'][0]])
-                             for f in data['features']]
-        elif data['geometryType'] == 'esriGeometryPolygon':
-            geometry_list = [Polygon([tuple(p) for p in
-                                      f['geometry']['rings'][0]])
-                             for f in data['features']]
-        else:
-            raise Exception('Incorrect data format returned')
-
+        attribute_list = [feature['properties'] for feature in data['features']]
+        geometry_list = [shape(feature['geometry']) for feature in data['features']]
         return gpd.GeoDataFrame(data=attribute_list, crs=self.crs,
                                 geometry=geometry_list)

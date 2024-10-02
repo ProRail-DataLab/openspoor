@@ -17,7 +17,7 @@ def lines_gdf():
                              'KM_GEOCODE_VAN': [10, 40],
                              'KM_GEOCODE_TOT': [50, 0]},
                             geometry=[LineString([(0, 0, 10), (10, 10, 20), (20, 20, 50)]),
-                                      LineString([(30, 0, 40), (20, 10, 10), (10, 20, 0)])])
+                                      LineString([(30, 0, 40), (20, 10, 10), (10, 20, 0)])], crs='EPSG:28992')
 
 
 def test_determine_geocode_km(points_gdf, lines_gdf):
