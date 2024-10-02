@@ -108,7 +108,7 @@ class MapServicesQuery:
         :param input_url: string, base_url for features
         :return: int, max_features_count
         """
-        return SafeRequest().get_json('GET', input_url + "&returnCountOnly=True")['count']
+        return SafeRequest().get_json('GET', input_url + "&returnCountOnly=True")['properties']['count']
 
     def _retrieve_batch_of_features_to_gdf(self, input_url, offset):
         """
