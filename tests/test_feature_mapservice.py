@@ -12,7 +12,7 @@ def featureserveroverview():
 def test_get_feature_wi_geometry(featureserveroverview):
     station = featureserveroverview.search_for(
         "Station", exact=True
-    ).load_data(return_m=True)
+    ).load_data()
     assert isinstance(station, gpd.GeoDataFrame)
 
 
