@@ -34,8 +34,7 @@ def test_exact_match(all_featureserver_layers):
     # This should find many hits, as 'spo' is part of 'spoor'
     general_search_hits = all_featureserver_layers.search_for('spo').shape[0]
     exact_search_hits = all_featureserver_layers.search_for('spo', exact=True).shape[0]
-
-    exact_search_hits_boom = all_featureserver_layers.search_for('boom', exact=True).shape[0]  # Hedges
+    exact_search_hits_boom = all_featureserver_layers.search_for('boom', exact=True).shape[0]  # Trees
 
     assert general_search_hits > 0, 'Did not find hits for a very general search'
     assert exact_search_hits == 0, 'Found hits for exact search where none where expected'
