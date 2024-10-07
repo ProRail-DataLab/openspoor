@@ -1,4 +1,4 @@
-standard_featureserver_query: "f=json&returnGeometry=true&spatialRel=esriSpatialRelIntersects&\
+standard_featureserver_query: "f=geojson&returnGeometry=true&spatialRel=esriSpatialRelIntersects&\
                               geometry={%22xmin%22:0,%22ymin%22:0,%22xmax%22:500000,%22ymax%\
                               22:800000,%22spatialReference%22:{%22wkid%22:28992}}&\
                               geometryType=esriGeometryEnvelope&inSR=28992&outFields=*\

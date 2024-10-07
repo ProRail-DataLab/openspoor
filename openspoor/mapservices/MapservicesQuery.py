@@ -4,8 +4,8 @@ import geopandas as gpd
 from typing import Optional
 from pathlib import Path
 from loguru import logger
-from shapely.geometry import Point, LineString, Polygon
 import pickle
+from shapely.geometry import shape
 
 from ..utils.safe_requests import SafeRequest
 from ..utils.common import read_config
@@ -108,7 +108,12 @@ class MapServicesQuery:
         :param input_url: string, base_url for features
         :return: int, max_features_count
         """
-        return SafeRequest().get_json('GET', input_url + "&returnCountOnly=True")['count']
+        res = SafeRequest().get_json('GET', input_url + "&returnCountOnly=True")
+        # some layers do not return geojson when asking for the count only
+        # i.e.: 'https://mapservices.prorail.nl/arcgis/rest/services/Kadastraal_004/MapServer/5'
+        if 'properties' not in res.keys():
+            return res['count']
+        return res['properties']['count']
 
     def _retrieve_batch_of_features_to_gdf(self, input_url, offset):
         """
@@ -133,22 +138,12 @@ class MapServicesQuery:
 
         :param data: dictionary, json format as retrieved from feature server
         map_services.prorail.nl
-        :return: geopandas dataframe
+        :return: geopandas dataframe with geometry or pandas dataframe without
         """
-        attribute_list = [feature['attributes'] for feature in data['features']]
-        if data['geometryType'] == 'esriGeometryPoint':
-            geometry_list = [Point((f['geometry'])['x'], (f['geometry'])['y'])
-                             for f in data['features']]
-        elif data['geometryType'] == 'esriGeometryPolyline':
-            geometry_list = [LineString([tuple(p) for p in
-                                         f['geometry']['paths'][0]])
-                             for f in data['features']]
-        elif data['geometryType'] == 'esriGeometryPolygon':
-            geometry_list = [Polygon([tuple(p) for p in
-                                      f['geometry']['rings'][0]])
-                             for f in data['features']]
-        else:
-            raise Exception('Incorrect data format returned')
-
-        return gpd.GeoDataFrame(data=attribute_list, crs=self.crs,
-                                geometry=geometry_list)
+        attribute_list = [feature['properties'] for feature in data['features']]
+        geometry_list = [feature['geometry'] for feature in data['features']]
+        if all(geometry is None for geometry in geometry_list):
+            return pd.DataFrame(data=attribute_list)
+        geometry_list = [shape(geometry) if geometry is not None else None 
+                         for geometry in geometry_list]
+        return gpd.GeoDataFrame(data=attribute_list, geometry=geometry_list, crs=self.crs)

@@ -10,3 +10,4 @@ shapely==2.0.1
 importlib_metadata==6.3.0
 numpy==1.24.2
 parameterized==0.9.0
+fiona==1.9.6

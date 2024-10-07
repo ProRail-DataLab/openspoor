@@ -24,7 +24,7 @@ def test_get_all_featureserver_layers(all_featureserver_layers):
 
 
 def test_get_layers_in_featureservers(all_featureserver_layers):
-    url = 'https://mapservices.prorail.nl/arcgis/rest/services/Afscherming_002/FeatureServer'
+    url = 'https://mapservices.prorail.nl/arcgis/rest/services/Afscherming_003/FeatureServer'
     out = all_featureserver_layers._get_layers_in_featureservers(url)
     assert out.shape[0] > 0, 'No featureservices found'
     assert out.shape[1] == 2, 'Unexpected number of columns'
@@ -34,12 +34,11 @@ def test_exact_match(all_featureserver_layers):
     # This should find many hits, as 'spo' is part of 'spoor'
     general_search_hits = all_featureserver_layers.search_for('spo').shape[0]
     exact_search_hits = all_featureserver_layers.search_for('spo', exact=True).shape[0]
-
-    exact_search_hits_haag = all_featureserver_layers.search_for('haag', exact=True).shape[0]  # Hedges
+    exact_search_hits_boom = all_featureserver_layers.search_for('boom', exact=True).shape[0]  # Trees
 
     assert general_search_hits > 0, 'Did not find hits for a very general search'
     assert exact_search_hits == 0, 'Found hits for exact search where none where expected'
-    assert exact_search_hits_haag == 1, 'Found no hit for haag when one was expected'
+    assert exact_search_hits_boom == 1, 'Found no hit for boom when one was expected'
 
 
 
