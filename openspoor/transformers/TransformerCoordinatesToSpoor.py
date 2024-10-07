@@ -83,7 +83,9 @@ class TransformerCoordinatesToSpoor:
                             (d.geocode_kilometrering <= d[['KM_GEOCODE_VAN', 'KM_GEOCODE_TOT']].max(axis=1) + 0.0012))]
             .assign(geocode_kilometrering=lambda d: d.groupby(  # This ensures a unique geocode within every segment
                 [d.geometry.astype(str),
-                 'GEOCODE', 'SUBCODE', 'NAAM_LANG'])['geocode_kilometrering']
+                 d.GEOCODE.apply(lambda x: '' if x is None else str(x)),
+                 d.SUBCODE.apply(lambda x: '' if x is None else str(x)),
+                 d.NAAM_LANG.apply(lambda x: '' if x is None else str(x))])['geocode_kilometrering']                
                     .transform(np.mean))
             .reset_index()  # Below makes sure every original point is projected, even if the data contained duplicates
             .drop_duplicates()
