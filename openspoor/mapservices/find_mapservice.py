@@ -6,7 +6,7 @@ import geopandas as gpd
 from functools import cache
 
 from ..utils.safe_requests import SafeRequest
-from openspoor.mapservices.MapservicesQuery import MapServicesQuery
+from openspoor.mapservices.MapservicesQuery import MapServicesQuery, MapServicesQueryMValues
 from openspoor.utils.singleton import Singleton
 
 
@@ -25,8 +25,11 @@ class FeatureSearchResults(pd.DataFrame):
             raise IndexError("Invalid entry requested")
 
         url = self.layer_url.values[entry_number]
-
-        return MapServicesQuery(url, return_m=return_m).load_data()
+        
+        if not return_m:
+            return MapServicesQuery(url).load_data()
+        else:
+            return MapServicesQueryMValues(url).load_data()
 
     def write_gpkg(self, output_dir: Path, entry_number: int = 0) -> None:
         """
