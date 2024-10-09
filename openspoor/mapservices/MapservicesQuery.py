@@ -5,7 +5,8 @@ from typing import Optional
 from pathlib import Path
 from loguru import logger
 import pickle
-from shapely.geometry import shape
+import re
+from shapely.geometry import shape, Point, LineString
 
 from ..utils.safe_requests import SafeRequest
 from ..utils.common import read_config
@@ -29,6 +30,9 @@ class MapServicesQuery:
 
         self.standard_featureserver_query = config['standard_featureserver_query'] + \
                                             ('&returnM=true&returnZ=false' if return_m else '')
+        self.return_m = return_m
+        if return_m:
+            self.m_values_query = self.standard_featureserver_query.replace('f=geojson', 'f=json')
         self.url = url
         self.crs = config['crs']
         self.cache_location = cache_location
@@ -73,6 +77,13 @@ class MapServicesQuery:
             where_query = where_query[:-5] + "&"
 
         return where_query
+    
+    def _get_max_recordcount(self, url: str) -> int:
+        body = SafeRequest()._request_with_retry('GET', url)._body
+        try:
+            return int(re.findall(r'MaxRecordCount: </b> (\d+)', str(body))[0])
+        except:
+            raise ValueError("MaxRecordCount not found in response")
 
     def _load_all_features_to_gdf(self, dict_query=None):
         """
@@ -87,16 +98,31 @@ class MapServicesQuery:
         where_query = self._get_query_url(dict_query)
 
         input_url = self.url + where_query + self.standard_featureserver_query
-        logger.info("Load data with api call: " + input_url)
         total_features_count = self._retrieve_max_features_count(input_url)
         output_gdf = pd.DataFrame({})
         logger.info("Initiate downloading " + str(total_features_count) +
                     " of features.")
+        
+        # Maxrecordcount is either 1000 or 2000. For bigger sets, it is not worth the extra request to check the max recordcount        
+        if total_features_count > 2000:
+            recordcount = self._get_max_recordcount(self.url)
+        else:
+            recordcount = 1000
 
-        # Loop per 1000 features, as feature servers return max 1000 per call
-        for features_offset in range(0, total_features_count, 1000):
-            temp_gdf = self._retrieve_batch_of_features_to_gdf(input_url, features_offset)
-            output_gdf = pd.concat([output_gdf, temp_gdf], ignore_index=True)
+        if not self.return_m:            
+            logger.info("Load data with api call: " + input_url)
+            for features_offset in range(0, total_features_count, recordcount):
+                temp_m_gdf = self._retrieve_batch_of_features_to_gdf(input_url, features_offset, get_m=False)
+                output_gdf = pd.concat([output_gdf, temp_m_gdf], ignore_index=True)
+        else:
+            m_gdf = pd.DataFrame({})
+            m_values_url = self.url + where_query + self.m_values_query
+            
+            logger.info("Load data with api call: " + m_values_url)
+            for features_offset in range(0, total_features_count, recordcount):
+                temp_m_gdf = self._retrieve_batch_of_features_to_gdf(m_values_url, features_offset, get_m=True)
+                m_gdf = pd.concat([m_gdf, temp_m_gdf], ignore_index=True)
+            output_gdf = m_gdf.drop_duplicates(subset=['geometry']).reset_index(drop=True)
 
         return output_gdf
 
@@ -115,7 +141,7 @@ class MapServicesQuery:
             return res['count']
         return res['properties']['count']
 
-    def _retrieve_batch_of_features_to_gdf(self, input_url, offset):
+    def _retrieve_batch_of_features_to_gdf(self, input_url, offset, get_m=False):
         """
         Retrieve a batch of features from the url. As api calls can
         retrieve a maximum of 1000 features, the offset is used to retrieve
@@ -127,11 +153,11 @@ class MapServicesQuery:
         :return: geopandas dataframe of features
         """
         data = SafeRequest().get_json('GET', input_url + "&resultOffset=" + str(offset))
-        temp_gdf = self._transform_dict_to_gdf(data)
+        temp_gdf = self._transform_dict_to_gdf(data, get_m)
         logger.info("Downloaded " + str(offset + len(temp_gdf)) + " features")
         return temp_gdf
 
-    def _transform_dict_to_gdf(self, data):
+    def _transform_dict_to_gdf(self, data, get_m=False):
         """
         Transform given json format data from feature servers into a geopandas
         dataframe with given geometry.
@@ -140,10 +166,25 @@ class MapServicesQuery:
         map_services.prorail.nl
         :return: geopandas dataframe with geometry or pandas dataframe without
         """
-        attribute_list = [feature['properties'] for feature in data['features']]
-        geometry_list = [feature['geometry'] for feature in data['features']]
-        if all(geometry is None for geometry in geometry_list):
-            return pd.DataFrame(data=attribute_list)
-        geometry_list = [shape(geometry) if geometry is not None else None 
-                         for geometry in geometry_list]
-        return gpd.GeoDataFrame(data=attribute_list, geometry=geometry_list, crs=self.crs)
+        if not get_m:
+            geometry_list = [
+                shape(feature['geometry']) if feature['geometry'] is not None else None 
+                for feature in data['features']]
+            attribute_list = [feature['properties'] for feature in data['features']]
+            if all(geometry is None for geometry in geometry_list):
+                return pd.DataFrame(data=attribute_list)
+            return gpd.GeoDataFrame(data=attribute_list, geometry=geometry_list, crs=self.crs)
+        else:
+            attribute_list = [feature['attributes'] for feature in data['features']]
+            if data['geometryType'] == 'esriGeometryPolyline':
+                geometry_list = [LineString([tuple(p) for p in
+                                            f['geometry']['paths'][0]])
+                                for f in data['features']]
+            elif data['geometryType'] == 'esriGeometryPoint':
+                logger.warning("Requested m values for point geometry, these are not relevant for these layers")
+                geometry_list = [Point((f['geometry'])['x'], (f['geometry'])['y'])
+                                for f in data['features']]
+            else:
+                raise NotImplementedError("Requesting m values for this geometry type is not yet implemented")
+            return gpd.GeoDataFrame(data=attribute_list, crs=self.crs,
+                                geometry=geometry_list)
