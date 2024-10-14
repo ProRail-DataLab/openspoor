@@ -182,8 +182,18 @@ class MapServicesQueryMValues(MapServicesQuery):
 
     def __init__(self, url: str, cache_location: Optional[Path] = None):
         super().__init__(url, cache_location)
+        if not self._has_m_values():
+            logger.warning("This layer does not have M values, for this layer MapServicesQuery should be used. "\
+                           f"See {url} for more information")
+                           
         self.standard_featureserver_query = self.standard_featureserver_query.replace('f=geojson', 'f=json') + \
                                             '&returnM=true&returnZ=false'
+        
+    def _has_m_values(self):
+        body = SafeRequest()._request_with_retry('GET', self.url)._body
+        logger.info(body)
+        hasmvalues = re.findall(r'HasM: (\w+)', str(body))[0]
+        return hasmvalues == 'true'
 
     def _transform_dict_to_gdf(self, data: dict) -> gpd.GeoDataFrame:
         """
