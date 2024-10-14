@@ -191,7 +191,6 @@ class MapServicesQueryMValues(MapServicesQuery):
         
     def _has_m_values(self):
         body = SafeRequest()._request_with_retry('GET', self.url)._body
-        logger.info(body)
         hasmvalues = re.findall(r'HasM: (\w+)', str(body))[0]
         return hasmvalues == 'true'
 
