@@ -6,7 +6,7 @@ from pathlib import Path
 from loguru import logger
 import pickle
 import re
-from shapely.geometry import shape, Point, LineString
+from shapely.geometry import shape, Point, LineString, MultiLineString
 
 from ..utils.safe_requests import SafeRequest
 from ..utils.common import read_config
@@ -20,7 +20,8 @@ class MapServicesQuery:
     abstract parent class to other mapservices classes
     """
 
-    def __init__(self, url: Optional[str] = None, cache_location: Optional[Path] = None):
+    # def __init__(self, url: Optional[str] = None, cache_location: Optional[Path] = None):
+    def __init__(self, url: str, cache_location: Optional[Path] = None):
         """
         :param url: An url of a mapservices.prorail.nl feature server to download from.
                 this is the part of the url until /query?
@@ -54,6 +55,12 @@ class MapServicesQuery:
 
     @staticmethod
     def _get_query_url(dict_query: dict) -> str:
+        """
+        Create the query url from the given dictionary. This is used to filter
+        the data from the feature server.
+
+        :param dict_query: dictionary with filters.
+        """
         if dict_query is None:
             where_query = "/query?"
         else:
@@ -189,9 +196,11 @@ class MapServicesQueryMValues(MapServicesQuery):
         """
         attribute_list = [feature['attributes'] for feature in data['features']]
         if data['geometryType'] == 'esriGeometryPolyline':
-            geometry_list = [LineString([tuple(p) for p in
-                                        f['geometry']['paths'][0]])
-                            for f in data['features']]
+            for feature in data['features']:
+                if len(feature['geometry']['paths']) > 1:
+                    geometry_list = MultiLineString([LineString([tuple(p) for p in path]) for path in feature['geometry']['paths']])
+                else:
+                    geometry_list = LineString([tuple(p) for p in feature['geometry']['paths'][0]])
         elif data['geometryType'] == 'esriGeometryPoint':
             logger.warning("Requested m values for point geometry, these are not relevant for these layers")
             geometry_list = [Point((f['geometry'])['x'], (f['geometry'])['y'])

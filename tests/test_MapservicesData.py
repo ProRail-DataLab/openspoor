@@ -5,7 +5,7 @@ from shapely.geometry import Point, LineString, Polygon
 
 class Test:
     def test_transform_geojson_to_gdf_point(self):
-        mapservices_data = MapServicesQuery()
+        mapservices_data = MapServicesQuery(url="")
         input_data = {
             "type": "FeatureCollection",
             "features": [
@@ -30,7 +30,7 @@ class Test:
         pd.testing.assert_frame_equal(output_data, expected_output)
 
     def test_transform_geojson_to_gdf_polyline(self):
-        mapservices_data = MapServicesQuery()
+        mapservices_data = MapServicesQuery(url="")
         input_data = {
             "type": "FeatureCollection",
             "features": [
@@ -58,7 +58,7 @@ class Test:
         pd.testing.assert_frame_equal(output_data, expected_output)
 
     def test_transform_geojson_to_gdf_polygon(self):
-        mapservices_data = MapServicesQuery()
+        mapservices_data = MapServicesQuery(url="")
         input_data = {
             "type": "FeatureCollection",
             "features": [

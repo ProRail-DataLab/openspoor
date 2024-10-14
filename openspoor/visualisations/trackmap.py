@@ -3,7 +3,7 @@ import pandas as pd
 import folium
 from loguru import logger
 
-from shapely.geometry import point, polygon, linestring
+from shapely.geometry import point, polygon, linestring, multilinestring
 import geopandas as gpd
 from typing import List, Optional, Dict, Tuple, Union
 from pathlib import Path
@@ -435,7 +435,7 @@ def plottable(data: Union[gpd.GeoDataFrame, pd.DataFrame, PlotObject], popup=Non
         firstentry = data.geometry.values[0]
         if isinstance(firstentry, polygon.Polygon):
             return PlottingAreas(data, popup, *args, **kwargs)
-        elif isinstance(firstentry, linestring.LineString):
+        elif isinstance(firstentry, linestring.LineString) or isinstance(firstentry, multilinestring.MultiLineString):
             return PlottingLineStrings(data, popup, *args, **kwargs)
         elif isinstance(firstentry, point.Point):
             return PlottingPoints(data, popup, *args, **kwargs)
