@@ -216,6 +216,7 @@ class MapServicesQueryMValues(MapServicesQuery):
             geometry_list = [Point((f['geometry'])['x'], (f['geometry'])['y'])
                             for f in data['features']]
         else:
-            raise NotImplementedError("Requesting m values for this geometry type is not yet implemented")
+            geometrytype = data['geometryType']
+            raise NotImplementedError(f"Requesting m values for this geometry type: ({geometrytype}) is not yet implemented")
         return gpd.GeoDataFrame(data=attribute_list, crs=self.crs,
                             geometry=geometry_list)
