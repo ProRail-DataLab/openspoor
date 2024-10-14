@@ -54,6 +54,12 @@ class MapServicesQuery:
 
     @staticmethod
     def _get_query_url(dict_query: dict) -> str:
+        """
+        Create the query url from the given dictionary. This is used to filter
+        the data from the feature server.
+
+        :param dict_query: dictionary with filters.
+        """
         if dict_query is None:
             where_query = "/query?"
         else:
