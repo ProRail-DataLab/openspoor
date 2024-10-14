@@ -180,7 +180,7 @@ class MapServicesQueryMValues(MapServicesQuery):
     Unfortunately these are in json format only, so the standard query needs to be adjusted for this.    
     """
 
-    def __init__(self, url: Optional[str] = None, cache_location: Optional[Path] = None):
+    def __init__(self, url: str, cache_location: Optional[Path] = None):
         super().__init__(url, cache_location)
         self.standard_featureserver_query = self.standard_featureserver_query.replace('f=geojson', 'f=json') + \
                                             '&returnM=true&returnZ=false'
@@ -197,7 +197,7 @@ class MapServicesQueryMValues(MapServicesQuery):
         attribute_list = [feature['attributes'] for feature in data['features']]
         if data['geometryType'] == 'esriGeometryPolyline':
             geometry_list = []
-            for feature in data['features']:
+            for feature in data['features']:  # Sometimes there are multiple paths in one feature. These can be combined within the same geometry column
                 if len(feature['geometry']['paths']) > 1:
                     geometry_list.append(MultiLineString([LineString([tuple(p) for p in path]) for path in feature['geometry']['paths']]))
                 else:
