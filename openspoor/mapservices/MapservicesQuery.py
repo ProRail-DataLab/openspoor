@@ -196,11 +196,12 @@ class MapServicesQueryMValues(MapServicesQuery):
         """
         attribute_list = [feature['attributes'] for feature in data['features']]
         if data['geometryType'] == 'esriGeometryPolyline':
+            geometry_list = []
             for feature in data['features']:
                 if len(feature['geometry']['paths']) > 1:
-                    geometry_list = MultiLineString([LineString([tuple(p) for p in path]) for path in feature['geometry']['paths']])
+                    geometry_list.append(MultiLineString([LineString([tuple(p) for p in path]) for path in feature['geometry']['paths']]))
                 else:
-                    geometry_list = LineString([tuple(p) for p in feature['geometry']['paths'][0]])
+                    geometry_list.append(LineString([tuple(p) for p in feature['geometry']['paths'][0]]))
         elif data['geometryType'] == 'esriGeometryPoint':
             logger.warning("Requested m values for point geometry, these are not relevant for these layers")
             geometry_list = [Point((f['geometry'])['x'], (f['geometry'])['y'])
