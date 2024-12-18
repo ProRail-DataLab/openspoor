@@ -50,27 +50,35 @@ def far_points_gdf():
                                       Point(0, 30.5)])  # Should be in another segment
 
 
-def test_transform(monkeypatch, points_gdf, lines_gdf):
+@pytest.mark.parametrize('best_match_only', [True, False])
+def test_transform(monkeypatch, points_gdf, lines_gdf, best_match_only):
     
     monkeypatch.setattr(TransformerCoordinatesToSpoor, '_get_spoortak_met_geokm', lambda q: lines_gdf)
-    transformer = TransformerCoordinatesToSpoor()
+    transformer = TransformerCoordinatesToSpoor(best_match_only=best_match_only)
     out = transformer.transform(points_gdf)
-    # print(mock_transformer.stgk)
 
     expected_out = pd.concat([points_gdf, points_gdf.iloc[2:, :]])
     for col in ['linename', 'GEOCODE', 'SUBCODE', 'NAAM_LANG', 'KM_GEOCODE_VAN', 'KM_GEOCODE_TOT']:
         expected_out[col] = list(lines_gdf[col].values) * 2
     expected_out['geocode_kilometrering'] = [26.0, 8.0, 35.0, 5.0]
+    if best_match_only:
+        #The last point has two hits, best takes the first one
+        expected_out = expected_out.iloc[:-1,:]
     pd.testing.assert_frame_equal(out, expected_out)
-    
-def test_transform_far_points(monkeypatch, far_points_gdf, lines_gdf):    
+
+@pytest.mark.parametrize('best_match_only', [True, False])    
+def test_transform_far_points(monkeypatch, far_points_gdf, lines_gdf, best_match_only):    
     monkeypatch.setattr(TransformerCoordinatesToSpoor, '_get_spoortak_met_geokm', lambda q: lines_gdf)
 
-    out = TransformerCoordinatesToSpoor().transform(far_points_gdf)
+    out = TransformerCoordinatesToSpoor(best_match_only=best_match_only).transform(far_points_gdf)
 
     expected_out = far_points_gdf
     for col in ['linename', 'GEOCODE', 'SUBCODE', 'NAAM_LANG']:
         expected_out[col] = [None] * 2
     for col in ['KM_GEOCODE_VAN', 'KM_GEOCODE_TOT', 'geocode_kilometrering']:
         expected_out[col] = [np.nan] * 2
+    
+    if best_match_only:
+        # If no hits are good enough, none are returned
+        expected_out = expected_out.iloc[[], :]
     pd.testing.assert_frame_equal(out, expected_out)

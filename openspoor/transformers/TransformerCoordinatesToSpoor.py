@@ -16,10 +16,11 @@ class TransformerCoordinatesToSpoor:
 
     """
 
-    def __init__(self, buffer_distance=1.2):
+    def __init__(self, buffer_distance=1.2, best_match_only=False):
         """
         :param buffer_distance: float, max distance in meters used to
                                 pinpoint points to spoor referential systems
+        :param best_match_only: bool, if True, only the closest match per point is returned.
         """
         logger.info(
             "Initiating TransformerCoordinatesToSpoor object in order to "
@@ -28,6 +29,7 @@ class TransformerCoordinatesToSpoor:
 
         self.buffer_distance = buffer_distance
         self.stgk = self._get_spoortak_met_geokm()
+        self.best_match_only = best_match_only
 
     @cache
     def _get_spoortak_met_geokm(self):
@@ -72,12 +74,14 @@ class TransformerCoordinatesToSpoor:
             self.stgk.loc[close_geocodes.index]
             .set_index(close_geocodes['index_right'])  # Sample only the list of matching hits
             .assign(geocode_kilometrering=lambda d: self._determine_geocode_km(d, gdf_points))
+            .assign(geometry_geocode=lambda d: d.geometry)
             .drop(['geometry'], axis=1)
         )
 
-        return (
+        out = (
             gdf_points
             .join(points_geocodes)
+            .assign(projection_distance=lambda d: d.geometry.distance(d.geometry_geocode))
             .loc[lambda d: (d.KM_GEOCODE_VAN.isnull()) |
                            ((d.geocode_kilometrering >= d[['KM_GEOCODE_VAN', 'KM_GEOCODE_TOT']].min(axis=1) - 0.0012) &
                             (d.geocode_kilometrering <= d[['KM_GEOCODE_VAN', 'KM_GEOCODE_TOT']].max(axis=1) + 0.0012))]
@@ -93,3 +97,15 @@ class TransformerCoordinatesToSpoor:
             .rename_axis(None)
             .to_crs(starting_crs)
         )
+
+        if self.best_match_only:
+            # create an index based on the geometry, as this can be sorted
+            out['geometry_index'] = out['geometry'].astype(str)
+            out = (
+                out
+                .loc[lambda d: d.groupby('geometry_index')['projection_distance'].transform('min') == d['projection_distance']]
+                .drop_duplicates('geometry_index')  # Make sure this is done in the rare case of multiple closest matches
+                .drop(['geometry_index'], axis=1)
+            )
+
+        return out.drop(['projection_distance', 'geometry_geocode'], axis=1)
