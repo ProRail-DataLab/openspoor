@@ -178,7 +178,8 @@ def test_colors(points_dataframe):
     for _, child in m._children.items():
         if isinstance(child, folium.map.Marker):
             for _, grandchild in child._children.items():
-                markercolors.append(grandchild.options['markerColor'])
+                print(grandchild.options)
+                markercolors.append(grandchild.options['marker_color'])
     assert markercolors == ['purple', 'lightblue', 'darkgreen', 'blue'], 'Incorrect colors for points'
 
     # Create map with colors based on numeric values in a given column
@@ -190,5 +191,5 @@ def test_colors(points_dataframe):
     for _, child in q._children.items():
         if isinstance(child, folium.map.Marker):
             for _, grandchild in child._children.items():
-                markercolors.append(grandchild.options['markerColor'])
+                markercolors.append(grandchild.options['marker_color'])
     assert markercolors == ['green', 'orange', 'orange', 'red'], 'Incorrect colors for points'
