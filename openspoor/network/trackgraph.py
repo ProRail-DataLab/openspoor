@@ -16,7 +16,8 @@ class TrackNetherlands:
     This class is used to create a graph of the track topology
     and to find the shortest path between two points.    
     """
-    def __init__(self, overwrite: bool = False):
+    def __init__(self, overwrite: bool = False, local_cache=True):
+        self.local_cache = local_cache
         self.cache_location = Path('output')
         self.functionele_spoortak_path = self.cache_location / 'functionele_spoortak.gpkg'
         self.allconnections_path = self.cache_location / 'tracknetherlands.csv'
@@ -27,16 +28,16 @@ class TrackNetherlands:
         """
         :return: The GeoDataFrame with the functionele spoortakken
         """
+        relevant_columns = [['PUIC', 'NAAM', 'geometry', 'NAAM_LANG', 'REF_BEGRENZER_TYPE_EIND', 'REF_BEGRENZER_TYPE_BEGIN', 
+                             'KANTCODE_SPOORTAK_EIND', 'KANTCODE_SPOORTAK_BEGIN', 'REF_BEGRENZER_PUIC_BEGIN','REF_BEGRENZER_PUIC_EIND']]
         if self.functionele_spoortak_path.exists() or self.overwrite:
             functionele_spoortak = gpd.read_file(self.functionele_spoortak_path)
         else:
-            functionele_spoortak = FeatureServerOverview().search_for('functionele spoortak').load_data()            
-            functionele_spoortak.to_file(self.functionele_spoortak_path, driver='GPKG')
-            logger.info(f"Saved functionele spoortak to {self.functionele_spoortak_path}")
-        
-        functionele_spoortak = functionele_spoortak[['PUIC', 'NAAM', 'geometry', 'NAAM_LANG', 'REF_BEGRENZER_TYPE_EIND', 'REF_BEGRENZER_TYPE_BEGIN', 'KANTCODE_SPOORTAK_EIND', 'KANTCODE_SPOORTAK_BEGIN', 'REF_BEGRENZER_PUIC_BEGIN','REF_BEGRENZER_PUIC_EIND']]
-
-        functionele_spoortak['expected_connections'] = functionele_spoortak.apply(self.expected_connections, axis=1)        
+            functionele_spoortak = FeatureServerOverview().search_for('functionele spoortak').load_data()
+            functionele_spoortak['expected_connections'] = functionele_spoortak.apply(self.expected_connections, axis=1)   
+            if self.local_cache:  
+                functionele_spoortak.to_file(self.functionele_spoortak_path, driver='GPKG')[relevant_columns]
+                logger.info(f"Saved functionele spoortak to {self.functionele_spoortak_path}")   
         return functionele_spoortak
 
     def _process_functionele_spoortak(self) -> tuple[gpd.GeoDataFrame, gpd.GeoDataFrame]:
@@ -120,7 +121,10 @@ class TrackNetherlands:
             all_connections['length'] = all_connections.geometry.length
 
             self.cache_location.mkdir(exist_ok=True)
-            all_connections.to_csv(self.allconnections_path)
+            if self.local_cache:
+                all_connections.to_csv(self.allconnections_path)
+            else:
+                return all_connections
             logger.info(f"Saved all connections to {self.allconnections_path}")
         return pd.read_csv(self.allconnections_path, index_col=0)
 
@@ -212,7 +216,6 @@ class TrackNetherlands:
         # Priority queue to store (cost, current_node, path)
         pq: list[tuple[float, str, list[str]]] = [(0, start_spoortak, [])]
         visited = set()
-        print(self.illegal_pairs_list)
         illegal_set = set(self.illegal_pairs_list)
 
         while pq:
