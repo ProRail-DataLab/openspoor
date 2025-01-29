@@ -13,7 +13,7 @@ class TrackNetherlands:
     def __init__(self, overwrite=False):
         self.cache_location = Path('output')
         self.functionele_spoortak_path = self.cache_location / 'functionele_spoortak.gpkg'
-        self.allconnections_path = self.cache_location / 'tracknetherlands.gpkg'
+        self.allconnections_path = self.cache_location / 'tracknetherlands.csv'
         self.overwrite = overwrite
 
     @cached_property
@@ -27,91 +27,125 @@ class TrackNetherlands:
         
         functionele_spoortak = functionele_spoortak[['PUIC', 'NAAM', 'geometry', 'NAAM_LANG', 'REF_BEGRENZER_TYPE_EIND', 'REF_BEGRENZER_TYPE_BEGIN', 'KANTCODE_SPOORTAK_EIND', 'KANTCODE_SPOORTAK_BEGIN', 'REF_BEGRENZER_PUIC_BEGIN','REF_BEGRENZER_PUIC_EIND']]
 
-        functionele_spoortak['expected_connections'] = functionele_spoortak.apply(self.expected_connections, axis=1)
-        functionele_spoortak = functionele_spoortak[['PUIC', 'geometry', 'REF_BEGRENZER_TYPE_EIND', 'REF_BEGRENZER_TYPE_BEGIN', 'expected_connections']]
-        
+        functionele_spoortak['expected_connections'] = functionele_spoortak.apply(self.expected_connections, axis=1)        
         return functionele_spoortak
 
-    def _process_functionele_spoortak(self):
-        joined = (
+    def _process_functionele_spoortak(self) -> tuple[gpd.GeoDataFrame, gpd.GeoDataFrame]:
+        touching_spoortakken = (
             self.functionele_spoortak
             .sjoin(
                 (self.functionele_spoortak
                     .assign(geometry_right=lambda d: d.geometry)
                 )
                 , how='inner', predicate='touches')
-            .assign(geometry_begin_left=lambda d: d.geometry.apply(lambda x: x.interpolate(0, normalized=True)))
-            .assign(geometry_end_left=lambda d: d.geometry.apply(lambda x: x.interpolate(1, normalized=True)))
-            .assign(geometry_begin_right=lambda d: d.geometry_right.apply(lambda x: x.interpolate(0, normalized=True)))
-            .assign(geometry_end_right=lambda d: d.geometry_right.apply(lambda x: x.interpolate(1, normalized=True)))
         )
 
+        small_overlaps = self.get_small_overlaps(touching_spoortakken)  # Filter on spoortakken that are roughly consecutive
+        small_overlaps_cleaned = KruisingResolver(small_overlaps).take_best_at_kruising()  # At kruisingen, take the best match
+        return self._recheck_connections(small_overlaps_cleaned), touching_spoortakken  # Recheck if the connections are correct after the filtering
+    
+    def get_small_overlaps(self, joined: gpd.GeoDataFrame) -> gpd.GeoDataFrame:
         joined['geometry_capped_left'] = joined.geometry.apply(lambda x: x.buffer(1, cap_style='flat'))
         joined['geometry_capped_right'] = joined.geometry_right.apply(lambda x: x.buffer(1, cap_style='flat'))
         joined['intersection_area'] = joined.apply(lambda d: d.geometry_capped_left.intersection(d.geometry_capped_right).area, axis=1)
-        small_overlaps = joined[lambda d: d.intersection_area < 0.2]
+        return joined[lambda d: d.intersection_area < 0.2].drop(columns=['geometry_capped_left', 'geometry_capped_right'])
+    
+    def _recheck_connections(self, gdf_cleaned: gpd.GeoDataFrame) -> gpd.GeoDataFrame:
+        gdf_cleaned = gdf_cleaned.assign(found_connections_2=lambda d: d.groupby('PUIC_left').PUIC_right.transform('count'))
+        gdf_cleaned.loc[lambda d: d.found_connections_2 != d.expected_connections_left].sort_values('PUIC_left')
+        gdf_cleaned['mismatch'] = gdf_cleaned.apply(lambda x: x['found_connections_2'] != x['expected_connections_left'], axis=1)
+        return gdf_cleaned
 
-        small_overlaps = small_overlaps.assign(found_connections=lambda d: d.groupby('PUIC_left').PUIC_right.transform('count')).reset_index()
-        small_overlaps_filtered = KruisingResolver(small_overlaps).take_best_at_kruising()
-        small_overlaps_filtered = small_overlaps_filtered.assign(found_connections_2=lambda d: d.groupby('PUIC_left').PUIC_right.transform('count'))
-        small_overlaps_filtered.loc[lambda d: d.found_connections_2 != d.expected_connections_left].sort_values('PUIC_left')
-        small_overlaps_filtered['mismatch'] = small_overlaps_filtered.apply(lambda x: x['found_connections_2'] != x['expected_connections_left'], axis=1)
+    def _identify_illegal_connections(self, all_connections: pd.DataFrame, valid_connections: gpd.GeoDataFrame) -> gpd.GeoDataFrame:
+        return all_connections.set_index(['PUIC_left', 'PUIC_right']).loc[lambda d: d.index.isin(valid_connections.set_index(['PUIC_left', 'PUIC_right']).index)==False].assign(illegal=True)[['illegal']]
 
-        return small_overlaps_filtered
+    def _mark_connections(self, all_connections: gpd.GeoDataFrame, illegal_connections: gpd.GeoDataFrame, valid_connections: gpd.GeoDataFrame) -> gpd.GeoDataFrame:
+        """
+        Tag every connection as illegal, valid or neither. This is based on the expected connections and the actual connections.
 
-    def _identify_illegal_connections(self, all_connections, joined_valid_filtered):
-        illegal_connections = all_connections.set_index(['PUIC_left', 'PUIC_right']).loc[lambda d: d.index.isin(joined_valid_filtered.set_index(['PUIC_left', 'PUIC_right']).index)==False].assign(illegal=True)[['illegal']]
-        return illegal_connections
+        :param all_connections: The GeoDataFrame with all connections
+        :param illegal_connections: The GeoDataFrame with the illegal connections
+        :param joined_valid_filtered: The GeoDataFrame with the valid connections
+        :return: The GeoDataFrame with all connections marked as illegal or valid
+        """
 
-    def _mark_connections(self, all_connections, illegal_connections, joined_valid_filtered):
         all_connections = all_connections.set_index(['PUIC_left', 'PUIC_right'])
         all_connections['illegal'] = all_connections.index.isin(illegal_connections.index)
-        all_connections['valid'] = all_connections.index.isin(joined_valid_filtered.set_index(['PUIC_left', 'PUIC_right']).index)
+        all_connections['valid'] = all_connections.index.isin(valid_connections.set_index(['PUIC_left', 'PUIC_right']).index)
         return all_connections
     
     @cached_property
-    def mismatches(self):
-        joined_valid_filtered = self._process_functionele_spoortak()  #TODO: This is a bit of a hack, but it works for now
-        return joined_valid_filtered.loc[lambda d: d.mismatch==True]
+    def mismatches(self)->gpd.GeoDataFrame:
+        """
+        Return a GeoDataFrame with all the mismatches in the track topology. These are the connections that are not as expected.
+        This might indicate a problem in the underlying topology of the track.
+
+        :return: The GeoDataFrame with all the mismatches        
+        """
+        valid_connections, _ = self._process_functionele_spoortak()  #TODO: This is a bit of a hack, but it works for now
+        return valid_connections.loc[lambda d: d.mismatch==True]
     
     @cached_property    
-    def all_connections(self):
-        if not self.allconnections_path.exists() or self.overwrite:
-            joined_valid_filtered = self._process_functionele_spoortak()
-            all_connections = self.functionele_spoortak.sjoin(self.functionele_spoortak, how='inner', predicate='touches')
-            illegal_connections = self._identify_illegal_connections(all_connections, joined_valid_filtered)
+    def all_connections(self)-> pd.DataFrame:
+        """
+        Create a GeoDataFrame with all connections between the different spoortakken. 
 
-            all_connections = self._mark_connections(all_connections, illegal_connections, joined_valid_filtered)
+        :return: The GeoDataFrame with all connections        
+        """
+        if not self.allconnections_path.exists() or self.overwrite:
+            valid_connections, all_connections = self._process_functionele_spoortak()
+            illegal_connections = self._identify_illegal_connections(all_connections, valid_connections)
+            all_connections = self._mark_connections(all_connections, illegal_connections, valid_connections)
+            all_connections['length'] = all_connections.geometry.length
 
             self.cache_location.mkdir(exist_ok=True)
-            all_connections.to_file(self.allconnections_path, driver='GPKG')
+            all_connections.to_csv(self.allconnections_path)
             logger.info(f"Saved all connections to {self.allconnections_path}")
-        return gpd.read_file(self.allconnections_path)
+        # return gpd.read_file(self.allconnections_path)
+        return pd.read_csv(self.allconnections_path, index_col=0)
 
     @cached_property
-    def graphentries(self):
+    def graphentries(self) -> dict[str, list[tuple[str, float]]]:
+        """
+        Create a dictionary with the connections between the different spoortakken. The dictionary is structured as follows:
+        {PUIC_left: [(PUIC_right, length), ...], ...}
+
+        :return: The dictionary with the connections        
+        """
         valid_locations = self.all_connections.loc[lambda d: d.valid].reset_index()
-        graphentries = valid_locations.assign(length=lambda d: d.geometry.length)[['PUIC_left', 'PUIC_right', 'length']]
+        graphentries = valid_locations[['PUIC_left', 'PUIC_right', 'length']]
 
         return graphentries.groupby('PUIC_left').apply(lambda x: list(zip(x.PUIC_right, x.length))).to_dict()
     
     @cached_property    
-    def illegal_pairs_list(self):
+    def illegal_pairs_list(self) -> list[tuple[str, str]]:
+        """
+        Return a list of illegal pairs of PUICs. These are the pairs that should not be connected due to the track topology not allowing a train to drive from one to the other.
+        The list is structured as follows:
+        [(PUIC_left, PUIC_right), ...]        
+        """
         return self.all_connections.loc[lambda d: d.illegal].reset_index().apply(lambda x: (x.PUIC_left, x.PUIC_right), axis=1).tolist()
 
     @staticmethod
-    def expected_connections(row):
+    def expected_connections(row: pd.Series) -> int:
+        """
+        For a given spoortak, calculate the expected number of connections (on both sides combined).
+
+        :param row: The row of the spoortak
+
+        :return: The expected number of connections
+        """
         connections = 0
         for begineind in ['_BEGIN', '_EIND']:
             begrenzer = row[f'REF_BEGRENZER_TYPE{begineind}']
             kantcode = row[f'KANTCODE_SPOORTAK{begineind}']
-            if begrenzer in ['EINDESPOOR',"STOOTJUK", "TERRA-INCOGNITA"]:
+            if begrenzer in ['EINDESPOOR',"STOOTJUK", "TERRA-INCOGNITA"]:  # No significant connections
                 connections += 0
-            elif begrenzer =='KRUISING':
+            elif begrenzer =='KRUISING':  # Kruising, always connect to 1
                 connections +=1
-            elif begrenzer in ['WISSEL_EW', 'WISSEL_HEW']:
+            elif begrenzer in ['WISSEL_EW', 'WISSEL_HEW']:  # Engelse wissels, always connect to 2
                 connections += 2
-            elif begrenzer in ['WISSEL_GW']:
+            elif begrenzer in ['WISSEL_GW']:  # Regular wissel, check at which side it connects
                 if kantcode  in ['L', "R"]:
                     connections += 1
                 elif kantcode =='V':
@@ -149,6 +183,7 @@ class TrackNetherlands:
         # Priority queue to store (cost, current_node, path)
         pq = [(0, start_spoortak, [])]
         visited = set()
+        print(self.illegal_pairs_list)
         illegal_set = set(self.illegal_pairs_list)
 
         while pq:
@@ -189,78 +224,51 @@ class TrackNetherlands:
     
 
 class KruisingResolver:
-    def __init__(self, small_overlaps):
-        self.kruisingleft = {}
-        self.small_overlaps = small_overlaps
-        self.small_overlaps['kruising_begin_left'] = self.small_overlaps.REF_BEGRENZER_TYPE_BEGIN_left == 'KRUISING'
-        self.small_overlaps['kruising_eind_left'] = self.small_overlaps.REF_BEGRENZER_TYPE_EIND_left == 'KRUISING'
-        self.small_overlaps['kruising_begin_right'] = self.small_overlaps.REF_BEGRENZER_TYPE_BEGIN_right == 'KRUISING'
-        self.small_overlaps['kruising_eind_right'] = self.small_overlaps.REF_BEGRENZER_TYPE_EIND_right == 'KRUISING'
-        for (kruising_begin_left, kruising_eind_left), df_subset in (
-            self.small_overlaps
-            .loc[lambda d: (d.expected_connections_left == d.found_connections)]
-            .groupby(['kruising_eind_left', 'kruising_begin_left'])):
-            logger.debug(f"{kruising_begin_left} {kruising_eind_left}")
-            self.kruisingleft[(kruising_begin_left, kruising_eind_left)] = df_subset.reset_index()
+    def __init__(self, data: pd.DataFrame):
+        self.data = data.assign(found_connections=lambda d: d.groupby('PUIC_left').PUIC_right.transform('count')).reset_index()
 
-    def take_best_at_kruising(self):
-
+    def take_best_at_kruising(self)->pd.DataFrame:
         corrects = self._get_corrects()
-        nonproblem = self._get_nonproblem()
-        nonproblem_end = self._get_nonproblem_end()
-        nonproblem_begin = self._get_nonproblem_begin()
+        non_kruising_problem = self._get_non_kruising_problem()
         fixed_end = self._get_fixed_end()
-        fixed_begin = self._get_fixed_begin()
-
-        return pd.concat([corrects, nonproblem, nonproblem_begin, nonproblem_end, fixed_end, fixed_begin]).drop_duplicates(['PUIC_left', 'PUIC_right'])
+        fixed_begin = self._get_fixed_begin()        
+        return pd.concat([corrects, non_kruising_problem, fixed_end, fixed_begin]).drop_duplicates(['PUIC_left', 'PUIC_right'])
         
 
-    def _get_corrects(self):
-        return self.small_overlaps.loc[lambda d: (d.expected_connections_left == d.found_connections)].assign(source='correct')
+    def _get_corrects(self)->pd.DataFrame:
+        return self.data.loc[lambda d: (d.expected_connections_left == d.found_connections)].assign(source='correct')
 
-    def _get_nonproblem(self):
-        return self.kruisingleft[(False, False)].assign(source='nonproblem')
-
-    def _get_nonproblem_end(self):
-        try:
-            return (self.kruisingleft[(False, True)]
-                .apply(self._no_relevant_kruising, axis=1)
-                .assign(source='nonproblem_end'))
-        except KeyError:
-            return pd.DataFrame()
-
-    def _get_nonproblem_begin(self):
-        try:
-            return (            
-                self.kruisingleft[(True, False)]
-                .apply(self._no_relevant_kruising, axis=1)
-                .assign(source='nonproblem_begin')
-            )
-        except KeyError:
-            return pd.DataFrame()
-
-    def _get_fixed_begin(self):
+    def _get_non_kruising_problem(self)->pd.DataFrame:
         return (
-            self.small_overlaps            
-            .loc[lambda d: ((d.REF_BEGRENZER_TYPE_BEGIN_left=='KRUISING') | (d.REF_BEGRENZER_TYPE_BEGIN_right=='KRUISING')) & \
-                ((d.kruising_begin_left==d.kruising_eind_right) | (d.kruising_begin_left==d.kruising_begin_right))]
+            self.data
+            .loc[lambda d: (d.expected_connections_left != d.found_connections)]
+            .loc[lambda d: (d.REF_BEGRENZER_TYPE_EIND_left != 'KRUISING') & (d.REF_BEGRENZER_TYPE_BEGIN_left != 'KRUISING')]
+            .assign(source='non_kruising_problem')
+        )
+
+    def _get_fixed_begin(self)->pd.DataFrame:
+        return (
+            self.data  
+            .loc[lambda d: ((d.REF_BEGRENZER_TYPE_BEGIN_left=='KRUISING'))]
             .pipe(self._get_best_match)
             .assign(source='fixed_begin')
         )
 
-    def _get_fixed_end(self):
+    def _get_fixed_end(self)->pd.DataFrame:
         return (
-            self.small_overlaps
-            .loc[lambda d: ((d.REF_BEGRENZER_TYPE_EIND_left=='KRUISING') | (d.REF_BEGRENZER_TYPE_EIND_right=='KRUISING')) & \
-                ((d.kruising_eind_left==d.kruising_eind_right) | (d.kruising_eind_left==d.kruising_begin_right))]
+            self.data
+            .loc[lambda d: ((d.REF_BEGRENZER_TYPE_EIND_left=='KRUISING'))]
             .pipe(self._get_best_match)
             .assign(source='fixed_begin')
         )
     
     @staticmethod    
-    def _get_best_match(overlap_dataframe):
+    def _get_best_match(overlap_dataframe: pd.DataFrame) -> pd.DataFrame:
+        """
+        For kruisingen specifically, look for the connection with the smallest overlap area. This is the one to which the spoortak should connect.
+
+        :param overlap_dataframe: A dataframe with unfiltered kruisingen.
+
+        :return: A dataframe with the best match for each PUIC_left        
+        """
         return overlap_dataframe.loc[lambda d: d.groupby('PUIC_left').intersection_area.transform('min') == d.intersection_area]
-    
-    @staticmethod
-    def _no_relevant_kruising(overlap_dataframe):
-        return overlap_dataframe.loc[lambda d: (d.geometry_end_left != d.geometry_end_right) & (d.geometry_end_left != d.geometry_begin_right)]
