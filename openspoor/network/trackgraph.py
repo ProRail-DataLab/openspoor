@@ -1,5 +1,3 @@
-from openspoor.mapservices import FeatureServerOverview
-from openspoor.visualisations import Route
 import pandas as pd
 from loguru import logger
 from shapely.geometry import Point
@@ -8,16 +6,27 @@ from pathlib import Path
 import heapq
 from functools import cached_property
 
+from openspoor.mapservices import FeatureServerOverview
+from openspoor.visualisations import Route
+
 
 class TrackNetherlands:
-    def __init__(self, overwrite=False):
+    """
+    Class to handle the track topology of the Netherlands. 
+    This class is used to create a graph of the track topology
+    and to find the shortest path between two points.    
+    """
+    def __init__(self, overwrite: bool = False):
         self.cache_location = Path('output')
         self.functionele_spoortak_path = self.cache_location / 'functionele_spoortak.gpkg'
         self.allconnections_path = self.cache_location / 'tracknetherlands.csv'
         self.overwrite = overwrite
 
     @cached_property
-    def functionele_spoortak(self):
+    def functionele_spoortak(self) -> gpd.GeoDataFrame:
+        """
+        :return: The GeoDataFrame with the functionele spoortakken
+        """
         if self.functionele_spoortak_path.exists() or self.overwrite:
             functionele_spoortak = gpd.read_file(self.functionele_spoortak_path)
         else:
@@ -31,6 +40,11 @@ class TrackNetherlands:
         return functionele_spoortak
 
     def _process_functionele_spoortak(self) -> tuple[gpd.GeoDataFrame, gpd.GeoDataFrame]:
+        """
+        Process the functionele spoortakken to find the connections between the different spoortakken.
+
+        :return: A tuple with the valid connections and all connections        
+        """
         touching_spoortakken = (
             self.functionele_spoortak
             .sjoin(
@@ -45,32 +59,40 @@ class TrackNetherlands:
         return self._recheck_connections(small_overlaps_cleaned), touching_spoortakken  # Recheck if the connections are correct after the filtering
     
     def get_small_overlaps(self, joined: gpd.GeoDataFrame) -> gpd.GeoDataFrame:
+        """
+        Filter the connections between the different spoortakken to only include the connections that are roughly consecutive. This is done by checking the area of the intersection between the two spoortakken.
+
+        :param joined: The GeoDataFrame with the connections between the different spoortakken
+        :return: The GeoDataFrame with the filtered connections        
+        """
         joined['geometry_capped_left'] = joined.geometry.apply(lambda x: x.buffer(1, cap_style='flat'))
         joined['geometry_capped_right'] = joined.geometry_right.apply(lambda x: x.buffer(1, cap_style='flat'))
         joined['intersection_area'] = joined.apply(lambda d: d.geometry_capped_left.intersection(d.geometry_capped_right).area, axis=1)
         return joined[lambda d: d.intersection_area < 0.2].drop(columns=['geometry_capped_left', 'geometry_capped_right'])
     
     def _recheck_connections(self, gdf_cleaned: gpd.GeoDataFrame) -> gpd.GeoDataFrame:
+        """
+        Recheck the connections between the different spoortakken to see if the connections
+        are as expected. This is done by checking if the number of connections is as expected.
+
+        :param gdf_cleaned: The GeoDataFrame with the cleaned connections
+        :return: The GeoDataFrame with the rechecked connections        
+        """
         gdf_cleaned = gdf_cleaned.assign(found_connections_2=lambda d: d.groupby('PUIC_left').PUIC_right.transform('count'))
         gdf_cleaned.loc[lambda d: d.found_connections_2 != d.expected_connections_left].sort_values('PUIC_left')
         gdf_cleaned['mismatch'] = gdf_cleaned.apply(lambda x: x['found_connections_2'] != x['expected_connections_left'], axis=1)
         return gdf_cleaned
 
-    def _identify_illegal_connections(self, all_connections: pd.DataFrame, valid_connections: gpd.GeoDataFrame) -> gpd.GeoDataFrame:
-        return all_connections.set_index(['PUIC_left', 'PUIC_right']).loc[lambda d: d.index.isin(valid_connections.set_index(['PUIC_left', 'PUIC_right']).index)==False].assign(illegal=True)[['illegal']]
-
-    def _mark_connections(self, all_connections: gpd.GeoDataFrame, illegal_connections: gpd.GeoDataFrame, valid_connections: gpd.GeoDataFrame) -> gpd.GeoDataFrame:
+    def _mark_connections(self, all_connections: gpd.GeoDataFrame, valid_connections: gpd.GeoDataFrame) -> gpd.GeoDataFrame:
         """
         Tag every connection as illegal, valid or neither. This is based on the expected connections and the actual connections.
 
         :param all_connections: The GeoDataFrame with all connections
-        :param illegal_connections: The GeoDataFrame with the illegal connections
         :param joined_valid_filtered: The GeoDataFrame with the valid connections
         :return: The GeoDataFrame with all connections marked as illegal or valid
         """
 
         all_connections = all_connections.set_index(['PUIC_left', 'PUIC_right'])
-        all_connections['illegal'] = all_connections.index.isin(illegal_connections.index)
         all_connections['valid'] = all_connections.index.isin(valid_connections.set_index(['PUIC_left', 'PUIC_right']).index)
         return all_connections
     
@@ -94,14 +116,12 @@ class TrackNetherlands:
         """
         if not self.allconnections_path.exists() or self.overwrite:
             valid_connections, all_connections = self._process_functionele_spoortak()
-            illegal_connections = self._identify_illegal_connections(all_connections, valid_connections)
-            all_connections = self._mark_connections(all_connections, illegal_connections, valid_connections)
+            all_connections = self._mark_connections(all_connections, valid_connections)
             all_connections['length'] = all_connections.geometry.length
 
             self.cache_location.mkdir(exist_ok=True)
             all_connections.to_csv(self.allconnections_path)
             logger.info(f"Saved all connections to {self.allconnections_path}")
-        # return gpd.read_file(self.allconnections_path)
         return pd.read_csv(self.allconnections_path, index_col=0)
 
     @cached_property
@@ -124,7 +144,7 @@ class TrackNetherlands:
         The list is structured as follows:
         [(PUIC_left, PUIC_right), ...]        
         """
-        return self.all_connections.loc[lambda d: d.illegal].reset_index().apply(lambda x: (x.PUIC_left, x.PUIC_right), axis=1).tolist()
+        return self.all_connections.loc[lambda d: ~d.valid].reset_index().apply(lambda x: (x.PUIC_left, x.PUIC_right), axis=1).tolist()
 
     @staticmethod
     def expected_connections(row: pd.Series) -> int:
@@ -170,7 +190,16 @@ class TrackNetherlands:
             crs = 'EPSG:28992'
         return self.functionele_spoortak.to_crs(crs).loc[lambda d: d.geometry.apply(lambda x: x.distance(point)).idxmin()].PUIC
         
-    def dijkstra(self, start, end, keringen_allowed=False):
+    def dijkstra(self, start: Point, end: Point, keringen_allowed: bool = False) -> Route:
+        """
+        Find the shortest path between two points on the track. This is done using Dijkstra's algorithm.
+
+        :param start: The start point of the route
+        :param end: The end point of the route
+        :param keringen_allowed: Whether or not to allow keringen in the route
+
+        :return: The Route object with the shortest path
+        """
         if isinstance(start, Point):
             start_spoortak = self._project_point(start)
         else:
@@ -181,7 +210,7 @@ class TrackNetherlands:
             end_spoortak = end
             
         # Priority queue to store (cost, current_node, path)
-        pq = [(0, start_spoortak, [])]
+        pq: list[tuple[float, str, list[str]]] = [(0, start_spoortak, [])]
         visited = set()
         print(self.illegal_pairs_list)
         illegal_set = set(self.illegal_pairs_list)
@@ -224,10 +253,21 @@ class TrackNetherlands:
     
 
 class KruisingResolver:
+    """
+    This class filters the connections between the different 
+    spoortakken to only include the best match at kruisingen.
+    At a kruising, two spoortakken will touch, but only one of them
+    can actually be used.    
+    """
     def __init__(self, data: pd.DataFrame):
         self.data = data.assign(found_connections=lambda d: d.groupby('PUIC_left').PUIC_right.transform('count')).reset_index()
 
     def take_best_at_kruising(self)->pd.DataFrame:
+        """
+        Filter the connections between the different spoortakken to only include the best match at kruisingen.
+
+        :return: The filtered connections        
+        """
         corrects = self._get_corrects()
         non_kruising_problem = self._get_non_kruising_problem()
         fixed_end = self._get_fixed_end()
@@ -236,9 +276,20 @@ class KruisingResolver:
         
 
     def _get_corrects(self)->pd.DataFrame:
+        """
+        Get the connections that are correct. This means that the number of expected connections is equal to the number of found connections.
+
+        :return: The connections that are correct        
+        """
         return self.data.loc[lambda d: (d.expected_connections_left == d.found_connections)].assign(source='correct')
 
     def _get_non_kruising_problem(self)->pd.DataFrame:
+        """
+        Get the connections that are not correct and are not at a kruising.
+        These should still be looked at later.
+
+        :return: The connections that are not correct and are not at a kruising
+        """
         return (
             self.data
             .loc[lambda d: (d.expected_connections_left != d.found_connections)]
@@ -247,6 +298,11 @@ class KruisingResolver:
         )
 
     def _get_fixed_begin(self)->pd.DataFrame:
+        """
+        Get the connections that are not correct and are at a kruising.
+
+        :return: The connections that are not correct and are at a kruising        
+        """
         return (
             self.data  
             .loc[lambda d: ((d.REF_BEGRENZER_TYPE_BEGIN_left=='KRUISING'))]
@@ -255,6 +311,11 @@ class KruisingResolver:
         )
 
     def _get_fixed_end(self)->pd.DataFrame:
+        """
+        Get the connections that are not correct and are at a kruising.
+
+        :return: The connections that are not correct and are at a kruising
+        """
         return (
             self.data
             .loc[lambda d: ((d.REF_BEGRENZER_TYPE_EIND_left=='KRUISING'))]
