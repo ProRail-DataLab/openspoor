@@ -251,8 +251,7 @@ class TrackNetherlands:
                                 allowed = False
                         if allowed:                
                             heapq.heappush(pq, (cost + weight, neighbor, path))
-
-        return Route(self.functionele_spoortak, [], start, end)
+        raise ValueError(f"No route found between {start_spoortak} and {end_spoortak}")
     
 
 class KruisingResolver:
