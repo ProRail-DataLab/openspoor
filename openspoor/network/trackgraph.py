@@ -262,10 +262,10 @@ class KruisingResolver:
     At a kruising, two spoortakken will touch, but only one of them
     can actually be used.    
     """
-    def __init__(self, data: pd.DataFrame):
+    def __init__(self, data: gpd.GeoDataFrame):
         self.data = data.assign(found_connections=lambda d: d.groupby('PUIC_left').PUIC_right.transform('count')).reset_index()
 
-    def take_best_at_kruising(self)->pd.DataFrame:
+    def take_best_at_kruising(self)->gpd.GeoDataFrame:
         """
         Filter the connections between the different spoortakken to only include the best match at kruisingen.
 
@@ -278,7 +278,7 @@ class KruisingResolver:
         return pd.concat([corrects, non_kruising_problem, fixed_end, fixed_begin]).drop_duplicates(['PUIC_left', 'PUIC_right'])
         
 
-    def _get_corrects(self)->pd.DataFrame:
+    def _get_corrects(self)->gpd.GeoDataFrame:
         """
         Get the connections that are correct. This means that the number of expected connections is equal to the number of found connections.
 
@@ -286,7 +286,7 @@ class KruisingResolver:
         """
         return self.data.loc[lambda d: (d.expected_connections_left == d.found_connections)].assign(source='correct')
 
-    def _get_non_kruising_problem(self)->pd.DataFrame:
+    def _get_non_kruising_problem(self)->gpd.GeoDataFrame:
         """
         Get the connections that are not correct and are not at a kruising.
         These should still be looked at later.
@@ -300,7 +300,7 @@ class KruisingResolver:
             .assign(source='non_kruising_problem')
         )
 
-    def _get_fixed_begin(self)->pd.DataFrame:
+    def _get_fixed_begin(self)->gpd.GeoDataFrame:
         """
         Get the connections that are not correct and are at a kruising.
 
@@ -313,7 +313,7 @@ class KruisingResolver:
             .assign(source='fixed_begin')
         )
 
-    def _get_fixed_end(self)->pd.DataFrame:
+    def _get_fixed_end(self)->gpd.GeoDataFrame:
         """
         Get the connections that are not correct and are at a kruising.
 
@@ -327,7 +327,7 @@ class KruisingResolver:
         )
     
     @staticmethod    
-    def _get_best_match(overlap_dataframe: pd.DataFrame) -> pd.DataFrame:
+    def _get_best_match(overlap_dataframe: gpd.GeoDataFrame) -> gpd.GeoDataFrame:
         """
         For kruisingen specifically, look for the connection with the smallest overlap area. This is the one to which the spoortak should connect.
 
