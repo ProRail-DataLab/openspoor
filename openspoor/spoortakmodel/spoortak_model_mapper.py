@@ -1,5 +1,5 @@
 import logging
-from typing import Optional
+from typing import List, Optional, Tuple
 
 import numpy as np
 import pandas as pd
@@ -57,8 +57,8 @@ class SpoortakModelMapper:
         return self._data.models[model_version].loc[spoortak_identifier]
 
     def _related_spoortakken(
-        self, spoortak_identifier: str, geocodes: [int]
-    ) -> [(str, int)]:
+        self, spoortak_identifier: str, geocodes: List[int]
+    ) -> List[Tuple[str, int]]:
 
         related_spoortakken = []
 
@@ -109,8 +109,8 @@ class SpoortakModelMapper:
 
     @staticmethod
     def _limit_start_end(
-        subsections: [SpoortakSubsection], km_start: int, km_end: int
-    ) -> [SpoortakSubsection]:
+        subsections: List[SpoortakSubsection], km_start: int, km_end: int
+    ) -> List[SpoortakSubsection]:
         """perforce the limit in place"""
         return [
             subsection.limit_start_end(km_start, km_end)
@@ -119,16 +119,16 @@ class SpoortakModelMapper:
 
     @staticmethod
     def _remove_duplicates(
-        subsections: [SpoortakSubsection],
-    ) -> [SpoortakSubsection]:
+        subsections: List[SpoortakSubsection],
+    ) -> List[SpoortakSubsection]:
         deduped = set(subsections)
         return list(deduped)
 
     def map(
         self,
         spoortak_subsection: SpoortakSubsection,
-        _ignore_list: [str] = None,
-    ) -> [SpoortakSubsection]:
+        _ignore_list: Optional[List[str]] = None,
+    ) -> List[SpoortakSubsection]:
         """Maps a spoortak subsection to all other spoortak models
 
         :param spoortak_subsection: subsection to map
@@ -227,7 +227,7 @@ class SpoortakModelMapper:
 
     def map_to(
         self, spoortak_subsection: SpoortakSubsection, model_version: int
-    ) -> [SpoortakSubsection]:
+    ) -> List[SpoortakSubsection]:
         """Maps a spoortak subsection to a specific model version"""
         results = self.map(spoortak_subsection)
         return [

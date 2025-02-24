@@ -2,6 +2,7 @@ import logging
 import os
 from glob import glob
 from os.path import basename, join
+from typing import List, Optional
 
 import numpy as np
 import pandas as pd
@@ -18,8 +19,8 @@ class SpoortakModelsData(Singleton):
     - Support V18 (spoortak 2.0)
     """
 
-    models: dict = None
-    model_changes: dict = None
+    models: dict = {}
+    model_changes: dict = {}
 
     @staticmethod
     def _convert_dutch_number(value: str) -> float:
@@ -53,7 +54,7 @@ class SpoortakModelsData(Singleton):
         df.drop(columns=["KM_BEGIN", "KM_EIND"], inplace=True)
 
     @staticmethod
-    def _get_model_numbers(data_path: str) -> [int]:
+    def _get_model_numbers(data_path: str) -> List[int]:
         """Return the available model numbers
         converts ".../Version_17", ".../Version_18" to 17, 18
         """

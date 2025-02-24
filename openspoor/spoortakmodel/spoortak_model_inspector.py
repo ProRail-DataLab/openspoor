@@ -1,4 +1,5 @@
 from pprint import pprint
+from typing import Any, Dict
 
 import pandas as pd
 
@@ -8,7 +9,7 @@ from ..spoortakmodel import SpoortakModelsData
 class SpoortakModelInspector:
     def __init__(self, spoortak_model_data: SpoortakModelsData):
         self.data = spoortak_model_data
-        self.old_pd_option_values = dict()
+        self.old_pd_option_values: Dict[Any,Any] = dict()
 
     def _set_pd_options(self):
 
