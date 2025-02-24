@@ -1,6 +1,7 @@
 from functools import cache
 
 import geopandas as gpd
+import pandas as pd
 import numpy as np
 from loguru import logger
 
@@ -33,7 +34,7 @@ class TransformerCoordinatesToSpoor:
         self.best_match_only = best_match_only
 
     @cache
-    def _get_spoortak_met_geokm(self):
+    def _get_spoortak_met_geokm(self) -> gpd.GeoDataFrame:
         return (
             FeatureServerOverview()
             .search_for("Spoortakdeel met geocode kilometrering")
@@ -78,7 +79,7 @@ class TransformerCoordinatesToSpoor:
         gdf_points = gdf_points.to_crs("EPSG:28992")
         close_geocodes = self.buffered_stgk.sjoin(gdf_points)
 
-        points_geocodes = (
+        points_geocodes: pd.DataFrame = (
             self.stgk.loc[close_geocodes.index]
             .set_index(
                 close_geocodes["index_right"]
@@ -134,8 +135,13 @@ class TransformerCoordinatesToSpoor:
             .drop_duplicates()
             .set_index("index")
             .rename_axis(None)
-            .to_crs(starting_crs)
         )
+        if not isinstance(out, gpd.GeoDataFrame) or starting_crs is None:
+            raise ValueError("No geodataframe was returned.")
+
+        # Convert to target CRS
+
+        out = out.to_crs(starting_crs)
 
         if self.best_match_only:
             # create an index based on the geometry, as this can be sorted
@@ -152,5 +158,7 @@ class TransformerCoordinatesToSpoor:
                 )  # Make sure this is done in the rare case of multiple closest matches
                 .drop(["geometry_index"], axis=1)
             )
+        if not isinstance(out, gpd.GeoDataFrame):
+            raise ValueError("No geodataframe was returned.")
 
         return out.drop(["projection_distance", "geometry_geocode"], axis=1)
