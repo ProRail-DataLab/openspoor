@@ -38,7 +38,9 @@ class FeatureSearchResults(pd.DataFrame):
         else:
             return MapServicesQueryMValues(url).load_data()
 
-    def write_gpkg(self, output_dir: Path, entry_number: int = 0) -> gpd.GeoDataFrame:
+    def write_gpkg(
+        self, output_dir: Path, entry_number: int = 0
+    ) -> gpd.GeoDataFrame:
         """
         Write the data at the requested url to a local file directory
 
@@ -128,7 +130,9 @@ class FeatureServerOverview(Singleton):
             .reset_index(drop=True)
         )
 
-    def search_for(self, search_for: str, exact: bool = False) -> pd.DataFrame:
+    def search_for(
+        self, search_for: str, exact: bool = False
+    ) -> FeatureSearchResults:
         """
         Find all layers which include a certain phrase.
 

@@ -48,6 +48,9 @@ class TransformerSpoortakToCoordinates:
                    columns.
         :return: A pandas dataframe with x, y information
         """
+        if not isinstance(self.spoortak_gdf, gpd.GeoDataFrame):
+            raise ValueError("No spoortak_gdf is set. Use fit method first.")
+
         df_with_spoortak_info = df.merge(
             self.spoortak_gdf,
             how="left",

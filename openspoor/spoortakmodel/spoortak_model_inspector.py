@@ -9,7 +9,7 @@ from ..spoortakmodel import SpoortakModelsData
 class SpoortakModelInspector:
     def __init__(self, spoortak_model_data: SpoortakModelsData):
         self.data = spoortak_model_data
-        self.old_pd_option_values: Dict[Any,Any] = dict()
+        self.old_pd_option_values: Dict[Any, Any] = dict()
 
     def _set_pd_options(self):
 

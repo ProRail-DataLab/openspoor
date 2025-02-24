@@ -2,7 +2,7 @@ import json
 import logging
 import ssl
 import time
-from typing import Optional
+from typing import Optional, cast
 
 import certifi
 import urllib3
@@ -13,7 +13,9 @@ from openspoor.utils.singleton import Singleton
 
 class SafeRequest(Singleton):
 
-    last_request = 0.  # Use a class attribute, as we use the Singleton pattern
+    last_request = (
+        0.0  # Use a class attribute, as we use the Singleton pattern
+    )
 
     def __init__(self, max_retry: int = 5, time_between: float = 0.3):
         """
@@ -36,7 +38,7 @@ class SafeRequest(Singleton):
 
     def _request_with_retry(
         self, request_type: str, url: str, body: Optional[dict] = None
-    ) -> urllib3.response.BaseHTTPResponse:
+    ) -> urllib3.response.HTTPResponse:
         """
         Make an API call using a certificate. Ensure the time between consecutive calls is at least self.time_between
         seconds and retry for the required amount of times.
@@ -60,7 +62,7 @@ class SafeRequest(Singleton):
                 )  # Do this before the query to update even if unsuccessful
                 request = self.pool.request(request_type, url, body=body_str)
                 if request.status == 200:
-                    return request
+                    return cast(urllib3.HTTPResponse, request)
                 else:
                     raise ConnectionError(
                         f"Status {request.status} received at {url} instead of 200"
@@ -75,7 +77,8 @@ class SafeRequest(Singleton):
                 count += 1
                 logging.warning(
                     "Error encountered performing attempt %d out of %d",
-                    count, self.max_retry
+                    count,
+                    self.max_retry,
                 )
                 logging.warning(error)
                 if count >= self.max_retry:

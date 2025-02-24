@@ -142,7 +142,7 @@ class TrackMap(folium.Map):
                 bboxes.append(
                     [i for coords in item.get_bounds() for i in coords]
                 )
-            if isinstance(item, folium.map.Marker):  # For markers
+            if isinstance(item, folium.map.Marker) and item.location:
                 bboxes.append(
                     item.location * 2
                 )  # Min and max bound are equal for points, hence the repeat
@@ -201,13 +201,15 @@ class PlottingPoints(PlotObject):
         popup: Optional[Union[str, List[str]]] = None,
         lat_column: Optional[str] = "lat",
         lon_column: Optional[str] = "lon",
-        colors: Union[str, Tuple[str, Dict[Tuple[float, float]]]] = None,
+        colors: Optional[
+            Union[str, Tuple[str, Dict[Tuple[float, float]]]]
+        ] = None,
         markertype: Optional[str] = None,
-        marker_column: str = None,
-        color_column: str = None,
-        rotation_column: str = None,
-        radius_column: str = None,
-        url_column: str = None,
+        marker_column: Optional[str] = None,
+        color_column: Optional[str] = None,
+        rotation_column: Optional[str] = None,
+        radius_column: Optional[str] = None,
+        url_column: Optional[str] = None,
     ):
         """
         Initialize a PlottingPoints object, used for plotting a list of markers on a map of the Netherlands.
@@ -555,9 +557,9 @@ class PlottingAreas(PlotObject):
 
         for index, r in self.data.iterrows():
             sim_geo = gpd.GeoSeries(r["geometry"]).simplify(tolerance=0.00001)
-            geo_j = sim_geo.to_json()
+            geo_j_str = sim_geo.to_json()
             geo_j = folium.GeoJson(
-                data=geo_j,
+                data=geo_j_str,
                 style_function=lambda x: {
                     "fillColor": self.color,
                     "stroke": self.stroke,
@@ -614,6 +616,9 @@ def plottable(
     ):  # Whenever data is a dataframe, it is probably points
         logger.info("Interpreting data as dataframe")
         return PlottingPoints(data, popup, *args, **kwargs)
+    raise TypeError(
+        f"Data of type {type(data)} not supported. Please provide a geodataframe or a dataframe"
+    )
 
 
 def quick_plot(*args, notebook=False, **kwargs) -> TrackMap:

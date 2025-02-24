@@ -7,6 +7,7 @@ from typing import List, Optional, Union
 import geopandas as gpd
 import pandas as pd
 from loguru import logger
+from shapely import GeometryCollection
 from shapely.geometry import LineString, MultiLineString, Point, shape
 
 from ..utils.common import read_config
@@ -106,7 +107,9 @@ class MapServicesQuery:
         except:
             raise ValueError("MaxRecordCount not found in response")
 
-    def _load_all_features_to_gdf(self, dict_query=None) -> Union[gpd.GeoDataFrame, pd.DataFrame]:
+    def _load_all_features_to_gdf(
+        self, dict_query=None
+    ) -> Union[gpd.GeoDataFrame, pd.DataFrame]:
         """
         Downloads all available features from a feature server and set correct
         geometry.
@@ -179,7 +182,9 @@ class MapServicesQuery:
         logger.info("Downloaded " + str(offset + len(temp_gdf)) + " features")
         return temp_gdf
 
-    def _transform_dict_to_gdf(self, data: dict) -> Union[gpd.GeoDataFrame, pd.DataFrame]:
+    def _transform_dict_to_gdf(
+        self, data: dict
+    ) -> Union[gpd.GeoDataFrame, pd.DataFrame]:
         """
         Transform given json format data from feature servers into a geopandas
         dataframe with given geometry.
@@ -192,15 +197,20 @@ class MapServicesQuery:
             (
                 shape(feature["geometry"])
                 if feature["geometry"] is not None
-                else None
+                else GeometryCollection()
             )
             for feature in data["features"]
         ]
         attribute_list = [
             feature["properties"] for feature in data["features"]
         ]
-        if all(geometry is None for geometry in geometry_list):
+
+        if all(
+            isinstance(geom, GeometryCollection) and geom.is_empty
+            for geom in geometry_list
+        ):
             return pd.DataFrame(data=attribute_list)
+
         return gpd.GeoDataFrame(
             data=attribute_list, geometry=geometry_list, crs=self.crs
         )
