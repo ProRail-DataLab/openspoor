@@ -2,7 +2,7 @@
 
 ![alt text](https://www.radingspoor.nl/images/Stoom/Modellen_van_Leden/7_Inch_modellen/Zandloc_Janny/51133945_533417650499237_1555124498724814848_n.jpg)
 
-The openspoor package is intended to allow easy transformation between different geographical and topological systems 
+The openspoor package is intended to allow easy transformation between different geographical and topological systems
 commonly used in Dutch Railway and prepare this data for analysis and visualisations. Its goal is to be publicly available and function as an open source package.
 
 Currently the openspoor package allows the following transformations:
@@ -94,7 +94,7 @@ In the demo_notebook folder a notebook can be found that demonstrates the exampl
 
 ## Dependencies
 
-The transformations available in the openspoor package rely completely on data and API's made available at 
+The transformations available in the openspoor package rely completely on data and API's made available at
 https://mapservices.prorail.nl/. Be aware of this dependency and specifically of the following possible issues:
 
 - The use of API's on mapservices.prorail.nl is changed
@@ -110,18 +110,18 @@ The openspoor package is split into 4 categories.
 The MapservicesData classes use mapservices.prorail.nl API's to retrieve the necessary data to perform transformations.
 The essentially function as an interface with the topological systems used by ProRail.
 
-- PUICMapservices provides general data about railway tracks (spoor) and switches (wissel and kruisingbenen). This 
+- PUICMapservices provides general data about railway tracks (spoor) and switches (wissel and kruisingbenen). This
 contains information regarding Geocode, geocodekilometrering, but also Spoortak identificatie.
-- SpoortakMapservices provides information about railway tracks concerning Spoortak identificatie and lokale 
+- SpoortakMapservices provides information about railway tracks concerning Spoortak identificatie and lokale
 kilometrering.
 
 ### Transformers
 
 The various transformers use the geopandas dataframes obtained by MapservicesData objects to add additional geographical
-or topological systems to a given geopandas input dataframe. The current transformers only function for geopandas 
+or topological systems to a given geopandas input dataframe. The current transformers only function for geopandas
 dataframes containing Point data. The available transformers are:
 
-- TransformerCoordinatesToSpoor: transforms WGS84 or EPSG:28992 coordinates to spoortak and lokale kilomtrering as well 
+- TransformerCoordinatesToSpoor: transforms WGS84 or EPSG:28992 coordinates to spoortak and lokale kilomtrering as well
 as geocode and geocode kilometrering.
 - TransformerGeocodeToCoordinates: transforms geocode and geocode kilometrering to WGS84 or EPSG:28992 coordinates.
 - TransformerSpoorToCoordinates: transforms spoortak and lokale kilometrering to WGS84 or EPSG:28992 coordinates.
@@ -129,27 +129,27 @@ as geocode and geocode kilometrering.
 ### Spoortakmodel
 
 mapservices.prorail.nl only provides current information about the topological systems used in Dutch
-Railways. As the topological systems tend to change with time, due to changing infrastructure and naming conventions, 
-the current topological system is not necessarily sufficient to provide transformations on historical data. We added 
+Railways. As the topological systems tend to change with time, due to changing infrastructure and naming conventions,
+the current topological system is not necessarily sufficient to provide transformations on historical data. We added
 historical topological systems as part of the functionality of this package in such a way that it
 is available publicly. This enables users to also knwow where assets where in previous versions of the
-track topology. 
+track topology.
 
 ### Visualisations
 
-This part contains functionalities to plot locations on a map of the Netherlands.This currently supports pandas or geopandas dataframes with locations of either points or linestrings. 
+This part contains functionalities to plot locations on a map of the Netherlands.This currently supports pandas or geopandas dataframes with locations of either points or linestrings.
 
 ## Release History
 
 - <b>0.1.9</b>
   - Added spoortakmodel and visualisations
-  - Updated readme  
+  - Updated readme
 
 - <b>0.1</b>
   - The first proper release
   - ADD: transform point data between geographical systems.
 - <b>0.0.1</b>
-  - Work in progress 
+  - Work in progress
 
 #### Contributing
 The openspoor package stimulates every other person the contribute to the package. To do so:
