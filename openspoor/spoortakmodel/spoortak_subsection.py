@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from typing import Optional
 
 
 @dataclass(frozen=True)
@@ -17,7 +18,7 @@ class SpoortakSubsection:
     kilometrering_start: int
     kilometrering_end: int
 
-    spoortak_model_version: int = None
+    spoortak_model_version: Optional[int] = None
 
     def limit_start_end(self, start: int, end: int):
         """creates a new SpoortakSubsection limited to start and end"""

@@ -1,7 +1,7 @@
 class Singleton(object):
     """helper class to implement the singleton pattern"""
 
-    _instances = {}
+    _instances: dict = {}
 
     def __new__(class_, *args, **kwargs):
         if class_ not in class_._instances:

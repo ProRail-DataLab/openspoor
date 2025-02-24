@@ -13,7 +13,7 @@ from openspoor.utils.singleton import Singleton
 
 class SafeRequest(Singleton):
 
-    last_request = 0  # Use a class attribute, as we use the Singleton pattern
+    last_request = 0.  # Use a class attribute, as we use the Singleton pattern
 
     def __init__(self, max_retry: int = 5, time_between: float = 0.3):
         """
@@ -36,7 +36,7 @@ class SafeRequest(Singleton):
 
     def _request_with_retry(
         self, request_type: str, url: str, body: Optional[dict] = None
-    ) -> urllib3.response.HTTPResponse:
+    ) -> urllib3.response.BaseHTTPResponse:
         """
         Make an API call using a certificate. Ensure the time between consecutive calls is at least self.time_between
         seconds and retry for the required amount of times.
@@ -46,8 +46,9 @@ class SafeRequest(Singleton):
         :param body: A dictionary to be passed as a body
         :return: An http response
         """
+        body_str: Optional[str] = None
         if isinstance(body, dict):
-            body = json.dumps(body)
+            body_str = json.dumps(body)
 
         count = 0
         while count <= self.max_retry:
@@ -57,7 +58,7 @@ class SafeRequest(Singleton):
                 SafeRequest.last_request = (
                     time.time()
                 )  # Do this before the query to update even if unsuccessful
-                request = self.pool.request(request_type, url, body=body)
+                request = self.pool.request(request_type, url, body=body_str)
                 if request.status == 200:
                     return request
                 else:
@@ -78,6 +79,9 @@ class SafeRequest(Singleton):
                 logging.warning(error)
                 if count >= self.max_retry:
                     raise error
+        raise ConnectionError(
+            f"Could not connect to {url} after {self.max_retry} attempts"
+        )
 
     def get_string(
         self, request_type: str, url: str, body: Optional[dict] = None
