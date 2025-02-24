@@ -74,7 +74,8 @@ class SafeRequest(Singleton):
             except Exception as error:
                 count += 1
                 logging.warning(
-                    f"Error encountered performing attempt {count} out of {self.max_retry}"
+                    "Error encountered performing attempt %d out of %d",
+                    count, self.max_retry
                 )
                 logging.warning(error)
                 if count >= self.max_retry:
