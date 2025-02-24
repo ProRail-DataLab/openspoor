@@ -3,7 +3,7 @@ from dataclasses import dataclass
 
 @dataclass(frozen=True)
 class SpoortakSubsection:
-    """ Spoortak subsection
+    """Spoortak subsection
 
 
     :param kilometrering_start: Kilometrering in meters
@@ -20,10 +20,10 @@ class SpoortakSubsection:
     spoortak_model_version: int = None
 
     def limit_start_end(self, start: int, end: int):
-        """ creates a new SpoortakSubsection limited to start and end"""
+        """creates a new SpoortakSubsection limited to start and end"""
         return SpoortakSubsection(
             self.identification,
             max(self.kilometrering_start, start),
             min(self.kilometrering_end, end),
-            self.spoortak_model_version
+            self.spoortak_model_version,
         )

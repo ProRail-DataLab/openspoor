@@ -1,5 +1,5 @@
-import pandas as pd
 import geopandas as gpd
+import pandas as pd
 
 
 class TransformerSpoortakToCoordinates:
@@ -8,8 +8,9 @@ class TransformerSpoortakToCoordinates:
     contain coordinates, either Rijksdriehoek or GPS.
     """
 
-    def __init__(self, spoortak_column: str, lokale_km_column: str
-                 , coordinate_system):
+    def __init__(
+        self, spoortak_column: str, lokale_km_column: str, coordinate_system
+    ):
         """
         :param spoortak_column: Name of the spoortak column
         :param lokale_km_column: Name of the lokale kilometrering column
@@ -18,10 +19,10 @@ class TransformerSpoortakToCoordinates:
         """
         self.spoortak = spoortak_column
         self.lokale_km = lokale_km_column
-        if coordinate_system == 'Rijksdriehoek':
-            self.crs = 'epsg:28992'
-        elif coordinate_system == 'GPS':
-            self.crs = 'epsg:4326'
+        if coordinate_system == "Rijksdriehoek":
+            self.crs = "epsg:28992"
+        elif coordinate_system == "GPS":
+            self.crs = "epsg:4326"
         else:
             raise ValueError("coordinate_system is unknown")
 
@@ -48,20 +49,22 @@ class TransformerSpoortakToCoordinates:
         :return: A pandas dataframe with x, y information
         """
         df_with_spoortak_info = df.merge(
-            self.spoortak_gdf, how='left', left_on=[self.spoortak],
-            right_on=['NAAM_LANG']
+            self.spoortak_gdf,
+            how="left",
+            left_on=[self.spoortak],
+            right_on=["NAAM_LANG"],
         )
         geometry = gpd.GeoSeries(
             df_with_spoortak_info.apply(
-                lambda row: row['geometry'].interpolate(
+                lambda row: row["geometry"].interpolate(
                     row[self.lokale_km] * 1000
                 ),
-                axis=1
+                axis=1,
             ),
-            crs=self.spoortak_gdf.crs
+            crs=self.spoortak_gdf.crs,
         )
         geometry = geometry.to_crs(self.crs)
         df_with_xy = df.copy()
-        df_with_xy['x'] = geometry.centroid.x
-        df_with_xy['y'] = geometry.centroid.y
+        df_with_xy["x"] = geometry.centroid.x
+        df_with_xy["y"] = geometry.centroid.y
         return df_with_xy

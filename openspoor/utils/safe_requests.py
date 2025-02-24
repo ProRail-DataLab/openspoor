@@ -1,10 +1,11 @@
-import time
 import json
-import certifi
-import urllib3
-from typing import Optional
 import logging
 import ssl
+import time
+from typing import Optional
+
+import certifi
+import urllib3
 from requests.exceptions import SSLError
 
 from openspoor.utils.singleton import Singleton
@@ -27,13 +28,15 @@ class SafeRequest(Singleton):
         # See https://stackoverflow.com/questions/71603314/ssl-error-unsafe-legacy-renegotiation-disabled
         ctx = ssl.create_default_context(ssl.Purpose.SERVER_AUTH)
         ctx.options |= 0x4
-        self.pool = urllib3.PoolManager(ca_certs=certifi.where(), ssl_context=ctx)
+        self.pool = urllib3.PoolManager(
+            ca_certs=certifi.where(), ssl_context=ctx
+        )
         self.max_retry = max_retry
         self.time_between = time_between
 
-
-    def _request_with_retry(self, request_type: str, url: str, body: Optional[dict] = None)\
-            -> urllib3.response.HTTPResponse:
+    def _request_with_retry(
+        self, request_type: str, url: str, body: Optional[dict] = None
+    ) -> urllib3.response.HTTPResponse:
         """
         Make an API call using a certificate. Ensure the time between consecutive calls is at least self.time_between
         seconds and retry for the required amount of times.
@@ -51,24 +54,34 @@ class SafeRequest(Singleton):
             try:
                 time_since_last = time.time() - SafeRequest.last_request
                 time.sleep(max(0.0, self.time_between - time_since_last))
-                SafeRequest.last_request = time.time()  # Do this before the query to update even if unsuccessful
+                SafeRequest.last_request = (
+                    time.time()
+                )  # Do this before the query to update even if unsuccessful
                 request = self.pool.request(request_type, url, body=body)
                 if request.status == 200:
                     return request
                 else:
-                    raise ConnectionError(f'Status {request.status} received at {url} instead of 200')
+                    raise ConnectionError(
+                        f"Status {request.status} received at {url} instead of 200"
+                    )
 
             except SSLError:
-                logging.warning("Removing certificates. Please be aware of the security risks.")
+                logging.warning(
+                    "Removing certificates. Please be aware of the security risks."
+                )
                 self.pool = urllib3.PoolManager()
             except Exception as error:
                 count += 1
-                logging.warning(f'Error encountered performing attempt {count} out of {self.max_retry}')
+                logging.warning(
+                    f"Error encountered performing attempt {count} out of {self.max_retry}"
+                )
                 logging.warning(error)
                 if count >= self.max_retry:
                     raise error
 
-    def get_string(self, request_type: str, url: str, body: Optional[dict] = None):
+    def get_string(
+        self, request_type: str, url: str, body: Optional[dict] = None
+    ):
         """
         Return a request as a string.
 
@@ -78,9 +91,13 @@ class SafeRequest(Singleton):
         :return: The output of the request as a string
         """
 
-        return self._request_with_retry(request_type, url, body).data.decode('UTF-8')
+        return self._request_with_retry(request_type, url, body).data.decode(
+            "UTF-8"
+        )
 
-    def get_json(self, request_type: str, url: str, body: Optional[dict] = None) -> dict:
+    def get_json(
+        self, request_type: str, url: str, body: Optional[dict] = None
+    ) -> dict:
         """
         Return the request data as a dictionary.
 

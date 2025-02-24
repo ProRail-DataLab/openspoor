@@ -1,9 +1,10 @@
 from pathlib import Path
+
 import yaml
 
 
 def read_config():
-    default_filename = 'config.yaml'
+    default_filename = "config.yaml"
     config_file = get_package_root().absolute() / default_filename
 
     with open(config_file) as file:

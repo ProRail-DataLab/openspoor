@@ -1,5 +1,6 @@
-from setuptools import setup, find_packages
 from pathlib import Path
+
+from setuptools import find_packages, setup
 
 requirements = [
     "importlib_metadata",
@@ -15,6 +16,7 @@ requirements = [
 ]
 
 dev_packages = [
+    "mypy",
     "pytest",
     "pytest-cov",
     "pytest-xdist",
