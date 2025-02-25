@@ -38,7 +38,7 @@ class SafeRequest(Singleton):
 
     def _request_with_retry(
         self, request_type: str, url: str, body: Optional[dict] = None
-    ) -> urllib3.response.HTTPResponse:
+    ) -> urllib3.response.BaseHTTPResponse:
         """
         Make an API call using a certificate. Ensure the time between consecutive calls is at least self.time_between
         seconds and retry for the required amount of times.
@@ -60,9 +60,9 @@ class SafeRequest(Singleton):
                 SafeRequest.last_request = (
                     time.time()
                 )  # Do this before the query to update even if unsuccessful
-                request = self.pool.request(request_type, url, body=body_str)
+                request = self.pool.request_encode_body(request_type, url, body=body_str)
                 if request.status == 200:
-                    return cast(urllib3.HTTPResponse, request)
+                    return request#cast(urllib3.response.HTTPResponse, request)
                 else:
                     raise ConnectionError(
                         f"Status {request.status} received at {url} instead of 200"

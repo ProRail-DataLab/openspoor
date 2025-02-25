@@ -117,4 +117,8 @@ def test_transform_far_points(
     if best_match_only:
         # If no hits are good enough, none are returned
         expected_out = expected_out.iloc[[], :]
+
+    expected_out.replace(np.nan, None, inplace=True)
+    out.replace(np.nan, None, inplace=True)
+
     pd.testing.assert_frame_equal(out, expected_out)

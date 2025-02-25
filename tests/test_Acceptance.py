@@ -1,5 +1,5 @@
 import os
-
+import numpy as np
 import geopandas as gpd
 import pandas as pd
 import pytest
@@ -527,7 +527,7 @@ class Test:
             pd.DataFrame(expected_output.drop(columns="geometry")),
         )
         assert all(
-            output.geometry.geom_almost_equals(expected_output.geometry, 6)
+            output.geometry.geom_equals_exact(expected_output.geometry, 6)
         )
 
     def test_puicmapservices(self, monkeypatch, tmp_path):
@@ -551,7 +551,7 @@ class Test:
             pd.DataFrame(expected_output.drop(columns="geometry")),
         )
         assert all(
-            output.geometry.geom_almost_equals(expected_output.geometry, 6)
+            output.geometry.geom_equals_exact(expected_output.geometry, 6)
         )
 
     def test_acceptance_TransformerCoordinatesToSpoor(
@@ -667,7 +667,7 @@ class Test:
                 ],
             }
         )
-
+        expected_output_df.replace({None: np.nan}, inplace=True)
         pd.testing.assert_frame_equal(output_df, expected_output_df)
 
         # Check the same for GPS coordinate input

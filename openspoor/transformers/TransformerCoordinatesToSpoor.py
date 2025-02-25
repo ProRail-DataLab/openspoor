@@ -128,7 +128,7 @@ class TransformerCoordinatesToSpoor:
                 )[
                     "geocode_kilometrering"
                 ].transform(
-                    np.mean
+                    "mean"
                 )
             )
             .reset_index()  # Below makes sure every original point is projected, even if the data contained duplicates

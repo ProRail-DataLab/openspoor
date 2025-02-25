@@ -42,7 +42,7 @@ class PlotObject(ABC):
             self.data = self.data.set_index(self.popup)
 
     @abstractmethod
-    def add_to(self, m) -> None:
+    def add_to(self, m) -> PlotObject:
         """
         A base function that should be overwritten with logic for every plottable object.
 
@@ -202,7 +202,7 @@ class PlottingPoints(PlotObject):
         lat_column: Optional[str] = "lat",
         lon_column: Optional[str] = "lon",
         colors: Optional[
-            Union[str, Tuple[str, Dict[Tuple[float, float]]]]
+            Union[str, Tuple[str, Dict[float, float]]]
         ] = None,
         markertype: Optional[str] = None,
         marker_column: Optional[str] = None,
@@ -328,7 +328,7 @@ class PlottingPoints(PlotObject):
         else:
             return None
 
-    def add_to(self, folium_map):
+    def add_to(self, folium_map) -> folium.Map:
         for i, row in self.data.iterrows():
 
             location = row.geometry.y, row.geometry.x
@@ -621,7 +621,7 @@ def plottable(
     )
 
 
-def quick_plot(*args, notebook=False, **kwargs) -> TrackMap:
+def quick_plot(*args, notebook=False, **kwargs) -> Union[TrackMap | folium.Figure]:
     """
     A quick way to plot a list of objects on a map. This is a wrapper around the TrackMap class.
 

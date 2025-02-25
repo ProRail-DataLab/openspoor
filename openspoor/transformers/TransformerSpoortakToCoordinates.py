@@ -66,6 +66,7 @@ class TransformerSpoortakToCoordinates:
             ),
             crs=self.spoortak_gdf.crs,
         )
+
         geometry = geometry.to_crs(self.crs)
         df_with_xy = df.copy()
         df_with_xy["x"] = geometry.centroid.x

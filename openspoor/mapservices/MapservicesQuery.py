@@ -101,7 +101,9 @@ class MapServicesQuery:
         :param url: string, base_url for features
         :return: int, max_record_count
         """
-        body = SafeRequest()._request_with_retry("GET", url)._body
+        body = SafeRequest()._request_with_retry("GET", url).data.decode(
+            "UTF-8"
+        )
         try:
             return int(re.findall(r"MaxRecordCount: </b> (\d+)", str(body))[0])
         except:
