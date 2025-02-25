@@ -2,7 +2,7 @@ import logging
 import os
 from glob import glob
 from os.path import basename, join
-from typing import List, Optional
+from typing import List
 
 import numpy as np
 import pandas as pd

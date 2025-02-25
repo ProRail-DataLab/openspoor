@@ -2,7 +2,7 @@ import json
 import logging
 import ssl
 import time
-from typing import Optional, cast
+from typing import Optional
 
 import certifi
 import urllib3
@@ -62,7 +62,7 @@ class SafeRequest(Singleton):
                 )  # Do this before the query to update even if unsuccessful
                 request = self.pool.request_encode_body(request_type, url, body=body_str)
                 if request.status == 200:
-                    return request#cast(urllib3.response.HTTPResponse, request)
+                    return request
                 else:
                     raise ConnectionError(
                         f"Status {request.status} received at {url} instead of 200"

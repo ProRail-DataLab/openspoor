@@ -1,4 +1,9 @@
-# isort:skip_file
-from .PUICMapservices import PUICMapservices
-from .MapservicesQuery import MapServicesQuery, MapServicesQueryMValues
-from .find_mapservice import FeatureServerOverview, FeatureSearchResults
+from .find_mapservice import (  # noqa: F401
+    FeatureSearchResults,
+    FeatureServerOverview,
+)
+from .MapservicesQuery import (  # noqa: F401
+    MapServicesQuery,
+    MapServicesQueryMValues,
+)
+from .PUICMapservices import PUICMapservices  # noqa: F401
