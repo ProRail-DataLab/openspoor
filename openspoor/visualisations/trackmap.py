@@ -45,11 +45,16 @@ class PlotObject(ABC):
     @abstractmethod
     def add_to(self, m) -> PlotObject:
         """
-        A base function that should be overwritten with logic for every
-        plottable object.
+        Base function to be overridden with logic for each plottable object.
 
-        :param m: A TrackMap object, to which this element should be added.
-        :return: None
+        Parameters
+        ----------
+        m : TrackMap
+            A TrackMap object to which this element should be added.
+
+        Returns
+        -------
+        None
         """
         raise NotImplementedError(
             "This needs to be set in implementation classes"
@@ -77,12 +82,18 @@ class TrackMap(folium.Map):
         """
         Set up a TrackMap object.
 
-        :param objects: A single plottable object or list of plottable
-        objects that can be pre-defined
-        outside the context manager of the TrackMap
-        :param add_aerial: Whether you want to include the ProRail
-        aerial photograph or not
-        :return: A TrackMap object
+        Parameters
+        ----------
+        objects : object or list of objects, optional
+            A single plottable object or a list of plottable objects that can
+            be pre-defined outside the context manager of the TrackMap.
+        add_aerial : bool, optional
+            Whether to include the ProRail aerial photograph or not.
+
+        Returns
+        -------
+        TrackMap
+            A TrackMap object.
         """
 
         super().__init__(
@@ -110,7 +121,9 @@ class TrackMap(folium.Map):
         """
         Add the most recent ProRail aerial photograph to the map.
 
-        :return: None
+        Returns
+        -------
+        None
         """
         fg = folium.FeatureGroup(
             name="aerial_photograph", max_zoom=30, max_native_zoom=30
@@ -133,7 +146,9 @@ class TrackMap(folium.Map):
         Set the zoom level so all the plotted objects fit neatly within
         the initial view of the output.
 
-        :return: None
+        Returns
+        -------
+        None
         """
         # Bboxes are stored as a List of [min_lat, min_lon, max_lat, max_lon]
         bboxes = []
@@ -173,11 +188,18 @@ class TrackMap(folium.Map):
 
     def show(self, notebook: bool = False) -> Union[TrackMap, folium.Figure]:
         """
-        Show the map zoomed to a nice level and displayed at a suitable size.
+        Display the map at an optimal zoom level and size.
 
-        :param notebook: A boolean for decreasing the size of the final plot.
-        Designed for use in Notebooks
-        :return: self if notebook is False, a folium Figure if notebook is True
+        Parameters
+        ----------
+        notebook : bool, optional
+            If True, decreases the size of the final plot for use in notebooks.
+
+        Returns
+        -------
+        self or folium.Figure
+            Returns `self` if `notebook` is False, otherwise returns a
+            `folium.Figure`.
         """
         self._fix_zoom()
         if notebook:
@@ -191,9 +213,17 @@ class TrackMap(folium.Map):
 
     def save(self, save_name: Path) -> None:
         """
-        Save the map to a given directory
-        :param save_name: A Path where the final .html file could be written to
-        :return: Nothing, the map is saved
+        Save the map to a specified directory.
+
+        Parameters
+        ----------
+        save_name : Path
+            The file path where the final .html file should be saved.
+
+        Returns
+        -------
+        None
+            The map is saved to the specified location.
         """
 
         self.show()
@@ -221,33 +251,40 @@ class PlottingPoints(PlotObject):
         url_column: Optional[str] = None,
     ):
         """
-        Initialize a PlottingPoints object, used for plotting a list of
-        markers on a map of the Netherlands.
+        Initialize a PlottingPoints object for plotting markers on a
+        map of the Netherlands.
 
-        :param data: The Pandas DataFrame that should be plotted. GeoPandas
-        dataframes are also partially supported
-        :param lat_column: A column including latitudes. Not required if data
-        is a geopandas GeoDataFrame
-        :param lon_column: A column name including longitudes. Not required if
-        data is a geopandas GeoDataFrame
-        :param popup: A column or list of columns whose values should be
-        mentioned when an object is clicked on
-        :param colors: A string or a tuple, noting on what column to base the
-        colors on and what values they should take
-        depending on the registered value.
-        :param markertype: 'circle' if circles are required, or an icon name
-        found in
-        # https://fontawesome.com/v4/icons/
-        :param marker_column: A column including the names of the markers to
-        display
-        :param color_column: A column that can be  used for the colors of the
-        markers
-        :param rotation_column: A column noting the degrees of rotation in the
-        range (0,360)
-        :param radius_column: A column noting the radius of the circles to
-        plot (if markertype=='circle')
-        :param url_column: A column including an url that is
-        displayed in the popup
+        Parameters
+        ----------
+        data : pandas.DataFrame or geopandas.GeoDataFrame
+            The DataFrame containing data to be plotted. GeoPandas
+            DataFrames are partially supported.
+        lat_column : str, optional
+            Column name containing latitudes. Not required if `data`
+            is a GeoDataFrame.
+        lon_column : str, optional
+            Column name containing longitudes. Not required if `data`
+            is a GeoDataFrame.
+        popup : str or list of str, optional
+            Column(s) whose values should be displayed when an
+            object is clicked.
+        colors : str or tuple, optional
+            Specifies the column to base colors on and the values they
+            should take.
+        markertype : str, optional
+            'circle' for circular markers, or an icon name from
+            https://fontawesome.com/v4/icons/.
+        marker_column : str, optional
+            Column containing marker names to display.
+        color_column : str, optional
+            Column specifying marker colors.
+        rotation_column : str, optional
+            Column specifying rotation degrees (0-360).
+        radius_column : str, optional
+            Column specifying circle radius (if `markertype='circle'`).
+        url_column : str, optional
+            Column containing URLs displayed in the popup.
+
         """
 
         # Do some pre-processing for the cases the data is not a GeoDataFrame
@@ -411,13 +448,17 @@ class PlottingLineStrings(PlotObject):
         """
         Initialize a PlottingLineStrings object.
 
-        :param data: A geopandas dataframe or a file location of a csv file
-        :param popup: The column(s) whose values are shown when hovering
-        over a linestring
-        :param color: The color in which the linestrings should be shown
-        on the map
-        :param buffersize: The size of the buffer around the linestrings
-        on the map
+        Parameters
+        ----------
+        data : geopandas.GeoDataFrame or str
+            A GeoPandas DataFrame or a file path to a CSV file.
+        popup : str or list of str, optional
+            Column(s) whose values are displayed when hovering over
+            a LineString.
+        color : str, optional
+            Color in which the LineStrings should be displayed on the map.
+        buffersize : float, optional
+            Size of the buffer around the LineStrings on the map.
         """
 
         data = data.copy()
@@ -448,10 +489,17 @@ class PlottingLineStrings(PlotObject):
 
     def add_to(self, folium_map: TrackMap) -> TrackMap:
         """
-        Add Linestrings to a TrackMap object
+        Add LineStrings to a TrackMap object.
 
-        :param folium_map: The map to add the objects to
-        :return: The updated map
+        Parameters
+        ----------
+        folium_map : folium.Map
+            The map to which the LineStrings should be added.
+
+        Returns
+        -------
+        folium.Map
+            The updated map with the added LineStrings.
         """
         if "color_by_column" in self.data.columns:
             colors = [
@@ -567,14 +615,19 @@ class PlottingAreas(PlotObject):
         stroke: bool = True,
     ):
         """
-        Class which allows the plotting of areas on maps.
+        Class for plotting areas on maps.
 
-        :param data: A path to a geopandas geodataframe, or a geopandas
-        GeoDataFrame. The geometry should contain polygons.
-        :param popup: What columns to display in the popup
-        (when clicking in the area)
-        :param color: A background color for the areas
-        :param stroke: Whether to include a border for each area or not
+        Parameters
+        ----------
+        data : str or geopandas.GeoDataFrame
+            A file path to a GeoPandas GeoDataFrame or a GeoDataFrame itself.
+            The geometry should contain polygons.
+        popup : str or list of str, optional
+            Column(s) to display in the popup when clicking on an area.
+        color : str, optional
+            Background color for the areas.
+        stroke : bool, optional
+            Whether to include a border for each area.
         """
 
         super().__init__(data, popup)
@@ -583,11 +636,19 @@ class PlottingAreas(PlotObject):
 
     def add_to(self, folium_map: TrackMap) -> TrackMap:
         """
-        Add the areas to a TrackMap object
+        Add areas to a TrackMap object.
 
-        :param folium_map: The map to add the objects to
-        :return: The updated map
+        Parameters
+        ----------
+        folium_map : folium.Map
+            The map to which the areas should be added.
+
+        Returns
+        -------
+        folium.Map
+            The updated map with the added areas.
         """
+
         if self.popup:
             indexnames = self.data.index.names
 
@@ -624,14 +685,25 @@ def plottable(
     **kwargs,
 ) -> PlotObject:
     """
-    Infer the type of data to be plotted and make sure it can be added
-    to a TrackMap. This function is idempotent, so it can be used on
-    objects that are already plottable.
+    Infer the type of data to be plotted and ensure it can be added
+    to a TrackMap.
 
-    :param data: The data that needs to be plotted
-    :param popup: The columns that define the data
-    :return: The data, transformed as a plottable object
+    This function is idempotent, meaning it can be used on objects that
+    are already plottable.
+
+    Parameters
+    ----------
+    data : object
+        The data that needs to be plotted.
+    popup : str or list of str, optional
+        The columns that define the data.
+
+    Returns
+    -------
+    object
+        The data transformed into a plottable object.
     """
+
     if isinstance(data, PlotObject):  # Objects that are already plottable
         return data
     if isinstance(data, gpd.GeoDataFrame):
@@ -664,12 +736,21 @@ def quick_plot(
     *args, notebook=False, **kwargs
 ) -> Union[TrackMap | folium.Figure]:
     """
-    A quick way to plot a list of objects on a map.
-    This is a wrapper around the TrackMap class.
+    Quickly plot a list of objects on a map.
 
-    :param args: A list of PlotObjects
-    :return: A TrackMap object
+    This function is a wrapper around the TrackMap class.
+
+    Parameters
+    ----------
+    *args : list of PlotObjects
+        A list of PlotObjects to be plotted on the map.
+
+    Returns
+    -------
+    TrackMap
+        A TrackMap object with the plotted objects.
     """
+
     objects = []
     for arg in args:
         try:
