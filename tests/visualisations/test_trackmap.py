@@ -150,7 +150,8 @@ def test_add_to_trackmap(
     # For the points and areas, 1 child is added for every row in the dataframe
     # 1 child always exists when the aerial photograph is added
     aerial_photograph_children = add_aerial
-    # Linestrings always add 2 objects; one for the hover, and one for the lines themselves
+    # Linestrings always add 2 objects; one for the hover,
+    # and one for the lines themselves
     linestring_children = 2
     total_objects = (
         len(points_dataframe)
@@ -170,7 +171,8 @@ def test_add_to_trackmap(
     assert "test_output.html" in os.listdir(tmp_path), "No file was created"
 
     # Make a new map, that should be inferred to show the same data
-    # Type is established with plottable, and popup is a string instead of a list
+    # Type is established with plottable, and popup is a string instead
+    # of a list
     q = TrackMap()
     plottable(points_dataframe, popup="name").add_to(q)
     plottable(lines_geodataframe, popup="name").add_to(q)
@@ -178,9 +180,10 @@ def test_add_to_trackmap(
     q.save(str(tmp_path / "test_output2.html"))
 
     for m_child, q_child in zip(m._children, q._children):
-        assert type(m_child) == type(q_child), "Unequal type"
+        assert type(m_child) is type(q_child), "Unequal type"
 
-    # Popup is a list with 2 elements, and test some additional settings for linestrings and areas
+    # Popup is a list with 2 elements, and test some additional
+    # settings for linestrings and areas
     r = TrackMap()
     PlottingPoints(points_dataframe, popup=["name", "name2"]).add_to(r)
     PlottingLineStrings(
@@ -192,7 +195,7 @@ def test_add_to_trackmap(
     r.save(str(tmp_path / "test_output3.html"))
 
     for m_child, r_child in zip(m._children, r._children):
-        assert type(m_child) == type(r_child), "Unequal type"
+        assert type(m_child) is type(r_child), "Unequal type"
 
 
 def test_plottingpoint_settings(points_dataframe, tmp_path):

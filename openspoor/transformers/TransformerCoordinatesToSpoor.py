@@ -21,7 +21,8 @@ class TransformerCoordinatesToSpoor:
         """
         :param buffer_distance: float, max distance in meters used to
                                 pinpoint points to spoor referential systems
-        :param best_match_only: bool, if True, only the closest match per point is returned.
+        :param best_match_only: bool, if True, only the closest match per
+        point is returned.
         """
         logger.info(
             "Initiating TransformerCoordinatesToSpoor object in order to "
@@ -43,7 +44,8 @@ class TransformerCoordinatesToSpoor:
     @staticmethod
     def _determine_geocode_km(gdf_lines, gdf_points):
         """
-        Perform the interpolation for a set of line segments and points. Index indicates which lines and points are
+        Perform the interpolation for a set of line segments and points.
+        Index indicates which lines and points are
         compared.
 
         :param gdf_lines: A geodataframe with line data
@@ -54,20 +56,26 @@ class TransformerCoordinatesToSpoor:
             distances=lambda d: d.geometry.project(gdf_points.loc[d.index])
         ).pipe(lambda d: d.interpolate(d.distances).z)
 
-    # TODO: Fix for wissels. These seem to be a in a separate table: 'Spoorwisselbenaming met geocode kilometrering'
+    # TODO: Fix for wissels. These seem to be a in a separate table:
+    # 'Spoorwisselbenaming met geocode kilometrering'
     def transform(self, gdf_points: gpd.GeoDataFrame) -> gpd.GeoDataFrame:
         """
-        For every requested point, check which track segments are close to that location and add them to the data.
-        This can result in 0,1 or more matches per point. Every point will occur in the final output at least once, even
+        For every requested point, check which track segments are close to
+        that location and add them to the data.
+        This can result in 0,1 or more matches per point. Every point will
+        occur in the final output at least once, even
         if no match could be made.
 
-        :param gdf_points: A geodataframe with points data for which the geocode and spoortak coordinates are wanted.
+        :param gdf_points: A geodataframe with points data for which the
+        geocode and spoortak coordinates are wanted.
         All crs are allowed
-        :return: A geodataframe, based on the input dataframe. Every point will occur in the final output at least once,
+        :return: A geodataframe, based on the input dataframe. Every point
+        will occur in the final output at least once,
          even if no match could be made.
         """
         # Coordinates used are RD in the below.
-        # Buffer style prevents overflow into next segment; buffer has straight edges at the end
+        # Buffer style prevents overflow into next segment;
+        # buffer has straight edges at the end
         self.buffered_stgk = self.stgk.assign(
             geometry=lambda x: x.geometry.buffer(
                 self.buffer_distance, cap_style=2
@@ -115,7 +123,8 @@ class TransformerCoordinatesToSpoor:
                 )
             ]
             .assign(
-                geocode_kilometrering=lambda d: d.groupby(  # This ensures a unique geocode within every segment
+                geocode_kilometrering=lambda d: d.groupby(
+                    # This ensures a unique geocode within every segment
                     [
                         d.geometry.astype(str),
                         d.GEOCODE.astype(
@@ -124,13 +133,11 @@ class TransformerCoordinatesToSpoor:
                         d.SUBCODE.astype(str),
                         d.NAAM_LANG.astype(str),
                     ]
-                )[
-                    "geocode_kilometrering"
-                ].transform(
-                    "mean"
-                )
+                )["geocode_kilometrering"].transform("mean")
             )
-            .reset_index()  # Below makes sure every original point is projected, even if the data contained duplicates
+            .reset_index()
+            # Below makes sure every original point is projected,
+            # even if the data contained duplicates
             .drop_duplicates()
             .set_index("index")
             .rename_axis(None)
@@ -151,10 +158,10 @@ class TransformerCoordinatesToSpoor:
                         "projection_distance"
                     ].transform("min")
                     == d["projection_distance"]
-                ]
-                .drop_duplicates(
+                ].drop_duplicates(
                     "geometry_index"
-                )  # Make sure this is done in the rare case of multiple closest matches
+                )  # Make sure this is done in the rare
+                # case of multiple closest matches
                 .drop(["geometry_index"], axis=1)
             )
         if not isinstance(out, gpd.GeoDataFrame):

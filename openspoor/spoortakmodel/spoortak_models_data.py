@@ -37,7 +37,8 @@ class SpoortakModelsData(Singleton):
 
     @staticmethod
     def _replace_km_columns(df: pd.DataFrame) -> None:
-        """implace correction of the km columns and renaming them to avoid confusion"""
+        """implace correction of the km columns and
+        renaming them to avoid confusion"""
         df["kilometrering_start"] = df[["KM_BEGIN", "KM_EIND"]].values.min(1)
         df["kilometrering_end"] = df[["KM_BEGIN", "KM_EIND"]].values.max(1)
 
@@ -48,7 +49,10 @@ class SpoortakModelsData(Singleton):
 
         for spoortak, row in df_changed_geo.iterrows():
             log.warning(
-                f"Swapped from & two km for {spoortak} with different geocodes. This might actualy be a different kilometerlint and thus have incorrect results."
+                "Swapped from & two km for %s with different geocodes. "
+                "This might actually be a different kilometerlint "
+                "and thus have incorrect results.",
+                spoortak,
             )
 
         df.drop(columns=["KM_BEGIN", "KM_EIND"], inplace=True)
@@ -63,7 +67,8 @@ class SpoortakModelsData(Singleton):
         return [int(basename(directory).split("_")[1]) for directory in dirs]
 
     def __init__(self, data_path: str):
-        # we've applied the singleton pattern here so we can check if the data is already there.
+        # we've applied the singleton pattern here so we can
+        # check if the data is already there.
         if not self.models:
             log.info("loading data...")
 

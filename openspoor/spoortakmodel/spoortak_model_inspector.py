@@ -36,7 +36,8 @@ class SpoortakModelInspector:
             pd.set_option(key, value)
 
     def inspect(self, spoortak_identifier: str):
-        """Scans the spoortak model data (including change data) and returns everything related to the given spoortak"""
+        """Scans the spoortak model data (including change data)
+        and returns everything related to the given spoortak"""
         self._set_pd_options()
 
         print(f"--- {spoortak_identifier} spoortakmodel data ---")

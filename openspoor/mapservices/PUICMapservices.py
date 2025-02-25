@@ -11,7 +11,8 @@ config = read_config()
 
 class PUICMapservices:
     """
-    Loads mapservices data from the Geleidingssystemen. These contains PUIC data for spoor, wissels and kruisingbenen.
+    Loads mapservices data from the Geleidingssystemen.
+    These contains PUIC data for spoor, wissels and kruisingbenen.
     """
 
     def __init__(

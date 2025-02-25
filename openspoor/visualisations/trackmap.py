@@ -35,7 +35,8 @@ class PlotObject(ABC):
             self.data = gpd.read_file(data)
         else:
             raise TypeError(
-                "Provide either a geopandas dataframe or a file location of a csv to show"
+                "Provide either a geopandas dataframe or a file location "
+                "of a csv to show"
             )
         self.data = self.data.to_crs("EPSG:4326")
         if self.popup is not None:
@@ -44,7 +45,8 @@ class PlotObject(ABC):
     @abstractmethod
     def add_to(self, m) -> PlotObject:
         """
-        A base function that should be overwritten with logic for every plottable object.
+        A base function that should be overwritten with logic for every
+        plottable object.
 
         :param m: A TrackMap object, to which this element should be added.
         :return: None
@@ -56,10 +58,13 @@ class PlotObject(ABC):
 
 class TrackMap(folium.Map):
     """
-    Plotting functionality based on folium maps, designed for plotting objects on the Dutch railways.
-    Plottable objects are based on geopandas GeoDataFrames; with the function plottable they can be converted to
+    Plotting functionality based on folium maps, designed for plotting objects
+    on the Dutch railways.
+    Plottable objects are based on geopandas GeoDataFrames; with the function
+    plottable they can be converted to
     a PlotObject that can be used for this class.
-    Outputs are automatically zoomed in on what data is requested and include an aerial photograph of the Netherlands.
+    Outputs are automatically zoomed in on what data is requested and include
+    an aerial photograph of the Netherlands.
     Maps can be shown directly, or saved as .html files.
     """
 
@@ -72,9 +77,11 @@ class TrackMap(folium.Map):
         """
         Set up a TrackMap object.
 
-        :param objects: A single plottable object or list of plottable objects that can be pre-defined
+        :param objects: A single plottable object or list of plottable
+        objects that can be pre-defined
         outside the context manager of the TrackMap
-        :param add_aerial: Whether you want to include the ProRail aerial photograph or not
+        :param add_aerial: Whether you want to include the ProRail
+        aerial photograph or not
         :return: A TrackMap object
         """
 
@@ -106,7 +113,7 @@ class TrackMap(folium.Map):
         :return: None
         """
         fg = folium.FeatureGroup(
-            name=f"aerial_photograph", max_zoom=30, max_native_zoom=30
+            name="aerial_photograph", max_zoom=30, max_native_zoom=30
         )
         folium.WmsTileLayer(
             url="https://luchtfoto.prorail.nl/erdas-iws/ogc/wms/Luchtfoto",
@@ -123,7 +130,8 @@ class TrackMap(folium.Map):
 
     def _fix_zoom(self) -> None:
         """
-        Set the zoom level so all the plotted objects fit neatly within the initial view of the output.
+        Set the zoom level so all the plotted objects fit neatly within
+        the initial view of the output.
 
         :return: None
         """
@@ -167,12 +175,14 @@ class TrackMap(folium.Map):
         """
         Show the map zoomed to a nice level and displayed at a suitable size.
 
-        :param notebook: A boolean for decreasing the size of the final plot. Designed for use in Notebooks
+        :param notebook: A boolean for decreasing the size of the final plot.
+        Designed for use in Notebooks
         :return: self if notebook is False, a folium Figure if notebook is True
         """
         self._fix_zoom()
         if notebook:
-            # Add a folium map inside a folium figure. This is the easiest way to change the figure size
+            # Add a folium map inside a folium figure. This is the easiest way
+            # to change the figure size
             figure = folium.Figure(1000, 400)
             self.add_to(figure)
             return figure
@@ -192,7 +202,8 @@ class TrackMap(folium.Map):
 
 class PlottingPoints(PlotObject):
     """
-    Add functionalities to a Pandas DataFrame, so it can be plotted in a nice manner.
+    Add functionalities to a Pandas DataFrame,
+    so it can be plotted in a nice manner.
     """
 
     def __init__(
@@ -201,9 +212,7 @@ class PlottingPoints(PlotObject):
         popup: Optional[Union[str, List[str]]] = None,
         lat_column: Optional[str] = "lat",
         lon_column: Optional[str] = "lon",
-        colors: Optional[
-            Union[str, Tuple[str, Dict[float, float]]]
-        ] = None,
+        colors: Optional[Union[str, Tuple[str, Dict[float, float]]]] = None,
         markertype: Optional[str] = None,
         marker_column: Optional[str] = None,
         color_column: Optional[str] = None,
@@ -212,21 +221,33 @@ class PlottingPoints(PlotObject):
         url_column: Optional[str] = None,
     ):
         """
-        Initialize a PlottingPoints object, used for plotting a list of markers on a map of the Netherlands.
+        Initialize a PlottingPoints object, used for plotting a list of
+        markers on a map of the Netherlands.
 
-        :param data: The Pandas DataFrame that should be plotted. GeoPandas dataframes are also partially supported
-        :param lat_column: A column including latitudes. Not required if data is a geopandas GeoDataFrame
-        :param lon_column: A column name including longitudes. Not required if data is a geopandas GeoDataFrame
-        :param popup: A column or list of columns whose values should be mentioned when an object is clicked on
-        :param colors: A string or a tuple, noting on what column to base the colors on and what values they should take
+        :param data: The Pandas DataFrame that should be plotted. GeoPandas
+        dataframes are also partially supported
+        :param lat_column: A column including latitudes. Not required if data
+        is a geopandas GeoDataFrame
+        :param lon_column: A column name including longitudes. Not required if
+        data is a geopandas GeoDataFrame
+        :param popup: A column or list of columns whose values should be
+        mentioned when an object is clicked on
+        :param colors: A string or a tuple, noting on what column to base the
+        colors on and what values they should take
         depending on the registered value.
-        :param markertype: 'circle' if circles are required, or an icon name found in
+        :param markertype: 'circle' if circles are required, or an icon name
+        found in
         # https://fontawesome.com/v4/icons/
-        :param marker_column: A column including the names of the markers to display
-        :param color_column: A column that can be  used for the colors of the markers
-        :param rotation_column: A column noting the degrees of rotation in the range (0,360)
-        :param radius_column: A column noting the radius of the circles to plot (if markertype=='circle')
-        :param url_column: A column including an url that is displayed in the popup
+        :param marker_column: A column including the names of the markers to
+        display
+        :param color_column: A column that can be  used for the colors of the
+        markers
+        :param rotation_column: A column noting the degrees of rotation in the
+        range (0,360)
+        :param radius_column: A column noting the radius of the circles to
+        plot (if markertype=='circle')
+        :param url_column: A column including an url that is
+        displayed in the popup
         """
 
         # Do some pre-processing for the cases the data is not a GeoDataFrame
@@ -259,7 +280,7 @@ class PlottingPoints(PlotObject):
                 self.data["lat"] = data.geometry.apply(lambda d: d.y)
                 self.data["lon"] = data.geometry.apply(lambda d: d.x)
             else:
-                NotImplementedError(
+                raise NotImplementedError(
                     f"Unimplemented geometry: {data.geometry.iloc[0]}"
                 )
 
@@ -374,7 +395,8 @@ class PlottingPoints(PlotObject):
 
 class PlottingLineStrings(PlotObject):
     """
-    An object that can be plotted on a TrackMap. This is based on a geopandas dataframe or a file with every row
+    An object that can be plotted on a TrackMap.
+    This is based on a geopandas dataframe or a file with every row
     indicating an item to show.
 
     """
@@ -390,9 +412,12 @@ class PlottingLineStrings(PlotObject):
         Initialize a PlottingLineStrings object.
 
         :param data: A geopandas dataframe or a file location of a csv file
-        :param popup: The column(s) whose values are shown when hovering over a linestring
-        :param color: The color in which the linestrings should be shown on the map
-        :param buffersize: The size of the buffer around the linestrings on the map
+        :param popup: The column(s) whose values are shown when hovering
+        over a linestring
+        :param color: The color in which the linestrings should be shown
+        on the map
+        :param buffersize: The size of the buffer around the linestrings
+        on the map
         """
 
         data = data.copy()
@@ -402,7 +427,9 @@ class PlottingLineStrings(PlotObject):
             self.color_by_column = "color_by_column"
             assert (
                 self.color_by_column not in data.columns
-            ), f"Column name {self.color_by_column} already exists in data; please rename"
+            ), f"Column name {self.color_by_column} already exists in data;"
+            "please rename"
+
             data[self.color_by_column] = data[color]
             popup = (
                 [color] + popup if isinstance(popup, list) else [color, popup]
@@ -415,7 +442,8 @@ class PlottingLineStrings(PlotObject):
         return folium.features.GeoJsonTooltip(
             fields=self.popup,
             aliases=self.popup,
-            style="background-color: white; color: #333333; font-family: arial; font-size: 12px; padding: 10px;",
+            style="background-color: white; color: #333333; "
+            "font-family: arial; font-size: 12px; padding: 10px;",
         )
 
     def add_to(self, folium_map: TrackMap) -> TrackMap:
@@ -445,11 +473,14 @@ class PlottingLineStrings(PlotObject):
 
             if self.data["color_by_column"].nunique() > len(colors):
                 logger.warning(
-                    "More groups than colors, some groups will have the same color"
+                    "More groups than colors, some groups will "
+                    "have the same color"
                 )
                 if self.data["color_by_column"].nunique() > len(colors) * 100:
                     raise ValueError(
-                        f"Too many groups to color by; reduce the number of elements in the {self.color} column below {len(colors) * 100}"
+                        f"Too many groups to color by; reduce the number of "
+                        f"elements in the {self.color} column "
+                        f"below {len(colors) * 100}"
                     )
 
             if len(
@@ -483,19 +514,21 @@ class PlottingLineStrings(PlotObject):
             line_color=self.color,
         ).add_to(folium_map)
 
-        # Add hover functionality.
-        style_function = lambda x: {
-            "fillColor": "#ffffff",
-            "color": "#000000",
-            "fillOpacity": 0.1,
-            "weight": 0.1,
-        }
-        highlight_function = lambda x: {
-            "fillColor": "#000000",
-            "color": "#000000",
-            "fillOpacity": 0.50,
-            "weight": 0.1,
-        }
+        def style_function(_) -> Dict:
+            return {
+                "fillColor": "#000000",
+                "color": "#000000",
+                "fillOpacity": 0.50,
+                "weight": 0.1,
+            }
+
+        def highlight_function(_) -> Dict:
+            return {
+                "fillColor": "#000000",
+                "color": "#000000",
+                "fillOpacity": 0.50,
+                "weight": 0.1,
+            }
 
         if self.popup:
             tooltip = self._make_tooltip()
@@ -520,7 +553,8 @@ class PlottingLineStrings(PlotObject):
 
 class PlottingAreas(PlotObject):
     """
-    An object that can be plotted on a TrackMap. This is based on a geopandas dataframe or a file with every row
+    An object that can be plotted on a TrackMap. This is based on a geopandas
+    dataframe or a file with every row
     indicating an item to show.
 
     """
@@ -535,8 +569,10 @@ class PlottingAreas(PlotObject):
         """
         Class which allows the plotting of areas on maps.
 
-        :param data: A path to a geopandas geodataframe, or a geopandas GeoDataFrame. The geometry should contain polygons.
-        :param popup: What columns to display in the popup (when clicking in the area)
+        :param data: A path to a geopandas geodataframe, or a geopandas
+        GeoDataFrame. The geometry should contain polygons.
+        :param popup: What columns to display in the popup
+        (when clicking in the area)
         :param color: A background color for the areas
         :param stroke: Whether to include a border for each area or not
         """
@@ -588,8 +624,9 @@ def plottable(
     **kwargs,
 ) -> PlotObject:
     """
-    Infer the type of data to be plotted and make sure it can be added to a TrackMap.
-    This function is idempotent, so it can be used on objects that are already plottable.
+    Infer the type of data to be plotted and make sure it can be added
+    to a TrackMap. This function is idempotent, so it can be used on
+    objects that are already plottable.
 
     :param data: The data that needs to be plotted
     :param popup: The columns that define the data
@@ -608,8 +645,9 @@ def plottable(
         elif isinstance(firstentry, point.Point):
             return PlottingPoints(data, popup, *args, **kwargs)
         else:
-            NotImplementedError(
-                f"GeoDataFrame with entries of type {type(firstentry)} not supported yet"
+            raise NotImplementedError(
+                f"GeoDataFrame with entries of type {type(firstentry)} "
+                "not supported yet"
             )
     elif isinstance(
         data, pd.DataFrame
@@ -617,13 +655,17 @@ def plottable(
         logger.info("Interpreting data as dataframe")
         return PlottingPoints(data, popup, *args, **kwargs)
     raise TypeError(
-        f"Data of type {type(data)} not supported. Please provide a geodataframe or a dataframe"
+        f"Data of type {type(data)} not supported. "
+        "Please provide a geodataframe or a dataframe"
     )
 
 
-def quick_plot(*args, notebook=False, **kwargs) -> Union[TrackMap | folium.Figure]:
+def quick_plot(
+    *args, notebook=False, **kwargs
+) -> Union[TrackMap | folium.Figure]:
     """
-    A quick way to plot a list of objects on a map. This is a wrapper around the TrackMap class.
+    A quick way to plot a list of objects on a map.
+    This is a wrapper around the TrackMap class.
 
     :param args: A list of PlotObjects
     :return: A TrackMap object
@@ -634,7 +676,8 @@ def quick_plot(*args, notebook=False, **kwargs) -> Union[TrackMap | folium.Figur
             objects.append(plottable(arg, **kwargs))
         except TypeError:
             logger.info(
-                f"Unable to plot {arg} with these arguments, plot these without arguments."
+                f"Unable to plot {arg} with these arguments, "
+                "plot these without arguments."
             )
             objects.append(plottable(**kwargs))
     return TrackMap(objects).show(notebook=notebook)

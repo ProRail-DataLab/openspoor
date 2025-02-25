@@ -22,13 +22,14 @@ class MapServicesQuery:
     abstract parent class to other mapservices classes
     """
 
-    # def __init__(self, url: Optional[str] = None, cache_location: Optional[Path] = None):
     def __init__(self, url: str, cache_location: Optional[Path] = None):
         """
-        :param url: An url of a mapservices.prorail.nl feature server to download from.
-                this is the part of the url until /query?
-                e.g. https://mapservices.prorail.nl/arcgis/rest/services/Geleidingssysteem_007/FeatureServer/12
-        :param cache_location: filepath where pickle file of data will be loaded from (or saved to if file is absent)
+        :param url: An url of a mapservices.prorail.nl feature server
+        to download from. this is the part of the url until /query?
+        e.g. https://mapservices.prorail.nl/arcgis/
+        rest/services/Geleidingssysteem_007/FeatureServer/12
+        :param cache_location: filepath where pickle file of data will
+        be loaded from (or saved to if file is absent)
         """
 
         self.standard_featureserver_query = config[
@@ -101,12 +102,12 @@ class MapServicesQuery:
         :param url: string, base_url for features
         :return: int, max_record_count
         """
-        body = SafeRequest()._request_with_retry("GET", url).data.decode(
-            "UTF-8"
+        body = (
+            SafeRequest()._request_with_retry("GET", url).data.decode("UTF-8")
         )
         try:
             return int(re.findall(r"MaxRecordCount: </b> (\d+)", str(body))[0])
-        except:
+        except IndexError:
             raise ValueError("MaxRecordCount not found in response")
 
     def _load_all_features_to_gdf(
@@ -116,8 +117,9 @@ class MapServicesQuery:
         Downloads all available features from a feature server and set correct
         geometry.
 
-        :param dict_query: dictionary with data to filter. keys are column names.
-                more than one column are possible and also more than one value for each column
+        :param dict_query: dictionary with data to filter.
+        keys are column names. more than one column are possible
+        and also more than one value for each column
         :return: geopandas dataframe with all data from the api call
         """
 
@@ -132,7 +134,8 @@ class MapServicesQuery:
             + " of features."
         )
 
-        # Maxrecordcount is either 1000 or 2000. For bigger sets, it is not worth the extra request to check the max recordcount
+        # Maxrecordcount is either 1000 or 2000. For bigger sets,
+        # it is not worth the extra request to check the max recordcount
         if total_features_count > 2000:
             recordcount = self._get_max_recordcount(self.url)
         else:
@@ -159,7 +162,8 @@ class MapServicesQuery:
             "GET", input_url + "&returnCountOnly=True"
         )
         # some layers do not return geojson when asking for the count only
-        # i.e.: 'https://mapservices.prorail.nl/arcgis/rest/services/Kadastraal_004/MapServer/5'
+        # i.e.: 'https://mapservices.prorail.nl/
+        # arcgis/rest/services/Kadastraal_004/MapServer/5'
         if "properties" not in res.keys():
             return res["count"]
         return res["properties"]["count"]
@@ -173,8 +177,8 @@ class MapServicesQuery:
         batches by 1000 at a time.
 
         :param input_url: The url to query data from
-        :param offset: int, offset from 0 to retrieve different batches from the
-        same api
+        :param offset: int, offset from 0 to retrieve different
+        batches from the same api
         :return: geopandas dataframe of features
         """
         data = SafeRequest().get_json(
@@ -221,14 +225,16 @@ class MapServicesQuery:
 class MapServicesQueryMValues(MapServicesQuery):
     """
     Class for getting M-values from the mapservices.prorail.nl feature servers.
-    Unfortunately these are in json format only, so the standard query needs to be adjusted for this.
+    Unfortunately these are in json format only, so the standard query needs
+    to be adjusted for this.
     """
 
     def __init__(self, url: str, cache_location: Optional[Path] = None):
         super().__init__(url, cache_location)
         if not self._has_m_values():
             logger.warning(
-                "This layer does not have M values, for this layer MapServicesQuery should be used. "
+                "This layer does not have M values, for this layer "
+                "MapServicesQuery should be used. "
                 f"See {url} for more information"
             )
 
@@ -258,7 +264,8 @@ class MapServicesQueryMValues(MapServicesQuery):
             geometry_list: List[Union[LineString, Point, MultiLineString]] = []
             for feature in data[
                 "features"
-            ]:  # Sometimes there are multiple paths in one feature. These can be combined within the same geometry column
+            ]:  # Sometimes there are multiple paths in one feature.
+                # These can be combined within the same geometry column
                 if len(feature["geometry"]["paths"]) > 1:
                     geometry_list.append(
                         MultiLineString(
@@ -276,7 +283,8 @@ class MapServicesQueryMValues(MapServicesQuery):
                     )
         elif data["geometryType"] == "esriGeometryPoint":
             logger.warning(
-                "Requested m values for point geometry, these are not relevant for these layers"
+                "Requested m values for point geometry, "
+                "these are not relevant for these layers"
             )
             geometry_list = [
                 Point((f["geometry"])["x"], (f["geometry"])["y"])
@@ -285,7 +293,8 @@ class MapServicesQueryMValues(MapServicesQuery):
         else:
             geometrytype = data["geometryType"]
             raise NotImplementedError(
-                f"Requesting m values for this geometry type: ({geometrytype}) is not yet implemented"
+                "Requesting m values for this geometry type: "
+                f"({geometrytype}) is not yet implemented"
             )
         return gpd.GeoDataFrame(
             data=attribute_list, crs=self.crs, geometry=geometry_list

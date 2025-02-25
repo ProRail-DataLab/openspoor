@@ -64,7 +64,8 @@ class FeatureSearchResults(pd.DataFrame):
 class FeatureServerOverview(Singleton):
     """
     Class used to find all the available featureservers in mapservices.
-    This can be used to navigate the API through python, allowing some more efficient searching.
+    This can be used to navigate the API through python, allowing some more
+    efficient searching.
     """
 
     def __init__(self):
@@ -77,10 +78,12 @@ class FeatureServerOverview(Singleton):
         self, featureserver_url: str
     ) -> pd.DataFrame:
         """
-        For a given featureserver submenu within the mapservices environment give all the possible layers.
+        For a given featureserver submenu within the mapservices environment
+        give all the possible layers.
 
         :param featureserver_url: The url of the selected featureserver
-        :return: A pandas dataframe, listing the urls and descriptions of the found layers
+        :return: A pandas dataframe, listing the urls and descriptions of
+        the found layers
         """
         featureserver_text = SafeRequest().get_string("GET", featureserver_url)
         featureservers = re.findall(
@@ -99,7 +102,8 @@ class FeatureServerOverview(Singleton):
         """
         Find all available layers within the mapservices featureservers.
 
-        :return: A pandas dataframe, listing the urls and descriptions of the found layers in all featureservers
+        :return: A pandas dataframe, listing the urls and descriptions of
+        the found layers in all featureservers
         """
         all_services = SafeRequest().get_string("GET", self.base_url)
         featureserver_redirects = re.findall(
@@ -136,13 +140,16 @@ class FeatureServerOverview(Singleton):
         """
         Find all layers which include a certain phrase.
 
-        :param search_for: A case unsensitive string for which you want to find all available layers
-        :param exact: Whether to only return layers that match this string completely
-        :return: A pandas dataframe, listing the urls and descriptions of the found layers in all featureservers
+        :param search_for: A case unsensitive string for which you want to
+        find all available layers
+        :param exact: Whether to only return layers that match this
+        string completely
+        :return: A pandas dataframe, listing the urls and descriptions
+        of the found layers in all featureservers
         """
 
         if self.df is None:
-            logger.info(f"Retrieving featureserver layers")
+            logger.info("Retrieving featureserver layers")
             self.df = self.get_all_featureserver_layers()
         logger.info(f'Searching for "{search_for}"')
         if exact:

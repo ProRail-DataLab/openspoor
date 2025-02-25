@@ -39,7 +39,8 @@ class TestSpoortakModelMapper(unittest.TestCase):
         reason="Fails on ubuntu but succeeds on windows",
     )
     def test_map_happy_flow_bug(self):
-        """test to see if the start and end were the cause of the original test failing"""
+        """test to see if the start and end were the cause of the
+        original test failing"""
         expected_models = [14, 15, 16, 17]
         subsection = SpoortakSubsection("478_1201V_0.6", 0, 999999)
 

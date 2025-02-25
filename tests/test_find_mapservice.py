@@ -24,7 +24,10 @@ def test_get_all_featureserver_layers(all_featureserver_layers):
 
 
 def test_get_layers_in_featureservers(all_featureserver_layers):
-    url = "https://mapservices.prorail.nl/arcgis/rest/services/Afscherming_003/FeatureServer"
+    url = (
+        "https://mapservices.prorail.nl/"
+        "arcgis/rest/services/Afscherming_003/FeatureServer"
+    )
     out = all_featureserver_layers._get_layers_in_featureservers(url)
     assert out.shape[0] > 0, "No featureservices found"
     assert out.shape[1] == 2, "Unexpected number of columns"

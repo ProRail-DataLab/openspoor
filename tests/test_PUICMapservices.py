@@ -109,7 +109,7 @@ class Test:
 
         pd.testing.assert_frame_equal(output, expected_output)
 
-    def test_prep_wisselkruisingbeen_gdf_minimal_example_with_both_wisselbeen_and_kruisingbeen(
+    def test_prep_wisselkruisingbeen_gdf_minimal_example_with_both_wisselbeen_and_kruisingbeen(  # noqa: E501
         self, puic_mapservices
     ):
         wisselkruisingbeen_gdf = gpd.GeoDataFrame(

@@ -1,6 +1,7 @@
 import os
-import numpy as np
+
 import geopandas as gpd
+import numpy as np
 import pandas as pd
 import pytest
 from shapely.geometry import LineString
@@ -846,7 +847,8 @@ class Test:
 
     def test_acceptance_query_functionality(self):
         data = MapServicesQuery(
-            url="http://mapservices.prorail.nl/arcgis/rest/services/Kadastraal_004/MapServer/5"
+            url="http://mapservices.prorail.nl/"
+            + "arcgis/rest/services/Kadastraal_004/MapServer/5"
         )
         query_dict = {
             "KADSLEUTEL": ["ANM00G3774", "ANM00G3775", "ANM00H483"],

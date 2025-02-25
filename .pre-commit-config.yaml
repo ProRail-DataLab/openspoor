@@ -4,6 +4,7 @@ repos:
     hooks:
       - id: trailing-whitespace
       - id: end-of-file-fixer
+        exclude: '^data/'
       - id: check-yaml
       - id: check-added-large-files
 
@@ -14,16 +15,24 @@ repos:
         language_version: python3.11
         args: ["--profile", "black", "--line-length=79"]
 
+  - repo: https://github.com/psf/black
+    rev: 25.1.0
+    hooks:
+      - id: black
+        language_version: python3.11
+        args: ["--line-length", "79"]
+
   - repo: https://github.com/myint/autoflake
     rev: v2.2.1
     hooks:
       - id: autoflake
         args: ["--remove-all-unused-imports", "--remove-unused-variables", "--in-place", "--recursive"]
 
-  # - repo: https://github.com/pycqa/flake8
-  #   rev: 7.0.0
-  #   hooks:
-  #     - id: flake8
+
+  - repo: https://github.com/pycqa/flake8
+    rev: 7.0.0
+    hooks:
+      - id: flake8
   #       args: ['--config=.flake8']
 
   # - repo: local

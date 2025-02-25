@@ -14,13 +14,17 @@ class SpoortakModelMapper:
     """Limitations:
          - RENAME keyword not supported
          - can't map if there is no overlapping geocode
-         - assumes singular kilometer lint if geocodes match with older segments
+         - assumes singular kilometer lint if geocodes match
+         with older segments
          - does not support spoortak 2.0 model (v18) yet
-         - unkown what happens if geocode_begin and geocode_end differ and do not share a km lint
+         - unkown what happens if geocode_begin and geocode_end differ
+         and do not share a km lint
 
     TODO:
-       - now assume the input exists in 17 and we are searching backward... Make this more flexible to search forward from 'midway'
-       - Probably should have a validation that we have the same 'length' for all spoortak models in our output
+       - now assume the input exists in 17 and we are searching backward...
+         Make this more flexible to search forward from 'midway'
+       - Probably should have a validation that we have the same 'length'
+       for all spoortak models in our output
 
        changes as described in BBMS_BERICHT_xx.csv
        ASSIGN - implemented
@@ -28,7 +32,8 @@ class SpoortakModelMapper:
        EDITCORR - Don't need (?)
        EDITREAL - Don't need (?)
        RENAME - TODO
-         rename is often use to swap two names. If we want to support rename we need to keep track of both else we'll
+         rename is often use to swap two names. If we want to support
+         rename we need to keep track of both else we'll
          report back on both the spoortakken that swapped the names
 
     """
@@ -36,7 +41,8 @@ class SpoortakModelMapper:
     def __init__(self, spoortak_model_data: SpoortakModelsData):
         self._data = spoortak_model_data
         log.warning(
-            "SpoortakModelMapper is a best effort mapper to older/newer models, it is far from perfect."
+            "SpoortakModelMapper is a best effort mapper to older/newer models"
+            ", it is far from perfect."
         )
 
     def _is_new_spoortak(self, spoortak_identifier, spoortak_model: int):
@@ -88,7 +94,8 @@ class SpoortakModelMapper:
                 temp_related_spoortakken.remove(spoortak_identifier)
 
             for entry in temp_related_spoortakken:
-                # if there is no geocode overlap we can't assume the kilometrering uses the same 'kilometer lint'
+                # if there is no geocode overlap we can't assume
+                # the kilometrering uses the same 'kilometer lint'
                 spoortak = self._retrieve_spoortak(entry, model_version)
                 if spoortak is None:
                     spoortak = self._retrieve_spoortak(
@@ -96,7 +103,8 @@ class SpoortakModelMapper:
                     )
                 if spoortak is None:
                     raise ValueError(
-                        f"Could not find spoortak {entry} in model {model_version} and {model_version - 1}"
+                        f"Could not find spoortak {entry} "
+                        f"in model {model_version} and {model_version - 1}"
                     )
 
                 if (
@@ -132,7 +140,8 @@ class SpoortakModelMapper:
         """Maps a spoortak subsection to all other spoortak models
 
         :param spoortak_subsection: subsection to map
-        :param _ignore_list: list of spoortak identifiers to ignore (need this to avoid infinite loops)
+        :param _ignore_list: list of spoortak identifiers
+        to ignore (need this to avoid infinite loops)
 
         """
 
@@ -153,7 +162,8 @@ class SpoortakModelMapper:
 
             if spoortak_found and spoortak_data is None:
                 raise ValueError(
-                    f"The spoortak was not new, but could not find it in version {model_version}."
+                    "The spoortak was not new, but could "
+                    f"not find it in version {model_version}."
                 )
 
             if spoortak_data is None:
@@ -161,7 +171,8 @@ class SpoortakModelMapper:
 
             spoortak_found = True
 
-            # make this nicer, dont need to grab them every time and overwriting them with the oldest?
+            # make this nicer, dont need to grab them every time
+            # and overwriting them with the oldest?
             geocodes = [
                 spoortak_data["GEOCODE_BEGIN"],
                 spoortak_data["GEOCODE_EIND"],
@@ -186,12 +197,14 @@ class SpoortakModelMapper:
                 spoortak_subsection.identification, model_version
             ):
                 log.info(
-                    f"Spoortak was new, not searching further back in the model history"
+                    "Spoortak was new, not searching further "
+                    "back in the model history"
                 )
                 break
 
         # find anything that is related,
-        # assume same km lint if one of the geocodes matches and just add them all to the list
+        # assume same km lint if one of the geocodes matches
+        # and just add them all to the list
         related_spoortakken = self._related_spoortakken(
             spoortak_subsection.identification, geocodes
         )

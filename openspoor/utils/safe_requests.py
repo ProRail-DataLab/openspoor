@@ -19,7 +19,8 @@ class SafeRequest(Singleton):
 
     def __init__(self, max_retry: int = 5, time_between: float = 0.3):
         """
-        Create a package from where we can make requests. The requests are done using certificates and a sleep is
+        Create a package from where we can make requests. The requests are
+        done using certificates and a sleep is
         built in to guarantee that there is some time between every API call.
 
         :param max_retry: The maximum amount of times a request is attempted
@@ -27,7 +28,7 @@ class SafeRequest(Singleton):
         """
 
         # Hotfix: Updates to SSL certificates were required.
-        # See https://stackoverflow.com/questions/71603314/ssl-error-unsafe-legacy-renegotiation-disabled
+        # See https://stackoverflow.com/questions/71603314/ssl-error-unsafe-legacy-renegotiation-disabled  # noqa
         ctx = ssl.create_default_context(ssl.Purpose.SERVER_AUTH)
         ctx.options |= 0x4
         self.pool = urllib3.PoolManager(
@@ -40,7 +41,8 @@ class SafeRequest(Singleton):
         self, request_type: str, url: str, body: Optional[dict] = None
     ) -> urllib3.response.BaseHTTPResponse:
         """
-        Make an API call using a certificate. Ensure the time between consecutive calls is at least self.time_between
+        Make an API call using a certificate. Ensure the time between
+        consecutive calls is at least self.time_between
         seconds and retry for the required amount of times.
 
         :param request_type: The request type to use
@@ -60,17 +62,21 @@ class SafeRequest(Singleton):
                 SafeRequest.last_request = (
                     time.time()
                 )  # Do this before the query to update even if unsuccessful
-                request = self.pool.request_encode_body(request_type, url, body=body_str)
+                request = self.pool.request_encode_body(
+                    request_type, url, body=body_str
+                )
                 if request.status == 200:
                     return request
                 else:
                     raise ConnectionError(
-                        f"Status {request.status} received at {url} instead of 200"
+                        f"Status {request.status} received at"
+                        f"{url} instead of 200"
                     )
 
             except SSLError:
                 logging.warning(
-                    "Removing certificates. Please be aware of the security risks."
+                    "Removing certificates. "
+                    "Please be aware of the security risks."
                 )
                 self.pool = urllib3.PoolManager()
             except Exception as error:
