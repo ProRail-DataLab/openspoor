@@ -1,5 +1,7 @@
 class Singleton(object):
-    """helper class to implement the singleton pattern"""
+    """
+    Helper class to implement the singleton pattern.
+    """
 
     _instances: dict = {}
 

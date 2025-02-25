@@ -12,6 +12,9 @@ from openspoor.utils.singleton import Singleton
 
 
 class SafeRequest(Singleton):
+    """
+    A class for making requests with a delay between them.
+    """
 
     last_request = (
         0.0  # Use a class attribute, as we use the Singleton pattern
@@ -19,12 +22,15 @@ class SafeRequest(Singleton):
 
     def __init__(self, max_retry: int = 5, time_between: float = 0.3):
         """
-        Create a package from where we can make requests. The requests are
-        done using certificates and a sleep is
-        built in to guarantee that there is some time between every API call.
+        Requests are performed using certificates, and a delay is built in to
+        ensure a minimum time between consecutive API calls.
 
-        :param max_retry: The maximum amount of times a request is attempted
-        :param time_between: The minimum time between two consecutive queries
+        Parameters
+        ----------
+        max_retry : int
+            The maximum number of times a request is attempted.
+        time_between : float
+            The minimum time (in seconds) between two consecutive queries.
         """
 
         # Hotfix: Updates to SSL certificates were required.
@@ -41,14 +47,25 @@ class SafeRequest(Singleton):
         self, request_type: str, url: str, body: Optional[dict] = None
     ) -> urllib3.response.BaseHTTPResponse:
         """
-        Make an API call using a certificate. Ensure the time between
-        consecutive calls is at least self.time_between
-        seconds and retry for the required amount of times.
+        Make an API call using a certificate.
 
-        :param request_type: The request type to use
-        :param url: The URL to query
-        :param body: A dictionary to be passed as a body
-        :return: An http response
+        Ensures the time between consecutive calls is
+        at least `self.time_between`
+        seconds and retries for the required number of times.
+
+        Parameters
+        ----------
+        request_type : str
+            The request type to use (e.g., "GET", "POST").
+        url : str
+            The URL to query.
+        body : dict, optional
+            A dictionary to be passed as the request body.
+
+        Returns
+        -------
+        http.Response
+            The HTTP response object.
         """
         body_str: Optional[str] = None
         if isinstance(body, dict):
@@ -99,10 +116,19 @@ class SafeRequest(Singleton):
         """
         Return a request as a string.
 
-        :param request_type: The request type to use
-        :param url: The URL to query
-        :param body: A dictionary to be passed as a body
-        :return: The output of the request as a string
+        Parameters
+        ----------
+        request_type : str
+            The request type to use (e.g., "GET", "POST").
+        url : str
+            The URL to query.
+        body : dict, optional
+            A dictionary to be passed as the request body.
+
+        Returns
+        -------
+        str
+            The output of the request as a string.
         """
 
         return self._request_with_retry(request_type, url, body).data.decode(
@@ -115,9 +141,18 @@ class SafeRequest(Singleton):
         """
         Return the request data as a dictionary.
 
-        :param request_type: The request type to use
-        :param url: The URL to query
-        :param body: A dictionary to be passed as a body
-        :return: The output data of the request as a dictionary
+        Parameters
+        ----------
+        request_type : str
+            The request type to use (e.g., "GET", "POST").
+        url : str
+            The URL to query.
+        body : dict, optional
+            A dictionary to be passed as the request body.
+
+        Returns
+        -------
+        dict
+            The output data of the request as a dictionary.
         """
         return json.loads(self.get_string(request_type, url, body))

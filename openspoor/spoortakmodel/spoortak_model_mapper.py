@@ -137,12 +137,15 @@ class SpoortakModelMapper:
         spoortak_subsection: SpoortakSubsection,
         _ignore_list: Optional[List[str]] = None,
     ) -> List[SpoortakSubsection]:
-        """Maps a spoortak subsection to all other spoortak models
+        """
+        Maps a spoortak subsection to all other spoortak models.
 
-        :param spoortak_subsection: subsection to map
-        :param _ignore_list: list of spoortak identifiers
-        to ignore (need this to avoid infinite loops)
-
+        Parameters
+        ----------
+        spoortak_subsection : object
+            Subsection to map.
+        _ignore_list : list
+            List of spoortak identifiers to ignore (to avoid infinite loops).
         """
 
         if not _ignore_list:

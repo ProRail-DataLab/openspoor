@@ -302,12 +302,20 @@ class MapServicesQueryMValues(MapServicesQuery):
 
     def _transform_dict_to_gdf(self, data: dict) -> gpd.GeoDataFrame:
         """
-        Transform given json format data from feature servers into a geopandas
-        dataframe with given geometry.
+        Transforms JSON-formatted data from feature servers into a
+        GeoPandas DataFrame.
 
-        :param data: dictionary, json format as retrieved from feature server
-        map_services.prorail.nl
-        :return: geopandas dataframe with geometry or pandas dataframe without
+        Parameters
+        ----------
+        data : dict
+            JSON-formatted dictionary as retrieved from the feature server at
+            map_services.prorail.nl.
+
+        Returns
+        -------
+        geopandas.GeoDataFrame or pandas.DataFrame
+            A GeoDataFrame with geometry if applicable, otherwise a
+            Pandas DataFrame.
         """
         attribute_list = [
             feature["attributes"] for feature in data["features"]
