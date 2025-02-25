@@ -63,7 +63,7 @@ class SafeRequest(Singleton):
                     time.time()
                 )  # Do this before the query to update even if unsuccessful
                 request = self.pool.request_encode_body(
-                    request_type, url, body=body_str
+                    request_type, url, body=body_str  # type: ignore
                 )
                 if request.status == 200:
                     return request

@@ -1369,6 +1369,17 @@ files = [
 urllib3 = ">=2"
 
 [[package]]
+name = "types-setuptools"
+version = "75.8.0.20250225"
+description = "Typing stubs for setuptools"
+optional = false
+python-versions = ">=3.9"
+files = [
+    {file = "types_setuptools-75.8.0.20250225-py3-none-any.whl", hash = "sha256:94c86b439cc60bcc68c1cda3fd2c301f007f8f9502f4fbb54c66cb5ce9b875af"},
+    {file = "types_setuptools-75.8.0.20250225.tar.gz", hash = "sha256:6038f7e983d55792a5f90d8fdbf5d4c186026214a16bb65dd6ae83c624ae9636"},
+]
+
+[[package]]
 name = "types-shapely"
 version = "2.0.0.20250202"
 description = "Typing stubs for shapely"
@@ -1468,4 +1479,4 @@ type = ["pytest-mypy"]
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.10,<4"
-content-hash = "fc6d1138fa4293407799cc4750dc97bba34a1f546585bbfee4b0e6ef17633fb2"
+content-hash = "0a67a4916bd6add2b95f8c47c8fad715880d0cfb2eeadf526cbb37f5251d735c"

@@ -33,18 +33,17 @@ repos:
     rev: 7.0.0
     hooks:
       - id: flake8
-  #       args: ['--config=.flake8']
 
-  # - repo: local
-  #   hooks:
-  #     - id: mypy
-  #       name: check types
-  #       entry: mypy
-  #       language: python
-  #       args: [--python-version=3.11]
-  #       additional_dependencies: [pydantic, pytest]
-  #       verbose: true
-  #       exclude: '^tests/test_data|^pyproject.toml|^poetry.lock|^.pre-commit-config.yaml|^.gitignore|^mypy.ini|^.venv|^azure-pipelines.yaml|^.flake8|^notebooks/|pytest.ini|README.md|^docs|^azure-pipeline.yaml'
+  - repo: local
+    hooks:
+      - id: mypy
+        name: check types
+        entry: mypy
+        language: python
+        args: [--python-version=3.11]
+        additional_dependencies: [pydantic, pytest]
+        verbose: true
+        exclude: '^demo_notebook|^pyproject.toml|^poetry.lock|^.pre-commit-config.yaml|^.gitignore|^data|^.venv|README.md|trackmap.py|tests|requirements.txt|.github|config.yaml|LICENSE|CODEOWNERS'
 
   - repo: local
     hooks:
