@@ -1,163 +1,164 @@
 # Openspoor
 
-![alt text](https://www.radingspoor.nl/images/Stoom/Modellen_van_Leden/7_Inch_modellen/Zandloc_Janny/51133945_533417650499237_1555124498724814848_n.jpg)
+![Openspoor Logo](https://www.radingspoor.nl/wp-content/uploads/Stoom/Modellen_van_Leden/7_Inch_modellen/Zandloc_Janny/51133945_533417650499237_1555124498724814848_n-960x500.jpg)
 
-The openspoor package is intended to allow easy transformation between different geographical and topological systems
-commonly used in Dutch Railway and prepare this data for analysis and visualisations. Its goal is to be publicly available and function as an open source package.
+## Introduction
 
-Currently the openspoor package allows the following transformations:
+The **Openspoor** package provides an easy way to transform between different geographical and topological systems commonly used in the Dutch railway network. It prepares this data for analysis and visualization. The goal is to make Openspoor publicly available as an open-source package.
 
-**Type of input:**
+### Supported Transformations
+
+**Input Data:**
 - Point data
 
-These transformations can be performed between the following systems:
+**Geographical Systems:**
+- WGS84 (GPS coordinates)
+- EPSG:28992 (Rijksdriehoek)
 
-**Geographical systems:**
-- WGS84 coordinate system (commonly known as GPS coordinates)
-- EPSG:28992 coordinate system (commonly known in the Netherlands as Rijksdriehoek)
-
-**Topological systems:**
+**Topological Systems:**
 - Geocode and geocode kilometrering
 - Spoortak and spoortak kilometrering (unavailable on switches)
 - Spoortakken of different historical versions
 
-## Getting Started
+## Installation
 
-### Installation - usage
-
-#### Windows
-Openspoor is dependent on Fiona and GDAL, which are missing Windows dependencies on PyPi.
-
-Use conda to install Fiona and GDAL:
-
-- `conda install -c conda-forge Fiona GDAL`
-
-- `pip install openspoor`
-
-#### Linux
-
-- `pip install openspoor`
-
-#### Mac
-
-- `conda create -n [env_name] python=3.11`
-- `conda install -c conda-forge proj=7.0.0`
-- `conda install -c conda-forge pyproj=2.6.0`
-- `pip install openspoor`
-
-The steps above involving conda(-forge) are necessary for Mac M1 chips (used since Nov 2020). In case your Mac does not
-have a M1 chip, then `pip install openspoor` should suffice.
-
-### Installation - development
+### User Installation
 
 #### Windows
+Openspoor depends on Fiona and GDAL, which require additional dependencies on Windows. Install them using Conda:
 
-Installation using anaconda
-- Clone the "openspoor" repository
-  - `git clone https://github.com/ProRail-DataLab/openspoor.git`
-- create an environment:
-  - `conda create -n openspoorenv python==3.11`
-- activate the environment:
-  - `conda activate openspoorenv`
-- install dependencies:
-  - `pip install -r requirements.txt`
-- In the root directory of the repository, execute the command:
-  - `pip install -e .[dev]`
-- In the root directory of the repository, execute the command:
-  - `pytest --nbmake --nbmake-kernel=python3`
-- If all the test succeed, the openspoor package is ready to use and you are on the right "track"!
+```sh
+conda install -c conda-forge Fiona GDAL
+pip install openspoor
+```
 
 #### Linux
+```sh
+pip install openspoor
+```
 
-Installation using anaconda
+#### Mac (including M1 chips)
+```sh
+conda create -n [env_name] python=3.11
+conda install -c conda-forge proj=7.0.0
+conda install -c conda-forge pyproj=2.6.0
+pip install openspoor
+```
 
-- Clone the "openspoor" repository
-  - `git clone https://github.com/ProRail-DataLab/openspoor.git`
-- create an environment in your preferred way in Python 3.8 and activate. For example:
-  - `python3 -m venv venv`
-  - `source ./venv/bin/activate`
-- activate the environment:
-  - `conda activate openspoorenv`
-- update pip:
-  - `pip install --upgrade pip`
-- install dependencies:
-  - `pip install -r requirements.txt`
-- In the root directory of the repository, execute the command:
-  - `pip install -e .[dev]`
-- In the root directory of the repository, execute the command:
-  - `pytest --nbmake --nbmake-kernel=python3`
-- If all the test succeed, the openspoor package is ready to use and you are on the right "track"!
+For non-M1 Mac users, `pip install openspoor` should suffice.
 
-### Demonstration notebook
+## Development
 
-In the demo_notebook folder a notebook can be found that demonstrates the example usage of the openspoor package.
+To contribute to Openspoor, follow these steps to set up a development environment.
+
+### Installation
+
+#### Windows/Linux/Mac
+
+1. Clone the repository:
+   ```sh
+   git clone https://github.com/ProRail-DataLab/openspoor.git
+   cd openspoor
+   ```
+2. Create and activate a virtual environment:
+   ```sh
+   conda create -n openspoorenv python=3.11
+   conda activate openspoorenv
+   ```
+   Or using `venv` (Linux/Mac):
+   ```sh
+   python3 -m venv venv
+   source ./venv/bin/activate
+   ```
+3. Upgrade pip and install dependencies:
+   ```sh
+   pip install --upgrade pip
+   pip install -r requirements.txt
+   pip install -e .[dev]
+   ```
+4. Run tests to verify setup:
+   ```sh
+   pytest --nbmake --nbmake-kernel=python3
+   ```
+
+### Pre-commit Hooks
+
+Openspoor uses pre-commit hooks to enforce code quality. To install them:
+```sh
+pip install pre-commit
+pre-commit install
+```
+To run hooks manually on all files:
+```sh
+pre-commit run --all-files
+```
+
+### Generating Documentation
+
+Openspoor uses `pdoc` to generate documentation. To generate and serve documentation locally:
+```sh
+pdoc --http : openspoor
+```
+To generate static HTML documentation:
+```sh
+pdoc --html openspoor --output-dir docs --force
+```
+
+## Demonstration Notebook
+
+A demonstration notebook is available in the `demo_notebook` folder, showcasing Openspoor's functionality.
 
 ## Dependencies
 
-The transformations available in the openspoor package rely completely on data and API's made available at
-https://mapservices.prorail.nl/. Be aware of this dependency and specifically of the following possible issues:
+Openspoor relies on data and APIs from [mapservices.prorail.nl](https://mapservices.prorail.nl/). Be aware of possible issues such as:
+- Changes in API endpoints
+- Modifications in output data format
 
-- The use of API's on mapservices.prorail.nl is changed
-- The output data of the mapservices API's is changed (with added, removed or missing columns for instance)
+## Package Structure
 
+### 1. Mapservices
+Provides an interface to ProRail's map services API to retrieve railway topology data.
+- **PUICMapservices**: General railway track and switch data, including Geocode and Spoortak information.
+- **SpoortakMapservices**: Data for Spoortak identification and local kilometrering.
 
-## Structure
+### 2. Transformers
+Convert geographical and topological data.
+- **TransformerCoordinatesToSpoor**: WGS84/EPSG:28992 → Spoortak, Geocode
+- **TransformerGeocodeToCoordinates**: Geocode → WGS84/EPSG:28992
+- **TransformerSpoorToCoordinates**: Spoortak → WGS84/EPSG:28992
 
-The openspoor package is split into 4 categories.
+### 3. Spoortakmodel
+Provides historical railway topology to enable transformations on historical data.
 
-### Mapservices
-
-The MapservicesData classes use mapservices.prorail.nl API's to retrieve the necessary data to perform transformations.
-The essentially function as an interface with the topological systems used by ProRail.
-
-- PUICMapservices provides general data about railway tracks (spoor) and switches (wissel and kruisingbenen). This
-contains information regarding Geocode, geocodekilometrering, but also Spoortak identificatie.
-- SpoortakMapservices provides information about railway tracks concerning Spoortak identificatie and lokale
-kilometrering.
-
-### Transformers
-
-The various transformers use the geopandas dataframes obtained by MapservicesData objects to add additional geographical
-or topological systems to a given geopandas input dataframe. The current transformers only function for geopandas
-dataframes containing Point data. The available transformers are:
-
-- TransformerCoordinatesToSpoor: transforms WGS84 or EPSG:28992 coordinates to spoortak and lokale kilomtrering as well
-as geocode and geocode kilometrering.
-- TransformerGeocodeToCoordinates: transforms geocode and geocode kilometrering to WGS84 or EPSG:28992 coordinates.
-- TransformerSpoorToCoordinates: transforms spoortak and lokale kilometrering to WGS84 or EPSG:28992 coordinates.
-
-### Spoortakmodel
-
-mapservices.prorail.nl only provides current information about the topological systems used in Dutch
-Railways. As the topological systems tend to change with time, due to changing infrastructure and naming conventions,
-the current topological system is not necessarily sufficient to provide transformations on historical data. We added
-historical topological systems as part of the functionality of this package in such a way that it
-is available publicly. This enables users to also knwow where assets where in previous versions of the
-track topology.
-
-### Visualisations
-
-This part contains functionalities to plot locations on a map of the Netherlands.This currently supports pandas or geopandas dataframes with locations of either points or linestrings.
+### 4. Visualisations
+Allows plotting railway-related data on maps. Supports pandas and geopandas dataframes containing points or linestrings.
 
 ## Release History
 
-- <b>0.1.9</b>
-  - Added spoortakmodel and visualisations
-  - Updated readme
+- **0.1.9**: Added spoortakmodel and visualization features.
+- **0.1.0**: First stable release.
+- **0.0.1**: Work in progress.
 
-- <b>0.1</b>
-  - The first proper release
-  - ADD: transform point data between geographical systems.
-- <b>0.0.1</b>
-  - Work in progress
+## Contributing
+We welcome contributions! Follow these steps:
 
-#### Contributing
-The openspoor package stimulates every other person the contribute to the package. To do so:
+1. Fork the repository.
+2. Create a feature branch:
+   ```sh
+   git checkout -b feature/your-feature
+   ```
+3. Commit changes:
+   ```sh
+   git commit -am "Add your feature"
+   ```
+4. Push changes:
+   ```sh
+   git push origin feature/your-feature
+   ```
+5. Create a pull request and assign at least three reviewers.
 
-- Fork it
-- Create your feature branch (git checkout -b feature/fooBar)
-- Commit your changes (git commit -am 'Add some fooBar')
-- Push to the branch (git push origin feature/fooBar)
-- Create a new Pull Request with 3 obligated reviewers from the developement team.
+Alternatively, contribute by working on open issues listed on the GitHub repository.
 
-You could also contribute by working on one of the open Issues as noted on the GitHub page.
+---
+
+For further details, visit the [Openspoor GitHub repository](https://github.com/ProRail-DataLab/openspoor).
