@@ -24,12 +24,17 @@ class MapServicesQuery:
 
     def __init__(self, url: str, cache_location: Optional[Path] = None):
         """
-        :param url: An url of a mapservices.prorail.nl feature server
-        to download from. this is the part of the url until /query?
-        e.g. https://mapservices.prorail.nl/arcgis/
-        rest/services/Geleidingssysteem_007/FeatureServer/12
-        :param cache_location: filepath where pickle file of data will
-        be loaded from (or saved to if file is absent)
+        Downloads data from a specified ProRail map services FeatureServer.
+
+        Parameters
+        ----------
+        url : str
+            The URL of the FeatureServer to download from. This should be
+            the part of the URL up to `/query?`, e.g.,
+            `https://mapservices.prorail.nl/arcgis/rest/services/Geleidingssysteem_007/FeatureServer/12`.
+        cache_location : str
+            The file path where the pickle file of the data will be loaded from
+            (or saved to if the file is absent).
         """
 
         self.standard_featureserver_query = config[
@@ -61,10 +66,18 @@ class MapServicesQuery:
     @staticmethod
     def _get_query_url(dict_query: dict) -> str:
         """
-        Create the query url from the given dictionary. This is used to filter
-        the data from the feature server.
+        Creates a query URL from the given dictionary to filter data
+        from the FeatureServer.
 
-        :param dict_query: dictionary with filters.
+        Parameters
+        ----------
+        dict_query : dict
+            A dictionary containing filter parameters for the query.
+
+        Returns
+        -------
+        str
+            The constructed query URL
         """
         if dict_query is None:
             where_query = "/query?"
@@ -97,10 +110,17 @@ class MapServicesQuery:
 
     def _get_max_recordcount(self, url: str) -> int:
         """
-        Retrieve the max record count from the given url.
+        Retrieves the maximum record count from the given URL.
 
-        :param url: string, base_url for features
-        :return: int, max_record_count
+        Parameters
+        ----------
+        url : str
+            The base URL for the FeatureServer.
+
+        Returns
+        -------
+        int
+            The maximum record count.
         """
         body = (
             SafeRequest()._request_with_retry("GET", url).data.decode("UTF-8")
@@ -114,13 +134,21 @@ class MapServicesQuery:
         self, dict_query=None
     ) -> Union[gpd.GeoDataFrame, pd.DataFrame]:
         """
-        Downloads all available features from a feature server and set correct
-        geometry.
+        Downloads all available features from a FeatureServer and
+        sets the correct geometry.
 
-        :param dict_query: dictionary with data to filter.
-        keys are column names. more than one column are possible
-        and also more than one value for each column
-        :return: geopandas dataframe with all data from the api call
+        Parameters
+        ----------
+        dict_query : dict
+            A dictionary containing filter criteria.
+            - Keys represent column names.
+            - Multiple columns and multiple values per column are supported.
+
+        Returns
+        -------
+        GeoDataFrame
+            A GeoPandas DataFrame containing all data retrieved
+            from the API call.
         """
 
         where_query = self._get_query_url(dict_query)
@@ -153,10 +181,17 @@ class MapServicesQuery:
     @staticmethod
     def _retrieve_max_features_count(input_url: str) -> int:
         """
-        Retrieve the total number of features of the given input url.
+        Retrieves the total number of features from the given URL.
 
-        :param input_url: string, base_url for features
-        :return: int, max_features_count
+        Parameters
+        ----------
+        input_url : str
+            The base URL for the features.
+
+        Returns
+        -------
+        int
+            The total number of features available.
         """
         res = SafeRequest().get_json(
             "GET", input_url + "&returnCountOnly=True"
@@ -172,14 +207,23 @@ class MapServicesQuery:
         self, input_url: str, offset: int
     ) -> Union[gpd.GeoDataFrame, pd.DataFrame]:
         """
-        Retrieve a batch of features from the url. As api calls can
-        retrieve a maximum of 1000 features, the offset is used to retrieve
-        batches by 1000 at a time.
+        Retrieves a batch of features from the given URL.
 
-        :param input_url: The url to query data from
-        :param offset: int, offset from 0 to retrieve different
-        batches from the same api
-        :return: geopandas dataframe of features
+        Since API calls can return a maximum of 1000 features per request,
+        the offset parameter is used to retrieve data in batches of 1000.
+
+        Parameters
+        ----------
+        input_url : str
+            The URL to query data from.
+        offset : int
+            The offset value, starting from 0, used to retrieve different
+            batches from the same API.
+
+        Returns
+        -------
+        GeoDataFrame
+            A GeoPandas DataFrame containing the retrieved features.
         """
         data = SafeRequest().get_json(
             "GET", input_url + "&resultOffset=" + str(offset)
@@ -192,12 +236,20 @@ class MapServicesQuery:
         self, data: dict
     ) -> Union[gpd.GeoDataFrame, pd.DataFrame]:
         """
-        Transform given json format data from feature servers into a geopandas
-        dataframe with given geometry.
+        Transforms JSON-formatted data from FeatureServers into a GeoPandas
+        DataFrame with geometry.
 
-        :param data: dictionary, json format as retrieved from feature server
-        map_services.prorail.nl
-        :return: geopandas dataframe with geometry or pandas dataframe without
+        Parameters
+        ----------
+        data : dict
+            A dictionary containing JSON-formatted data retrieved from the
+            FeatureServer at map_services.prorail.nl.
+
+        Returns
+        -------
+        GeoDataFrame or DataFrame
+            A GeoPandas DataFrame if geometry is present,
+            otherwise a Pandas DataFrame.
         """
         geometry_list = [
             (

@@ -21,11 +21,19 @@ class FeatureSearchResults(pd.DataFrame):
         self, entry_number: int = 0, return_m: bool = False
     ) -> gpd.GeoDataFrame:
         """
-        Prepare the data for analysis
+        Prepares the data for analysis.
 
-        :param entry_number: The row giving the url to query
-        :param return_m : Whether to return m values (used in some layers)
-        :return: A geopandas dataframe
+        Parameters
+        ----------
+        entry_number : int
+            The row index containing the URL to query.
+        return_m : bool, optional
+            Whether to return M values (used in some layers). Default is False.
+
+        Returns
+        -------
+        GeoDataFrame
+            A GeoDataFrame containing the processed data.
         """
         if len(self) <= entry_number:
             logger.warning("No results found")
@@ -42,11 +50,19 @@ class FeatureSearchResults(pd.DataFrame):
         self, output_dir: Path, entry_number: int = 0
     ) -> gpd.GeoDataFrame:
         """
-        Write the data at the requested url to a local file directory
+        Writes the data at the requested URL to a local file directory.
 
-        :param entry_number: The entry in the dataframe to write
-        :param output_dir: The directory which to write to
-        :return: None, a file is written in the indicated
+        Parameters
+        ----------
+        entry_number : int
+            The entry in the DataFrame to write.
+        output_dir : str
+            The directory to which the file will be written.
+
+        Returns
+        -------
+        None
+            A file is written in the specified directory.
         """
 
         output_gdf = self.load_data(entry_number)
@@ -78,12 +94,19 @@ class FeatureServerOverview(Singleton):
         self, featureserver_url: str
     ) -> pd.DataFrame:
         """
-        For a given featureserver submenu within the mapservices environment
-        give all the possible layers.
+        Retrieves all possible layers from a given FeatureServer submenu
+        within the map services environment.
 
-        :param featureserver_url: The url of the selected featureserver
-        :return: A pandas dataframe, listing the urls and descriptions of
-        the found layers
+        Parameters
+        ----------
+        featureserver_url : str
+            The URL of the selected FeatureServer.
+
+        Returns
+        -------
+        DataFrame
+            A pandas DataFrame listing the URLs and descriptions
+            of the found layers.
         """
         featureserver_text = SafeRequest().get_string("GET", featureserver_url)
         featureservers = re.findall(
@@ -100,10 +123,13 @@ class FeatureServerOverview(Singleton):
     @cache
     def get_all_featureserver_layers(self) -> pd.DataFrame:
         """
-        Find all available layers within the mapservices featureservers.
+        Finds all available layers within the map services FeatureServers.
 
-        :return: A pandas dataframe, listing the urls and descriptions of
-        the found layers in all featureservers
+        Returns
+        -------
+        DataFrame
+            A pandas DataFrame listing the URLs and descriptions of
+            the found layers in all FeatureServers.
         """
         all_services = SafeRequest().get_string("GET", self.base_url)
         featureserver_redirects = re.findall(
@@ -138,14 +164,21 @@ class FeatureServerOverview(Singleton):
         self, search_for: str, exact: bool = False
     ) -> FeatureSearchResults:
         """
-        Find all layers which include a certain phrase.
+        Finds all layers that include a specified phrase.
 
-        :param search_for: A case unsensitive string for which you want to
-        find all available layers
-        :param exact: Whether to only return layers that match this
-        string completely
-        :return: A pandas dataframe, listing the urls and descriptions
-        of the found layers in all featureservers
+        Parameters
+        ----------
+        search_for : str
+            A case-insensitive string used to search for matching layers.
+        exact : bool, optional
+            Whether to return only layers that match the string exactly.
+            Default is False.
+
+        Returns
+        -------
+        DataFrame
+            A pandas DataFrame listing the URLs and descriptions of
+            the found layers in all FeatureServers.
         """
 
         if self.df is None:
