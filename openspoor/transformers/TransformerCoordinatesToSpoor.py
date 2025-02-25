@@ -19,10 +19,13 @@ class TransformerCoordinatesToSpoor:
 
     def __init__(self, buffer_distance=1.2, best_match_only=False):
         """
-        :param buffer_distance: float, max distance in meters used to
-                                pinpoint points to spoor referential systems
-        :param best_match_only: bool, if True, only the closest match per
-        point is returned.
+        Parameters
+        ----------
+        buffer_distance : float
+            Maximum distance in meters used to pinpoint points
+            to spoor referential systems.
+        best_match_only : bool
+            If True, only the closest match per point is returned.
         """
         logger.info(
             "Initiating TransformerCoordinatesToSpoor object in order to "
@@ -44,13 +47,21 @@ class TransformerCoordinatesToSpoor:
     @staticmethod
     def _determine_geocode_km(gdf_lines, gdf_points):
         """
-        Perform the interpolation for a set of line segments and points.
-        Index indicates which lines and points are
-        compared.
+        Performs interpolation for a set of line segments and points.
 
-        :param gdf_lines: A geodataframe with line data
-        :param gdf_points: A geodataframe with point data.
-        :return: A set of distances for every line to the specified points.
+        The index indicates which lines and points are compared.
+
+        Parameters
+        ----------
+        gdf_lines : geopandas.GeoDataFrame
+            GeoDataFrame containing line data.
+        gdf_points : geopandas.GeoDataFrame
+            GeoDataFrame containing point data.
+
+        Returns
+        -------
+        set
+            A set of distances for each line to the specified points.
         """
         return gdf_lines.assign(
             distances=lambda d: d.geometry.project(gdf_points.loc[d.index])
@@ -60,18 +71,24 @@ class TransformerCoordinatesToSpoor:
     # 'Spoorwisselbenaming met geocode kilometrering'
     def transform(self, gdf_points: gpd.GeoDataFrame) -> gpd.GeoDataFrame:
         """
-        For every requested point, check which track segments are close to
-        that location and add them to the data.
-        This can result in 0,1 or more matches per point. Every point will
-        occur in the final output at least once, even
-        if no match could be made.
+        Finds track segments close to each requested point and
+        adds them to the data.
 
-        :param gdf_points: A geodataframe with points data for which the
-        geocode and spoortak coordinates are wanted.
-        All crs are allowed
-        :return: A geodataframe, based on the input dataframe. Every point
-        will occur in the final output at least once,
-         even if no match could be made.
+        Each point may have zero, one, or multiple matches.
+        Every point will appear in the final output at least once,
+        even if no match is found.
+
+        Parameters
+        ----------
+        gdf_points : geopandas.GeoDataFrame
+            GeoDataFrame containing point data for which geocode and spoortak
+            coordinates are needed. Any CRS is allowed.
+
+        Returns
+        -------
+        geopandas.GeoDataFrame
+            A GeoDataFrame based on the input, where each point
+            appears at least once, even if no match was found.
         """
         # Coordinates used are RD in the below.
         # Buffer style prevents overflow into next segment;
