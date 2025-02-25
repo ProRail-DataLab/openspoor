@@ -8,6 +8,9 @@ jobs:
   build:
     name: Code Quality Windows
     runs-on: "windows-latest"
+    defaults:
+      run:
+        shell: bash
 
     steps:
       - uses: actions/checkout@v2
@@ -25,14 +28,17 @@ jobs:
           installer-parallel: true
 
       - name: Load cached venv
-        uses: actions/cache@v2
+        id: cached-pip-wheels
+        uses: actions/cache@v4
         with:
-          path: .venv
+          path: ~/.cache
           key: venv-${{ runner.os }}-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('**/poetry.lock') }}
 
       - name: Install dependencies
-        run: |
-          poetry install --no-interaction
+        run: poetry install --no-interaction --no-root
+
+      - name: Install library
+        run: poetry install --no-interaction
 
       - name: Test with pytest
         run: |
