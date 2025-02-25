@@ -1,8 +1,8 @@
 from functools import cache
 
 import geopandas as gpd
-import pandas as pd
 import numpy as np
+import pandas as pd
 from loguru import logger
 
 from openspoor.mapservices import FeatureServerOverview

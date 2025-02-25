@@ -1,3 +1,4 @@
+# isort:skip_file
 from .spoortak_models_data import SpoortakModelsData
 from .spoortak_subsection import SpoortakSubsection
 from .spoortak_model_inspector import SpoortakModelInspector
