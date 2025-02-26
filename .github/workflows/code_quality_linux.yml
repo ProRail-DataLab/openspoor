@@ -23,9 +23,10 @@ jobs:
 
       - name: Create virtual environment and install dependencies
         run: |
-          uv venv --python=3.11 .venv  # Explicitly use Python 3.11
-          uv sync  # Sync dependencies from uv.lock
+          uv venv --python=3.11
+          source .venv/bin/activate
+          uv sync
 
       - name: Test with pytest
         run: |
-          uv venv exec pytest --junitxml=junit/test-results.xml --nbmake --nbmake-kernel=python3 -n auto --cov=openspoor --cov-fail-under=50 tests/ demo_notebook/
+          uv run pytest --junitxml=junit/test-results.xml --nbmake --nbmake-kernel=python3 -n auto --cov=openspoor --cov-fail-under=50 tests/ demo_notebook/
