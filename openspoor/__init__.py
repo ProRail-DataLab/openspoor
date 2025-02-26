@@ -1,3 +1,3 @@
 from importlib_metadata import version
 
-__version__ = version('openspoor')
+__version__ = version("openspoor")

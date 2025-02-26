@@ -1,9 +1,13 @@
 from pathlib import Path
+
 import yaml
 
 
 def read_config():
-    default_filename = 'config.yaml'
+    """
+    Reads the configuration file.
+    """
+    default_filename = "config.yaml"
     config_file = get_package_root().absolute() / default_filename
 
     with open(config_file) as file:
@@ -12,7 +16,9 @@ def read_config():
 
 
 def get_package_root() -> Path:
-    """Returns package root folder."""
+    """
+    Returns package root folder.
+    """
     conf_folder = Path(__file__).parent.parent
     dirs_in_scope = [x.name for x in conf_folder.iterdir() if x.is_dir()]
 
