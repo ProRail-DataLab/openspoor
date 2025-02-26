@@ -43,7 +43,7 @@ pipx install uv
 #### Using `uv` on (Windows):
 ```sh
 uv venv --python=3.11
-uv .venv/Scripts/activate
+.venv/Scripts/activate
 ```
 
 #### for (Linux/Mac):
@@ -60,21 +60,6 @@ uv pip install openspoor
 
 ## Platform-Specific Installation Notes
 
-### Windows
-Openspoor depends on Fiona and GDAL, which require additional dependencies. Install them using Conda before proceeding:
-```sh
-conda install -c conda-forge Fiona GDAL
-```
-Then install Openspoor:
-```sh
-pip install openspoor
-```
-
-### Linux
-```sh
-pip install openspoor
-```
-
 ### Mac (including M1 chips)
 ```sh
 conda create -n [env_name] python=3.11
@@ -88,38 +73,47 @@ For non-M1 Mac users, `pip install openspoor` should suffice.
 
 To contribute to Openspoor, follow these steps to set up a development environment.
 
-1. Clone the repository:
+### Step 1: Clone repository:
    ```sh
    git clone https://github.com/ProRail-DataLab/openspoor.git
    cd openspoor
    ```
-2. Create and activate a virtual environment (as described above).
-3. Install dependencies using pip, uv, or poetry (as described above).
-4. Run tests to verify setup:
-   ```sh
-   pytest --nbmake --nbmake-kernel=python3
-   ```
+### Step 2: Create virtual environment:
 
-### Pre-commit Hooks
+```sh
+uv venv --python=3.11
+source .venv/bin/activate # linux/mac
+.venv/Script/activate # windows
+```
+
+### Step 3: Install dependencies
+
+```sh
+uv sync
+```
+
+### Step 4: Run tests to verify setup
+```sh
+uv run pytest --nbmake --nbmake-kernel=python3
+```
+
+### Step 5: install pre-commit hooks
 
 Openspoor uses pre-commit hooks to enforce code quality. To install them:
 ```sh
 pre-commit install
 ```
+
 To run hooks manually on all files:
 ```sh
 pre-commit run --all-files
 ```
 
-### Generating Documentation
+### Step 6: generating documentation
 
 Openspoor uses `pdoc` to generate documentation. To generate and serve documentation locally:
 ```sh
 pdoc --http : openspoor
-```
-To generate static HTML documentation:
-```sh
-pdoc --html openspoor --output-dir docs --force
 ```
 
 ## Demonstration Notebook
@@ -161,19 +155,20 @@ Allows plotting railway-related data on maps. Supports pandas and geopandas data
 We welcome contributions! Follow these steps:
 
 1. Fork the repository.
-2. Create a feature branch:
+2. Set up the development environment. See the [Development](#development)    section for details.
+3. Create a feature branch:
    ```sh
    git checkout -b feature/your-feature
    ```
-3. Commit changes:
+4. Commit changes:
    ```sh
    git commit -am "Add your feature"
    ```
-4. Push changes:
+5. Push changes:
    ```sh
    git push origin feature/your-feature
    ```
-5. Create a pull request and assign at least three reviewers.
+6. Create a pull request and assign at least three reviewers.
 
 Alternatively, contribute by working on open issues listed on the GitHub repository.
 
