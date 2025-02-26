@@ -33,18 +33,20 @@ class TrackNetherlands:
         """
         :return: The GeoDataFrame with the functionele spoortakken
         """
-        relevant_columns = [
-            "PUIC",
-            "NAAM",
-            "geometry",
-            "NAAM_LANG",
-            "REF_BEGRENZER_TYPE_EIND",
-            "REF_BEGRENZER_TYPE_BEGIN",
-            "KANTCODE_SPOORTAK_EIND",
-            "KANTCODE_SPOORTAK_BEGIN",
-            "REF_BEGRENZER_PUIC_BEGIN",
-            "REF_BEGRENZER_PUIC_EIND",
-        ]
+        # relevant_columns = [
+        #     [
+        #         "PUIC",
+        #         "NAAM",
+        #         "geometry",
+        #         "NAAM_LANG",
+        #         "REF_BEGRENZER_TYPE_EIND",
+        #         "REF_BEGRENZER_TYPE_BEGIN",
+        #         "KANTCODE_SPOORTAK_EIND",
+        #         "KANTCODE_SPOORTAK_BEGIN",
+        #         "REF_BEGRENZER_PUIC_BEGIN",
+        #         "REF_BEGRENZER_PUIC_EIND",
+        #     ]
+        # ]
         if self.functionele_spoortak_path.exists() or self.overwrite:
             functionele_spoortak = gpd.read_file(
                 self.functionele_spoortak_path
@@ -59,33 +61,32 @@ class TrackNetherlands:
                 functionele_spoortak.apply(self.expected_connections, axis=1)
             )
             if self.local_cache:
-                df = cast(
-                    gpd.GeoDataFrame, functionele_spoortak[relevant_columns]
-                )
-                df.to_file(self.functionele_spoortak_path, driver="GPKG")
+                functionele_spoortak.to_file(
+                    self.functionele_spoortak_path, driver="GPKG"
+                )  # [relevant_columns]
                 logger.info(
-                    "Saved functionele spoortak to"
+                    "Saved functionele spoortak to "
                     f"{self.functionele_spoortak_path}"
                 )
-        return cast(gpd.GeoDataFrame, functionele_spoortak)
+        return functionele_spoortak
 
     def _process_functionele_spoortak(
         self,
     ) -> tuple[gpd.GeoDataFrame, gpd.GeoDataFrame]:
         """
-        Process the functionele spoortakken to find the connections
-        between the different spoortakken.
+        Process the functionele spoortakken to find
+        the connections between the different spoortakken.
 
         :return: A tuple with the valid connections and all connections
         """
         touching_spoortakken = self.functionele_spoortak.sjoin(
-            (
-                cast(
-                    gpd.gpd.GeoDataFrame,
+            cast(
+                gpd.GeoDataFrame,
+                (
                     self.functionele_spoortak.assign(
                         geometry_right=lambda d: d.geometry
-                    ),
-                )
+                    )
+                ),
             ),
             how="inner",
             predicate="touches",
@@ -170,14 +171,14 @@ class TrackNetherlands:
         :param all_connections: The GeoDataFrame with all connections
         :param joined_valid_filtered: The GeoDataFrame with the valid
         connections
-        :return: The GeoDataFrame with all connections marked as illegal or
-        valid
+        :return: The GeoDataFrame with all connections marked as illegal
+        or valid
         """
 
         all_connections_res = all_connections.set_index(
             ["PUIC_left", "PUIC_right"]
         )
-        all_connections_res["valid"] = all_connections.index.isin(
+        all_connections_res["valid"] = all_connections_res.index.isin(
             valid_connections.set_index(["PUIC_left", "PUIC_right"]).index
         )
         return cast(gpd.GeoDataFrame, all_connections_res)
@@ -296,7 +297,7 @@ class TrackNetherlands:
                     connections += 2
                 else:
                     logger.warning(
-                        f"Unknown kantcode {kantcode}"
+                        f"Unknown kantcode {kantcode} "
                         f"for begrenzer {begrenzer}"
                     )
             else:
@@ -375,8 +376,8 @@ class TrackNetherlands:
                 # would be revisiting a location
                 # after making a circle and revisiting a previous location
                 # at the exact same track.
-                # This should not happen in the Netherlands due to the
-                # track topology.
+                # This should not happen in the Netherlands due to the track
+                # topology.
                 for neighbor, weight in self.graphentries[node]:
                     if (node, neighbor) in illegal_set or (
                         neighbor,
