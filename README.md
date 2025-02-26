@@ -24,9 +24,9 @@ The **Openspoor** package provides an easy way to transform between different ge
 
 Openspoor can be installed using different package management methods. Before proceeding, ensure you have created a virtual environment.
 
-### Step 1: Install Package Management Tool
+### Step 1: Install package management tool [uv](https://docs.astral.sh/uv/)
 
-Install `uv` globally using `pipx` before proceeding:
+These steps show how to install `uv` globally using `pipx`, for other installation methods see the [uv documentation](https://docs.astral.sh/uv/getting-started/installation/).
 
 #### Install `pipx` (if not already installed):
 ```sh
@@ -38,20 +38,14 @@ pipx ensurepath
 ```sh
 pipx install uv
 ```
-### Step 2: Create a Virtual Environment
+### Step 2: Create a virtual environment
 
-#### Using `uv` on (Windows):
 ```sh
 uv venv --python=3.11
-.venv/Scripts/activate
+source ./venv/bin/activate # linux/mac
+.venv/Scripts/activate # windows
 ```
-
-#### for (Linux/Mac):
-```sh
-uv venv --python=3.11
-source ./venv/bin/activate
-```
-### Step 3: Install Openspoor Dependencies
+### Step 3: Install Openspoor dependencies
 
 #### Using `uv`:
 ```sh
@@ -65,9 +59,9 @@ uv pip install openspoor
 conda create -n [env_name] python=3.11
 conda install -c conda-forge proj=7.0.0
 conda install -c conda-forge pyproj=2.6.0
-pip install openspoor
+uv pip install openspoor
 ```
-For non-M1 Mac users, `pip install openspoor` should suffice.
+For non-M1 Mac users, `uv pip install openspoor` should suffice.
 
 ## Development
 
