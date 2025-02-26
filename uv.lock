@@ -995,6 +995,7 @@ dependencies = [
     { name = "pyyaml" },
     { name = "requests" },
     { name = "shapely" },
+    { name = "types-geopandas" },
     { name = "types-pyyaml" },
     { name = "types-requests" },
 ]
@@ -1032,6 +1033,7 @@ requires-dist = [
     { name = "pyyaml", specifier = ">=6.0.2,<7" },
     { name = "requests", specifier = ">=2.32.3,<3" },
     { name = "shapely", specifier = ">=2.0.7,<3" },
+    { name = "types-geopandas", specifier = ">=1.0.1.20250120" },
     { name = "types-pyyaml", specifier = ">=6.0.12.20241230,<7" },
     { name = "types-requests", specifier = ">=2.32.0.20241016,<3" },
 ]
