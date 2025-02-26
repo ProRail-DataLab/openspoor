@@ -43,7 +43,7 @@ repos:
         args: [--python-version=3.11]
         additional_dependencies: [pydantic, pytest]
         verbose: true
-        exclude: '^demo_notebook|^pyproject.toml|^poetry.lock|^.pre-commit-config.yaml|^.gitignore|^data|^.venv|README.md|trackmap.py|tests|requirements.txt|.github|config.yaml|LICENSE|CODEOWNERS'
+        exclude: '^demo_notebook|^pyproject.toml|^uv.lock|^.pre-commit-config.yaml|^.gitignore|^data|^.venv|README.md|trackmap.py|tests|requirements.txt|.github|config.yaml|LICENSE|CODEOWNERS'
 
   - repo: local
     hooks:

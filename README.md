@@ -22,60 +22,79 @@ The **Openspoor** package provides an easy way to transform between different ge
 
 ## Installation
 
-### User Installation
+Openspoor can be installed using different package management methods. Before proceeding, ensure you have created a virtual environment.
 
-#### Windows
-Openspoor depends on Fiona and GDAL, which require additional dependencies on Windows. Install them using Conda:
+### Step 1: Install Package Management Tool
 
+Install `uv` globally using `pipx` before proceeding:
+
+#### Install `pipx` (if not already installed):
+```sh
+pip install --user pipx
+pipx ensurepath
+```
+
+#### Install `uv` globally:
+```sh
+pipx install uv
+```
+### Step 2: Create a Virtual Environment
+
+#### Using `uv` on (Windows):
+```sh
+uv venv --python=3.11
+uv .venv/Scripts/activate
+```
+
+#### for (Linux/Mac):
+```sh
+uv venv --python=3.11
+source ./venv/bin/activate
+```
+### Step 3: Install Openspoor Dependencies
+
+#### Using `uv`:
+```sh
+uv pip install openspoor
+```
+
+## Platform-Specific Installation Notes
+
+### Windows
+Openspoor depends on Fiona and GDAL, which require additional dependencies. Install them using Conda before proceeding:
 ```sh
 conda install -c conda-forge Fiona GDAL
-pip install openspoor
 ```
-
-#### Linux
+Then install Openspoor:
 ```sh
 pip install openspoor
 ```
 
-#### Mac (including M1 chips)
+### Linux
+```sh
+pip install openspoor
+```
+
+### Mac (including M1 chips)
 ```sh
 conda create -n [env_name] python=3.11
 conda install -c conda-forge proj=7.0.0
 conda install -c conda-forge pyproj=2.6.0
 pip install openspoor
 ```
-
 For non-M1 Mac users, `pip install openspoor` should suffice.
 
 ## Development
 
 To contribute to Openspoor, follow these steps to set up a development environment.
 
-### Installation
-
-#### Windows/Linux/Mac
-
 1. Clone the repository:
    ```sh
    git clone https://github.com/ProRail-DataLab/openspoor.git
    cd openspoor
    ```
-2. Create and activate a virtual environment:
-   ```sh
-   conda create -n openspoorenv python=3.11
-   conda activate openspoorenv
-   ```
-   Or using `venv` (Linux/Mac):
-   ```sh
-   python3 -m venv venv
-   source ./venv/bin/activate
-   ```
-3. Upgrade pip and install dependencies:
-   ```sh
-   pip install --upgrade pip
-   pip install -r requirements.txt
-   pip install -e .[dev]
-   ```
+2. Create and activate a virtual environment (as described above).
+3. Install dependencies using pip, uv, or poetry (as described above).
 4. Run tests to verify setup:
    ```sh
    pytest --nbmake --nbmake-kernel=python3
@@ -85,7 +104,6 @@ To contribute to Openspoor, follow these steps to set up a development environme
 
 Openspoor uses pre-commit hooks to enforce code quality. To install them:
 ```sh
-pip install pre-commit
 pre-commit install
 ```
 To run hooks manually on all files:
