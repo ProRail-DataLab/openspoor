@@ -24,7 +24,7 @@ jobs:
       - name: Create virtual environment and install dependencies
         run: |
           uv venv --python=3.11 .venv  # Explicitly use Python 3.11
-          uv pip sync  # Sync dependencies from uv.lock
+          uv sync  # Sync dependencies from uv.lock
 
       - name: Test with pytest
         run: |
