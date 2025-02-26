@@ -31,22 +31,13 @@ class TrackNetherlands:
     @cached_property
     def functionele_spoortak(self) -> gpd.GeoDataFrame:
         """
-        :return: The GeoDataFrame with the functionele spoortakken
+        Returns the GeoDataFrame with the functionele spoortakken.
+
+        Returns
+        -------
+        gpd.GeoDataFrame
+            A GeoDataFrame containing the functionele spoortakken.
         """
-        # relevant_columns = [
-        #     [
-        #         "PUIC",
-        #         "NAAM",
-        #         "geometry",
-        #         "NAAM_LANG",
-        #         "REF_BEGRENZER_TYPE_EIND",
-        #         "REF_BEGRENZER_TYPE_BEGIN",
-        #         "KANTCODE_SPOORTAK_EIND",
-        #         "KANTCODE_SPOORTAK_BEGIN",
-        #         "REF_BEGRENZER_PUIC_BEGIN",
-        #         "REF_BEGRENZER_PUIC_EIND",
-        #     ]
-        # ]
         if self.functionele_spoortak_path.exists() or self.overwrite:
             functionele_spoortak = gpd.read_file(
                 self.functionele_spoortak_path
@@ -74,10 +65,18 @@ class TrackNetherlands:
         self,
     ) -> tuple[gpd.GeoDataFrame, gpd.GeoDataFrame]:
         """
-        Process the functionele spoortakken to find
-        the connections between the different spoortakken.
+        Process the functionele spoortakken to find the connections
+        between different spoortakken.
 
-        :return: A tuple with the valid connections and all connections
+        Returns
+        -------
+        tuple of (gpd.GeoDataFrame, gpd.GeoDataFrame)
+            A tuple containing:
+            - valid_connections : gpd.GeoDataFrame
+                A GeoDataFrame with valid connections between spoortakken.
+            - all_connections : gpd.GeoDataFrame
+                A GeoDataFrame with all identified connections between
+                spoortakken.
         """
         touching_spoortakken = self.functionele_spoortak.sjoin(
             cast(
@@ -105,14 +104,20 @@ class TrackNetherlands:
 
     def get_small_overlaps(self, joined: gpd.GeoDataFrame) -> gpd.GeoDataFrame:
         """
-        Filter the connections between the different spoortakken to only
-        include the connections that are roughly consecutive.
-        This is done by checking the area of the intersection between
-        the two spoortakken.
+        Filters the connections between different spoortakken to retain only
+        those that are roughly consecutive. This is determined by checking
+        the intersection area between the two spoortakken.
 
-        :param joined: The GeoDataFrame with the connections between the
-        different spoortakken
-        :return: The GeoDataFrame with the filtered connections
+        Parameters
+        ----------
+        joined : gpd.GeoDataFrame
+            The GeoDataFrame containing the connections between
+            different spoortakken.
+
+        Returns
+        -------
+        gpd.GeoDataFrame
+            The GeoDataFrame with the filtered connections.
         """
         joined["geometry_capped_left"] = joined.geometry.apply(
             lambda x: x.buffer(1, cap_style="flat")
@@ -137,12 +142,18 @@ class TrackNetherlands:
         self, gdf_cleaned: gpd.GeoDataFrame
     ) -> gpd.GeoDataFrame:
         """
-        Recheck the connections between the different spoortakken to see
-        if the connections are as expected.
-        This is done by checking if the number of connections is as expected.
+        Rechecks the connections between different spoortakken to verify
+        if they match the expected number of connections.
 
-        :param gdf_cleaned: The GeoDataFrame with the cleaned connections
-        :return: The GeoDataFrame with the rechecked connections
+        Parameters
+        ----------
+        gdf_cleaned : gpd.GeoDataFrame
+            The GeoDataFrame containing the cleaned connections.
+
+        Returns
+        -------
+        gpd.GeoDataFrame
+            The GeoDataFrame with the rechecked connections.
         """
         gdf_cleaned_res = gdf_cleaned.assign(
             found_connections_2=lambda d: d.groupby(
@@ -165,16 +176,22 @@ class TrackNetherlands:
         valid_connections: gpd.GeoDataFrame,
     ) -> gpd.GeoDataFrame:
         """
-        Tag every connection as illegal, valid or neither.
-        This is based on the expected connections and the actual connections.
+        Tags each connection as illegal, valid, or neither based on the
+        expected and actual connections.
 
-        :param all_connections: The GeoDataFrame with all connections
-        :param joined_valid_filtered: The GeoDataFrame with the valid
-        connections
-        :return: The GeoDataFrame with all connections marked as illegal
-        or valid
+        Parameters
+        ----------
+        all_connections : gpd.GeoDataFrame
+            The GeoDataFrame containing all connections.
+        valid_connections : gpd.GeoDataFrame
+            The GeoDataFrame containing the valid connections.
+
+        Returns
+        -------
+        gpd.GeoDataFrame
+            The GeoDataFrame with all connections marked as illegal, valid,
+            or neither.
         """
-
         all_connections_res = all_connections.set_index(
             ["PUIC_left", "PUIC_right"]
         )
@@ -186,11 +203,15 @@ class TrackNetherlands:
     @cached_property
     def mismatches(self) -> gpd.GeoDataFrame:
         """
-        Return a GeoDataFrame with all the mismatches in the track topology.
-        These are the connections that are not as expected.
-        This might indicate a problem in the underlying topology of the track.
+        Returns a GeoDataFrame containing all mismatches in the track topology.
 
-        :return: The GeoDataFrame with all the mismatches
+        These mismatches represent connections that are not as expected and
+        might indicate a problem in the underlying track topology.
+
+        Returns
+        -------
+        gpd.GeoDataFrame
+            A GeoDataFrame with all detected mismatches in the track topology.
         """
         valid_connections, _ = (
             self._process_functionele_spoortak()
@@ -203,10 +224,12 @@ class TrackNetherlands:
     @cached_property
     def all_connections(self) -> pd.DataFrame:
         """
-        Create a GeoDataFrame with all connections between the different
-        spoortakken.
+        Creates a DataFrame with all connections between different spoortakken.
 
-        :return: The GeoDataFrame with all connections
+        Returns
+        -------
+        pd.DataFrame
+            A DataFrame containing all connections between spoortakken.
         """
         if not self.allconnections_path.exists() or self.overwrite:
             valid_connections, all_connections = (
@@ -228,11 +251,18 @@ class TrackNetherlands:
     @cached_property
     def graphentries(self) -> dict[str, list[tuple[str, float]]]:
         """
-        Create a dictionary with the connections between the different
-        spoortakken. The dictionary is structured as follows:
+        Creates a dictionary representing the connections between
+        different spoortakken.
+
+        The dictionary is structured as follows:
         {PUIC_left: [(PUIC_right, length), ...], ...}
 
-        :return: The dictionary with the connections
+        Returns
+        -------
+        dict[str, list[tuple[str, float]]]
+            A dictionary where each key is a PUIC representing a track segment,
+            and the value is a list of tuples containing the connected PUIC and
+            the length of the connection.
         """
         valid_locations = self.all_connections.loc[
             lambda d: d.valid
@@ -248,11 +278,16 @@ class TrackNetherlands:
     @cached_property
     def illegal_pairs_list(self) -> list[tuple[str, str]]:
         """
-        Return a list of illegal pairs of PUICs. These are the pairs that
-        should not be connected due to the track topology not allowing a
-        train to drive from one to the other.
-        The list is structured as follows:
-        [(PUIC_left, PUIC_right), ...]
+        Returns a list of illegal pairs of PUICs that should not be connected.
+
+        These pairs represent track segments where the topology does not allow
+        a train to travel from one to the other.
+
+        Returns
+        -------
+        list of tuple[str, str]
+            A list of illegal PUIC pairs structured as:
+            [(PUIC_left, PUIC_right), ...]
         """
         return (
             self.all_connections.loc[lambda d: ~d.valid]
@@ -264,12 +299,18 @@ class TrackNetherlands:
     @staticmethod
     def expected_connections(row: pd.Series) -> int:
         """
-        For a given spoortak, calculate the expected number of connections
-        (on both sides combined).
+        Calculates the expected number of connections for a
+        given track segment.
 
-        :param row: The row of the spoortak
+        Parameters
+        ----------
+        row : pandas.Series
+            A row representing a track segment.
 
-        :return: The expected number of connections
+        Returns
+        -------
+        int
+            The expected number of connections.
         """
         connections = 0
         for begineind in ["_BEGIN", "_EIND"]:
@@ -306,10 +347,17 @@ class TrackNetherlands:
 
     def _project_point(self, point: Point) -> str:
         """
-        Project a point to the nearest track
+        Projects a point to the nearest track and returns its PUIC.
 
-        :param point: The point to project
-        :return: The PUIC of the nearest track
+        Parameters
+        ----------
+        point : Point
+            The point to project onto the nearest track.
+
+        Returns
+        -------
+        str
+            The PUIC of the nearest track.
         """
         if point.x < 100:
             crs = "EPSG:4326"
@@ -329,14 +377,27 @@ class TrackNetherlands:
         self, start: Point, end: Point, keringen_allowed: bool = False
     ) -> Route:
         """
-        Find the shortest path between two points on the track.
-        This is done using Dijkstra's algorithm.
+        Finds the shortest path between two points using Dijkstra's algorithm.
 
-        :param start: The start point of the route
-        :param end: The end point of the route
-        :param keringen_allowed: Whether or not to allow keringen in the route
+        Parameters
+        ----------
+        start : shapely.geometry.Point
+            The starting point.
+        end : shapely.geometry.Point
+            The destination point.
+        keringen_allowed : bool, optional
+            Whether or not to allow keringen (turnarounds) in the route,
+            by default False.
 
-        :return: The Route object with the shortest path
+        Returns
+        -------
+        Route
+            A Route object representing the shortest path.
+
+        Raises
+        ------
+        ValueError
+            If no route is found between start and end.
         """
         if isinstance(start, Point):
             start_spoortak = self._project_point(start)
@@ -416,10 +477,13 @@ class KruisingResolver:
 
     def take_best_at_kruising(self) -> gpd.GeoDataFrame:
         """
-        Filter the connections between the different spoortakken to only
-        include the best match at kruisingen.
+        Filters the connections between different spoortakken to retain only
+        the best match at kruisingen.
 
-        :return: The filtered connections
+        Returns
+        -------
+        gpd.GeoDataFrame
+            The filtered connections.
         """
         corrects = self._get_corrects()
         non_kruising_problem = self._get_non_kruising_problem()
@@ -434,10 +498,13 @@ class KruisingResolver:
 
     def _get_corrects(self) -> gpd.GeoDataFrame:
         """
-        Get the connections that are correct. This means that the number of
-        expected connections is equal to the number of found connections.
+        Retrieves the connections that are correct, meaning the number of
+        expected connections matches the number of found connections.
 
-        :return: The connections that are correct
+        Returns
+        -------
+        gpd.GeoDataFrame
+            The connections that are correct.
         """
         return cast(
             gpd.GeoDataFrame,
@@ -448,10 +515,14 @@ class KruisingResolver:
 
     def _get_non_kruising_problem(self) -> gpd.GeoDataFrame:
         """
-        Get the connections that are not correct and are not at a kruising.
-        These should still be looked at later.
+        Retrieves the connections that are incorrect and not at a kruising.
+        These connections should still be reviewed later.
 
-        :return: The connections that are not correct and are not at a kruising
+        Returns
+        -------
+        gpd.GeoDataFrame
+            A GeoDataFrame containing the incorrect connections that are
+            not at a kruising.
         """
         return cast(
             gpd.GeoDataFrame,
@@ -471,9 +542,12 @@ class KruisingResolver:
 
     def _get_fixed_begin(self) -> gpd.GeoDataFrame:
         """
-        Get the connections that are not correct and are at a kruising.
+        Retrieves the connections that are incorrect and occur at a kruising.
 
-        :return: The connections that are not correct and are at a kruising
+        Returns
+        -------
+        gpd.GeoDataFrame
+            The connections that are incorrect and at a kruising.
         """
         connections = cast(
             gpd.GeoDataFrame,
@@ -486,9 +560,13 @@ class KruisingResolver:
 
     def _get_fixed_end(self) -> gpd.GeoDataFrame:
         """
-        Get the connections that are not correct and are at a kruising.
+        Retrieves the connections that are incorrect and occur at a kruising.
 
-        :return: The connections that are not correct and are at a kruising
+        Returns
+        -------
+        gpd.GeoDataFrame
+            A GeoDataFrame containing the incorrect connections located
+            at a kruising.
         """
         connections = cast(
             gpd.GeoDataFrame,
@@ -504,13 +582,21 @@ class KruisingResolver:
         overlap_dataframe: gpd.GeoDataFrame,
     ) -> gpd.GeoDataFrame:
         """
-        For kruisingen specifically, look for the connection with the smallest
-        overlap area. This is the one to which the spoortak should connect.
+        Finds the best connection for kruisingen by selecting the one with
+        the smallest overlap area.
+        This determines the correct spoortak connection.
 
-        :param overlap_dataframe: A dataframe with unfiltered kruisingen.
+        Parameters
+        ----------
+        overlap_dataframe : gpd.GeoDataFrame
+            A DataFrame containing unfiltered kruisingen.
 
-        :return: A dataframe with the best match for each PUIC_left
+        Returns
+        -------
+        gpd.GeoDataFrame
+            A DataFrame with the best match for each `PUIC_left`.
         """
+
         return cast(
             gpd.GeoDataFrame,
             overlap_dataframe.loc[

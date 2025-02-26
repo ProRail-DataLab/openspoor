@@ -176,7 +176,7 @@ class FeatureServerOverview(Singleton):
 
         Returns
         -------
-        DataFrame
+        FeatureSearchResults
             A pandas DataFrame listing the URLs and descriptions of
             the found layers in all FeatureServers.
         """
