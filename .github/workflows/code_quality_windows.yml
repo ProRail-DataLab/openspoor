@@ -19,16 +19,19 @@ jobs:
         run: pipx install uv
 
       - name: Load cached dependencies
-        uses: actions/cache@v4
+        id: cache-venv
+        uses: actions/cache@v2
         with:
           path: .venv
           key: venv-${{ runner.os }}-py3.11-${{ hashFiles('**/uv.lock') }}
 
-      - name: Create virtual environment and install dependencies
+      - name: Create virtual environment and install dependencies (if cache is missing)
+        if: steps.cache-venv.outputs.cache-hit != 'true'
         run: |
-          uv venv --python=3.11 .venv  # Ensure Python 3.11 is used
-          uv sync  # Sync dependencies from uv.lock
+          uv venv --python=3.11
+          .venv/Scripts/Activate.ps1
+          uv sync
 
       - name: Test with pytest
         run: |
-          uv venv exec pytest --junitxml=junit/test-results.xml --nbmake --nbmake-kernel=python3 -n auto --cov=openspoor --cov-fail-under=50 tests/ demo_notebook/
+          uv run pytest --junitxml=junit/test-results.xml --nbmake --nbmake-kernel=python3 -n auto --cov=openspoor --cov-fail-under=50 tests/ demo_notebook/
