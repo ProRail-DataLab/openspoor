@@ -23,7 +23,7 @@ dev_packages = [
 ]
 
 setup(name='openspoor',
-      version='0.2.9',
+      version='0.3.0',
       description='Open source project to allow translations between different spoor referential systems',
       long_description=(Path(__file__).parent / "README.md").read_text(),
       long_description_content_type='text/markdown',
