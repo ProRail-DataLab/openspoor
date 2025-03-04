@@ -1,6 +1,7 @@
 import pandas as pd
-from ..utils.safe_requests import  SafeRequest
+
 from ..utils.common import read_config
+from ..utils.safe_requests import SafeRequest
 
 config = read_config()
 
@@ -11,48 +12,65 @@ class TransformerGeocodeToCoordinates:
     coordinates, either Rijksdriehoek or GPS.
     """
 
-    def __init__(self, geocode_column: str, geocode_km_column: str,
-                 coordinate_system):
+    def __init__(
+        self, geocode_column: str, geocode_km_column: str, coordinate_system
+    ):
         """
-        :param geocode_column: Name of the geocode column
-        :param geocode_km_column: Name of the geocode kilometer column
-        :param coordinate_system: In which coordinate system to return the
-                                  coordinates. (Rijksdriehoek or GPS)
+        Parameters
+        ----------
+        geocode_column : str
+            Name of the geocode column.
+        geocode_km_column : str
+            Name of the geocode kilometer column.
+        coordinate_system : str
+            The coordinate system in which to return the coordinates
+            (Rijksdriehoek or GPS).
         """
 
-        self.mapservices_url = config['mapservices_url']
+        self.mapservices_url = config["mapservices_url"]
         self.geocode = geocode_column
         self.geocode_km = geocode_km_column
-        if coordinate_system == 'Rijksdriehoek':
-            self.coordinates = 'coordinatesRD'
-        elif coordinate_system == 'GPS':
-            self.coordinates = 'coordinatesWGS'
+        if coordinate_system == "Rijksdriehoek":
+            self.coordinates = "coordinatesRD"
+        elif coordinate_system == "GPS":
+            self.coordinates = "coordinatesWGS"
         else:
             raise ValueError("coordinate_system is unknown")
 
     def fit(self):
         """
-        Fit is redundant here, but is here to be consistent with other
-        Transformers
-        :return: self
+        Fit method is redundant but included for consistency
+        with other Transformers.
+
+        Returns
+        -------
+        self
+            The instance itself.
         """
         return self
 
     def transform(self, df: pd.DataFrame):
         """
-        Takes a Pandas dataframe with geocode and geocode_km columns and adds x
-        and y columns, corresponding to self.coordinate_system.
+        Adds x and y columns to a Pandas DataFrame based on
+        `self.coordinate_system`.
 
-        :param df: A pandas dataframe with self.geocode and self.geocode_km
-                   columns.
-        :return: A pandas dataframe with x, y coordinate columns
+        Parameters
+        ----------
+        df : pandas.DataFrame
+            DataFrame containing `self.geocode` and `self.geocode_km` columns.
+
+        Returns
+        -------
+        pandas.DataFrame
+            DataFrame with added x and y coordinate columns.
         """
         xy_information = self._geocode_naar_xy(df)
 
         # The index steps are required to keep the index of df
         index = df.index
-        df_with_xy = df.merge(xy_information, how='left',
-                              on=[self.geocode, self.geocode_km])
+        df_with_xy = df.merge(
+            xy_information, how="left", on=[self.geocode, self.geocode_km]
+        )
         df_with_xy.index = index
 
         return df_with_xy
@@ -69,62 +87,89 @@ class TransformerGeocodeToCoordinates:
         """
         input_json = self._make_json_for_geocode_to_xy_api(input_df)
 
-        response_json = SafeRequest().get_json('GET', self.mapservices_url, input_json)
+        response_json = SafeRequest().get_json(
+            "GET", self.mapservices_url, input_json
+        )
         return self._transform_xy_json_to_df(response_json)
 
     def _make_json_for_geocode_to_xy_api(self, input_df):
         """
-        Prepares input_df to be used as json input for the self.mapservices_url
-        call.
+        Prepares `input_df` for use as JSON input in the
+        `self.mapservices_url` call.
 
-        :param input_df: pandas dataframe with self.geocode and self.geocode_km
-                         columns
-        :return: dictionary
+        Parameters
+        ----------
+        input_df : pandas.DataFrame
+            DataFrame containing `self.geocode` and `self.geocode_km` columns.
+
+        Returns
+        -------
+        dict
+            Dictionary formatted for the API request.
         """
-        km_list_grouped_per_geocode = \
-            input_df.groupby(self.geocode)[self.geocode_km]\
-            .apply(lambda x: list(set(x))).reset_index()
+        km_list_grouped_per_geocode = (
+            input_df.groupby(self.geocode)[self.geocode_km]
+            .apply(lambda x: list(set(x)))
+            .reset_index()
+        )
 
         def make_feature_dict(row):
-            return {"geocode": row[self.geocode],
-                    "geometry": {"type": "Point",
-                                 "coordinatesRD": [0, 0],
-                                 "coordinatesWGS": [0, 0]},
-                    "properties": {"punten": row[self.geocode_km]}}
+            return {
+                "geocode": row[self.geocode],
+                "geometry": {
+                    "type": "Point",
+                    "coordinatesRD": [0, 0],
+                    "coordinatesWGS": [0, 0],
+                },
+                "properties": {"punten": row[self.geocode_km]},
+            }
 
         return {
-            "name": "JSONFeature", "type": "GeocodePunten",
+            "name": "JSONFeature",
+            "type": "GeocodePunten",
             "features": list(
                 km_list_grouped_per_geocode.apply(make_feature_dict, axis=1)
-            )
+            ),
         }
 
     def _transform_xy_json_to_df(self, api_response_json):
         """
-        Transforms json output of self.mapservices_url into a dataframe
+        Transforms JSON output from `self.mapservices_url`
+        into a Pandas DataFrame.
 
-        :param api_response_json: dictionary as from self.mapservices_url
-        :return: pandas dataframe with geocode and x, y information
+        Parameters
+        ----------
+        api_response_json : dict
+            Dictionary obtained from `self.mapservices_url`.
+
+        Returns
+        -------
+        pandas.DataFrame
+            DataFrame containing geocode and x, y coordinate information.
         """
-        features_series = pd.Series(api_response_json['features'])
+        features_series = pd.Series(api_response_json["features"])
         geocode_series = features_series.apply(
-            lambda dictionary: dictionary['geocode']
+            lambda dictionary: dictionary["geocode"]
         )
         geocode_km_series = features_series.apply(
-            lambda dictionary: dictionary['properties']['punten'][0]
+            lambda dictionary: dictionary["properties"]["punten"][0]
         )
 
         x_series = features_series.apply(
-            lambda dictionary: dictionary['geometry'][self.coordinates][0]
+            lambda dictionary: dictionary["geometry"][self.coordinates][0]
         )
         x_series = x_series.astype(float)
 
         y_series = features_series.apply(
-            lambda dictionary: dictionary['geometry'][self.coordinates][1]
+            lambda dictionary: dictionary["geometry"][self.coordinates][1]
         )
         y_series = y_series.astype(float)
 
         return pd.DataFrame(
-            {self.geocode: geocode_series, self.geocode_km: geocode_km_series,
-             'x': x_series, 'y': y_series}
+            {
+                self.geocode: geocode_series,
+                self.geocode_km: geocode_km_series,
+                "x": x_series,
+                "y": y_series,
+            }
         )

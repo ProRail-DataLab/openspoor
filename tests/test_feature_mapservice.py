@@ -1,6 +1,7 @@
-import pytest
-import pandas as pd
 import geopandas as gpd
+import pandas as pd
+import pytest
+
 from openspoor.mapservices import FeatureServerOverview
 
 
