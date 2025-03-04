@@ -23,45 +23,9 @@ The **Openspoor** package provides an easy way to transform between different ge
 ## Installation
 
 Openspoor can be installed using different package management methods. Before proceeding, ensure you have created a virtual environment.
-
-### Step 1: Install package management tool [uv](https://docs.astral.sh/uv/)
-
-These steps show how to install `uv` globally using `pipx`, for other installation methods see the [uv documentation](https://docs.astral.sh/uv/getting-started/installation/).
-
-#### Install `pipx` (if not already installed):
-```sh
-pip install --user pipx
-pipx ensurepath
 ```
-
-#### Install `uv` globally:
-```sh
-pipx install uv
+pip install openspoor
 ```
-### Step 2: Create a virtual environment
-
-```sh
-uv venv --python=3.11
-source ./venv/bin/activate # linux/mac
-.venv/Scripts/activate # windows
-```
-### Step 3: Install Openspoor dependencies
-
-#### Using `uv`:
-```sh
-uv pip install openspoor
-```
-
-## Platform-Specific Installation Notes
-
-### Mac (including M1 chips)
-```sh
-conda create -n [env_name] python=3.11
-conda install -c conda-forge proj=7.0.0
-conda install -c conda-forge pyproj=2.6.0
-uv pip install openspoor
-```
-For non-M1 Mac users, `uv pip install openspoor` should suffice.
 
 ## Development
 
@@ -77,7 +41,7 @@ To contribute to Openspoor, follow these steps to set up a development environme
 ```sh
 uv venv --python=3.11
 source .venv/bin/activate # linux/mac
-.venv/Script/activate # windows
+.venv\Scripts\activate # windows
 ```
 
 ### Step 3: Install dependencies
@@ -138,9 +102,13 @@ Provides historical railway topology to enable transformations on historical dat
 
 ### 4. Visualisations
 Allows plotting railway-related data on maps. Supports pandas and geopandas dataframes containing points or linestrings.
+With the TrackMap class, you can plot the railway network on a interactive map.
 
 ## Release History
 
+- **0.3.1**: Update for improved code quality.
+- **0.3.0**: Added the railway network feautures (shortest path and visualization).
+- **0.1.10**: Added support for historical spoortakken.
 - **0.1.9**: Added spoortakmodel and visualization features.
 - **0.1.0**: First stable release.
 - **0.0.1**: Work in progress.
