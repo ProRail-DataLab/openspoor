@@ -16,7 +16,7 @@ jobs:
 
       - name: Load cached venv
         id: cache-venv
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         with:
           path: .venv
           key: venv-${{ runner.os }}-py3.11-${{ hashFiles('**/uv.lock') }}
