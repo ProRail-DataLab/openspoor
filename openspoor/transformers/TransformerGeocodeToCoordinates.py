@@ -64,15 +64,19 @@ class TransformerGeocodeToCoordinates:
         pandas.DataFrame
             DataFrame with added x and y coordinate columns.
         """
+        # These steps preserve the original types of the dataframe
+        original_index = df.index
+        original_geocode_values = df[self.geocode]
+
+        df[self.geocode] = df[self.geocode].apply(lambda x: str(x).zfill(3))
         xy_information = self._geocode_naar_xy(df)
 
-        # The index steps are required to keep the index of df
-        index = df.index
         df_with_xy = df.merge(
             xy_information, how="left", on=[self.geocode, self.geocode_km]
         )
-        df_with_xy.index = index
 
+        df_with_xy.index = original_index
+        df_with_xy[self.geocode] = original_geocode_values
         return df_with_xy
 
     def _geocode_naar_xy(self, input_df):
