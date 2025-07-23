@@ -3,7 +3,15 @@ import re
 import matplotlib.colors as mcolors
 
 
-def is_valid_folium_color(color):
+def is_valid_folium_color(color: str) -> bool:
+    """Check if a string is a valid color for Folium.
+
+    Args:
+        color (str): The color string to check.
+
+    Returns:
+        bool: True if the color is valid, False otherwise.
+    """
 
     color = color.strip().lower()
 

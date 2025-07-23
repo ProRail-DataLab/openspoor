@@ -90,7 +90,7 @@ class TrackMap(folium.Map):
 
     def __init__(
         self,
-        objects: Union[PlotObject, PlotObjectList, list] = [],
+        objects: Union[PlotObject, PlotObjectList] = PlotObjectList(),
         add_aerial=True,
         **kwargs,
     ):
@@ -134,38 +134,13 @@ class TrackMap(folium.Map):
                 PlotObject,
             ),
         ):
-            self._add_plottables(objects)
-        elif isinstance(objects, list):
-            for obj in objects:
-                self._add_plottables(obj)
+            self.plottables.extend(objects)
         else:
-            raise TypeError(
-                f"Object {objects} is not a PlotObject, PlotObjectList, or list"
-            )
+            for obj in objects:
+                self.plottables.append(obj)
 
         for to_plot in self.plottables:
             to_plot.add_to(self)
-
-    def _add_plottables(self, new_plottables):
-        """
-        Add new plottables to the existing list of plottables.
-
-        Parameters
-        ----------
-        plottables : list
-            The existing list of plottables.
-        new_plottables : list
-            The new plottables to be added.
-
-        Returns
-        -------
-        None
-        """
-        if isinstance(new_plottables, list):
-            for item in new_plottables:
-                self.plottables.append(item)
-        else:
-            self.plottables.append(new_plottables)
 
     def _add_aerial_photograph(self) -> None:
         """
@@ -539,6 +514,9 @@ class PlottingLineStrings(PlotObject):
             # Color by column - create multiple PlottingLineStrings objects
             self.is_grouped = True
             self.grouped_objects = []
+
+            # Fillna color column with empty strings to avoid issues with NaN values
+            self.data[color] = self.data[color].fillna("")
 
             for color, group_data in self.data.groupby(color):
                 # Use a default color for each group (will be handled in add_to method)
