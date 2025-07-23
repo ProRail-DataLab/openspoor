@@ -23,7 +23,9 @@ def base_trackmap():
 
 @pytest.fixture(scope="session")
 def example_plottingdataframe():
-    return PlottingPoints({"lat": [52.45, 52.5], "lon": [5.15, 5.2], "name": ["ABC", "DEF"]})
+    return PlottingPoints(
+        {"lat": [52.45, 52.5], "lon": [5.15, 5.2], "name": ["ABC", "DEF"]}
+    )
 
 
 @pytest.fixture()
@@ -178,7 +180,9 @@ def test_add_to_trackmap(
     # settings for linestrings and areas
     r = TrackMap()
     PlottingPoints(points_dataframe, popup=["name", "name2"]).add_to(r)
-    PlottingLineStrings(lines_geodataframe, popup=["name", "name2"], color="blue").add_to(r)
+    PlottingLineStrings(
+        lines_geodataframe, popup=["name", "name2"], color="blue"
+    ).add_to(r)
     PlottingAreas(areas_geodataframe, popup=["name", "name2"], color="orange").add_to(r)
     r.save(str(tmp_path / "test_output3.html"))
 
@@ -188,17 +192,27 @@ def test_add_to_trackmap(
 
 def test_plottingpoint_settings(points_dataframe, tmp_path):
     m = TrackMap()
-    PlottingPoints(points_dataframe, popup=["name", "name2"], rotation_column="lat").add_to(m)
-    PlottingPoints(points_dataframe, popup=["name", "name2"], marker_column="marker").add_to(m)
-    PlottingPoints(points_dataframe, popup=["name", "name2"], markertype="train").add_to(m)
+    PlottingPoints(
+        points_dataframe, popup=["name", "name2"], rotation_column="lat"
+    ).add_to(m)
+    PlottingPoints(
+        points_dataframe, popup=["name", "name2"], marker_column="marker"
+    ).add_to(m)
+    PlottingPoints(
+        points_dataframe, popup=["name", "name2"], markertype="train"
+    ).add_to(m)
     PlottingPoints(
         points_dataframe,
         popup=["name", "name2"],
         markertype="circle",
         radius_column="lat",
     ).add_to(m)
-    markers_added = len([child for child in m._children if child.split("_")[0] == "marker"])
-    circles_added = len([child for child in m._children if child.split("_")[0] == "circle"])
+    markers_added = len(
+        [child for child in m._children if child.split("_")[0] == "marker"]
+    )
+    circles_added = len(
+        [child for child in m._children if child.split("_")[0] == "circle"]
+    )
 
     num_expected_markers = 3 * len(points_dataframe)
     num_expected_circles = 1 * len(points_dataframe)
@@ -324,7 +338,9 @@ def test_plottinglinestrings_color_as_column_grouping(
 
     # Check that each group has the correct data
     subcode_values = lines_with_categories_geodataframe["SUBCODE"].unique()
-    group_subcodes = [obj.data["SUBCODE"].iloc[0] for obj in plotting_lines.grouped_objects]
+    group_subcodes = [
+        obj.data["SUBCODE"].iloc[0] for obj in plotting_lines.grouped_objects
+    ]
     assert set(subcode_values) == set(group_subcodes)
 
 
@@ -337,8 +353,7 @@ def test_plottinglinestrings_color_as_regular_color(
     )
 
     # Check that it's not grouped
-    assert hasattr(plotting_lines, "is_grouped")
-    assert not plotting_lines.is_grouped
+    assert not hasattr(plotting_lines, "is_grouped")
 
     # Check that it has the correct color
     assert plotting_lines.color == "blue"
@@ -413,7 +428,9 @@ def test_plottinglinestrings_many_groups_warning(
     # Add many more categories to trigger warning
     additional_lines = []
     for i in range(20):  # Add 20 more categories
-        line = LineString([Point(6.0 + i * 0.1, 52.1), Point(6.05 + i * 0.1, 52.15)]).wkt
+        line = LineString(
+            [Point(6.0 + i * 0.1, 52.1), Point(6.05 + i * 0.1, 52.15)]
+        ).wkt
         additional_lines.append(
             {
                 "name": f"Line_{i}",
@@ -465,7 +482,9 @@ def test_plottinglinestrings_edge_cases():
     assert len(plotting_lines_grouped.grouped_objects) == 1
 
 
-def test_trackmap_with_mixed_plotting_objects(lines_with_categories_geodataframe, points_dataframe):
+def test_trackmap_with_mixed_plotting_objects(
+    lines_with_categories_geodataframe, points_dataframe
+):
     """Test TrackMap with a mix of grouped and non-grouped plotting objects."""
     # Create grouped LineStrings
     grouped_lines = PlottingLineStrings(

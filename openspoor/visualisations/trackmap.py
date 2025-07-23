@@ -11,6 +11,8 @@ import pandas as pd
 from loguru import logger
 from shapely.geometry import linestring, multilinestring, point, polygon
 
+from openspoor.visualisations.colorchecker import is_valid_folium_color
+
 from ..utils.common import read_config
 
 config = read_config()
@@ -35,7 +37,8 @@ class PlotObject(ABC):
             self.data = gpd.read_file(data)
         else:
             raise TypeError(
-                "Provide either a geopandas dataframe or a file location " "of a csv to show"
+                "Provide either a geopandas dataframe or a file location "
+                "of a csv to show"
             )
         self.data = self.data.to_crs("EPSG:4326")
         if self.popup is not None:
@@ -65,15 +68,11 @@ class PlotObjectList(List[PlotObject]):
     """
 
     def __init__(self, *args: PlotObject):
-
         self.plotitems = []
-        # super().__init__(args)
         for item in args:
-            print(item)
             assert isinstance(
                 item, PlotObject
             ), f"All items must be PlotObjects, but got {type(item)}"
-            # super().__init__(item)
             self.plotitems.append(item)
 
 
@@ -133,18 +132,16 @@ class TrackMap(folium.Map):
             (
                 PlotObjectList,
                 PlotObject,
-                PlottingLineStrings,
-                PlottingAreas,
-                PlottingPoints,
             ),
         ):
-            # print(objects)
             self._add_plottables(objects)
         elif isinstance(objects, list):
             for obj in objects:
                 self._add_plottables(obj)
         else:
-            raise TypeError(f"Object {objects} is not a PlotObject, PlotObjectList, or list")
+            raise TypeError(
+                f"Object {objects} is not a PlotObject, PlotObjectList, or list"
+            )
 
         for to_plot in self.plottables:
             to_plot.add_to(self)
@@ -167,13 +164,6 @@ class TrackMap(folium.Map):
         if isinstance(new_plottables, list):
             for item in new_plottables:
                 self.plottables.append(item)
-        elif (
-            isinstance(new_plottables, PlottingLineStrings)
-            and hasattr(new_plottables, "is_grouped")
-            and new_plottables.is_grouped
-        ):
-            # Handle grouped PlottingLineStrings - add the parent object, not the individual groups
-            self.plottables.append(new_plottables)
         else:
             self.plottables.append(new_plottables)
 
@@ -185,7 +175,9 @@ class TrackMap(folium.Map):
         -------
         None
         """
-        fg = folium.FeatureGroup(name="aerial_photograph", max_zoom=30, max_native_zoom=30)
+        fg = folium.FeatureGroup(
+            name="aerial_photograph", max_zoom=30, max_native_zoom=30
+        )
         folium.WmsTileLayer(
             url="https://luchtfoto.prorail.nl/erdas-iws/ogc/wms/Luchtfoto",
             layers="meest_recent",
@@ -211,7 +203,9 @@ class TrackMap(folium.Map):
 
         for _, item in self._children.items():
             if isinstance(item, folium.features.Choropleth):  # For linestrings
-                bboxes.extend(feature["bbox"][::-1] for feature in item.geojson.data["features"])
+                bboxes.extend(
+                    feature["bbox"][::-1] for feature in item.geojson.data["features"]
+                )
             if isinstance(item, folium.features.GeoJson):  # For linestrings and areas
                 bboxes.append([i for coords in item.get_bounds() for i in coords])
             if isinstance(item, folium.map.Marker) and item.location:
@@ -221,7 +215,11 @@ class TrackMap(folium.Map):
 
         if bboxes:  # Fit only if there are some items to show
             bounds = [
-                (min(map(lambda x: x[i], bboxes)) if i < 2 else max(map(lambda x: x[i], bboxes)))
+                (
+                    min(map(lambda x: x[i], bboxes))
+                    if i < 2
+                    else max(map(lambda x: x[i], bboxes))
+                )
                 for i in range(4)
             ]
             # Convert into [[min_lat, min_lon], [max_lat, max_lon]]
@@ -334,7 +332,9 @@ class PlottingPoints(PlotObject):
 
         # Validate input types
         if not isinstance(data, (dict, pd.DataFrame, gpd.GeoDataFrame)):
-            raise TypeError(f"data must be a dict, DataFrame, or GeoDataFrame, got {type(data)}")
+            raise TypeError(
+                f"data must be a dict, DataFrame, or GeoDataFrame, got {type(data)}"
+            )
 
         if colors is not None and not isinstance(colors, (str, tuple)):
             logger.warning(
@@ -347,7 +347,9 @@ class PlottingPoints(PlotObject):
         if isinstance(data, dict):
             data = pd.DataFrame(data)
 
-        if isinstance(data, pd.DataFrame) and not isinstance(data, gpd.geodataframe.GeoDataFrame):
+        if isinstance(data, pd.DataFrame) and not isinstance(
+            data, gpd.geodataframe.GeoDataFrame
+        ):
             data = gpd.GeoDataFrame(
                 data,
                 geometry=gpd.points_from_xy(data[lon_column], data[lat_column]),
@@ -357,7 +359,9 @@ class PlottingPoints(PlotObject):
             data[rotation_column + "_for_plotting"] = data[rotation_column]
         self.color_column = color_column
         if self.color_column is not None:
-            data[self.color_column + "_factorized"] = pd.factorize(data[self.color_column])[0]
+            data[self.color_column + "_factorized"] = pd.factorize(
+                data[self.color_column]
+            )[0]
 
         super().__init__(data, popup)
 
@@ -367,7 +371,9 @@ class PlottingPoints(PlotObject):
                 self.data["lat"] = data.geometry.apply(lambda d: d.y)
                 self.data["lon"] = data.geometry.apply(lambda d: d.x)
             else:
-                raise NotImplementedError(f"Unimplemented geometry: {data.geometry.iloc[0]}")
+                raise NotImplementedError(
+                    f"Unimplemented geometry: {data.geometry.iloc[0]}"
+                )
 
         # TODO: Automatically do this by looping through args?
         self.markertype = markertype
@@ -420,8 +426,12 @@ class PlottingPoints(PlotObject):
             popup_text = ""
             for indexvalue, col in zip(indexnames, self.popup):
                 if col == self.url_column:
-                    url = quote(row[col], safe="/:?=&")  # Replaces characters unsuitable for URL's
-                    popup_text = (popup_text + f"{col}: <a href={url}>Hyperlink</a><br>",)
+                    url = quote(
+                        row[col], safe="/:?=&"
+                    )  # Replaces characters unsuitable for URL's
+                    popup_text = (
+                        popup_text + f"{col}: <a href={url}>Hyperlink</a><br>",
+                    )
                 else:
                     popup_text = popup_text + f"{col}: {indexvalue}<br>"
             return popup_text
@@ -505,11 +515,14 @@ class PlottingLineStrings(PlotObject):
 
         # Validate input types
         if not isinstance(data, (gpd.GeoDataFrame, str)):
-            raise TypeError(f"data must be a GeoDataFrame or string path, got {type(data)}")
+            raise TypeError(
+                f"data must be a GeoDataFrame or string path, got {type(data)}"
+            )
 
         if not isinstance(color, str):
             logger.warning(
-                f"color parameter should be a string, got {type(color)}. Converting to string."
+                f"color parameter should be a string, got {type(color)}."
+                "Converting to string."
             )
             color = str(color)
 
@@ -527,16 +540,14 @@ class PlottingLineStrings(PlotObject):
             self.is_grouped = True
             self.grouped_objects = []
 
-            for group_value, group_data in self.data.groupby(color):
+            for color, group_data in self.data.groupby(color):
                 # Use a default color for each group (will be handled in add_to method)
                 group_obj = PlottingLineStrings(
                     data=group_data.reset_index(drop=True),
                     popup=popup,
-                    color="blue",  # Will be overridden with actual colors
+                    color=color,
                     buffersize=buffersize,
                 )
-                group_obj.group_value = group_value
-                group_obj.is_grouped = False  # Prevent infinite recursion
                 self.grouped_objects.append(group_obj)
 
             # Don't call super().__init__ for grouped objects
@@ -547,7 +558,6 @@ class PlottingLineStrings(PlotObject):
             )
         else:
             # Regular single-color LineStrings
-            self.is_grouped = False
             self.color = color
             super().__init__(self.data, popup)
 
@@ -575,7 +585,7 @@ class PlottingLineStrings(PlotObject):
         """
 
         # Handle grouped LineStrings
-        if hasattr(self, "is_grouped") and self.is_grouped:
+        if hasattr(self, "is_grouped"):
             colors = [
                 "black",
                 "pink",
@@ -591,7 +601,7 @@ class PlottingLineStrings(PlotObject):
                 "purple",
                 "red",
                 "beige",
-            ]
+            ]  # These are the default colors used for groups
 
             if len(self.grouped_objects) > len(colors):
                 logger.warning(
@@ -602,12 +612,14 @@ class PlottingLineStrings(PlotObject):
                 if len(self.grouped_objects) > len(colors) * 100:
                     raise ValueError(
                         f"Too many groups to color by ({len(self.grouped_objects)}). "
-                        f"Reduce the number of unique values to below {len(colors) * 100}."
+                        f"Reduce the number of unique values to below"
+                        f"{len(colors) * 100}."
                     )
 
             # Assign colors to groups
             for i, group_obj in enumerate(self.grouped_objects):
-                group_obj.color = colors[i % len(colors)]
+                if not is_valid_folium_color(group_obj.color):
+                    group_obj.color = colors[i % len(colors)]
                 group_obj.add_to(folium_map)
 
             return folium_map
@@ -642,7 +654,9 @@ class PlottingLineStrings(PlotObject):
 
         sectie_hover = folium.features.GeoJson(
             data=self.data.assign(
-                geometry=lambda x: x.geometry.to_crs("EPSG:28992").buffer(self.buffersize)
+                geometry=lambda x: x.geometry.to_crs("EPSG:28992").buffer(
+                    self.buffersize
+                )
             ).reset_index(),
             style_function=style_function,
             control=False,
@@ -687,11 +701,14 @@ class PlottingAreas(PlotObject):
 
         # Validate input types
         if not isinstance(data, (str, gpd.GeoDataFrame)):
-            raise TypeError(f"data must be a string path or GeoDataFrame, got {type(data)}")
+            raise TypeError(
+                f"data must be a string path or GeoDataFrame, got {type(data)}"
+            )
 
         if not isinstance(color, str):
             logger.warning(
-                f"color parameter should be a string, got {type(color)}. Converting to string."
+                "color parameter should be a string,"
+                "got {type(color)}. Converting to string."
             )
             color = str(color)
 
@@ -732,7 +749,10 @@ class PlottingAreas(PlotObject):
                 if not isinstance(index, tuple):
                     index = (index,)
                 popupname = "<br>".join(
-                    [": ".join([str(i), str(j)]) for i, j in list(zip(indexnames, index))]
+                    [
+                        ": ".join([str(i), str(j)])
+                        for i, j in list(zip(indexnames, index))
+                    ]
                 )
 
                 folium.Popup(popupname).add_to(geo_j)
@@ -780,13 +800,17 @@ def plottable(
             return PlottingPoints(data, popup, *args, **kwargs)
         else:
             raise NotImplementedError(
-                f"GeoDataFrame with entries of type {type(firstentry)} " "not supported yet"
+                f"GeoDataFrame with entries of type {type(firstentry)}"
+                " not supported yet"
             )
-    elif isinstance(data, pd.DataFrame):  # Whenever data is a dataframe, it is probably points
-        logger.info("Interpreting data as dataframe")
+    elif isinstance(
+        data, pd.DataFrame
+    ):  # Whenever data is a dataframe, it is probably points
+        logger.info("Interpreting data as points")
         return PlottingPoints(data, popup, *args, **kwargs)
     raise TypeError(
-        f"Data of type {type(data)} not supported. " "Please provide a geodataframe or a dataframe"
+        f"Data of type {type(data)} not supported."
+        "Please provide a geodataframe or a dataframe"
     )
 
 
@@ -813,7 +837,8 @@ def quick_plot(*args, notebook=False, **kwargs) -> Union[TrackMap | folium.Figur
             objects.append(plottable(arg, **kwargs))
         except TypeError:
             logger.info(
-                f"Unable to plot {arg} with these arguments, " "plot these without arguments."
+                f"Unable to plot {arg} with these arguments,"
+                "plot these without arguments."
             )
             objects.append(plottable(**kwargs))
     return TrackMap(objects).show(notebook=notebook)
