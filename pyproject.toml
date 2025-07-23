@@ -11,6 +11,7 @@ requires-python = ">=3.10,<4"
 readme = "README.md"
 license = "MIT"
 dependencies = [
+    "matplotlib",
     "geopandas>=1.0.1,<2",
     "pyyaml>=6.0.2,<7",
     "loguru>=0.7.3,<0.8",
