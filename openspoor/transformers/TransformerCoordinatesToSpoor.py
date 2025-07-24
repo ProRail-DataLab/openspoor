@@ -40,7 +40,7 @@ class TransformerCoordinatesToSpoor:
     def _get_spoortak_met_geokm(self) -> gpd.GeoDataFrame:
         return (
             FeatureServerOverview()
-            .search_for("Spoortakdeel met geocode kilometrering")
+            .search_for("Spoorwisselbenaming met geocode kilometrering")
             .load_data(return_m=True)
         )
 
@@ -67,8 +67,6 @@ class TransformerCoordinatesToSpoor:
             distances=lambda d: d.geometry.project(gdf_points.loc[d.index])
         ).pipe(lambda d: d.interpolate(d.distances).z)
 
-    # TODO: Fix for wissels. These seem to be a in a separate table:
-    # 'Spoorwisselbenaming met geocode kilometrering'
     def transform(self, gdf_points: gpd.GeoDataFrame) -> gpd.GeoDataFrame:
         """
         Finds track segments close to each requested point and
