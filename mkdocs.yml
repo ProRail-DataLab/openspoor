@@ -1,0 +1,84 @@
+site_name: OpenSpoor Documentation
+site_description: Open source project to allow translations between different spoor referential systems
+site_url: https://prorail-datalab.github.io/openspoor/
+repo_url: https://github.com/ProRail-DataLab/openspoor
+repo_name: ProRail-DataLab/openspoor
+
+theme:
+  name: material
+  palette:
+    - scheme: default
+      primary: blue
+      accent: blue
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - scheme: slate
+      primary: blue
+      accent: blue
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
+    - search.highlight
+    - content.code.copy
+
+nav:
+  - Home: index.md
+  - Getting Started:
+    - Installation: installation.md
+    - Quick Start: quickstart.md
+  - User Guide:
+    - MapServices: user-guide/mapservices.md
+    - Transformers: user-guide/transformers.md
+    - Visualizations: user-guide/visualizations.md
+    - Network Analysis: user-guide/network.md
+    - Spoortak Models: user-guide/spoortakmodel.md
+  - Examples:
+    - Demo Notebook: examples/demo-notebook.md
+    - Use Cases: examples/use-cases.md
+  - Development:
+    - Contributing: development/contributing.md
+    - Development Setup: development/setup.md
+    - Testing: development/testing.md
+  - API Reference:
+    - Overview: api/index.md
+
+plugins:
+  - search
+  - autorefs
+  - mkdocstrings:
+      handlers:
+        python:
+          options:
+            docstring_style: numpy
+            show_source: true
+            show_root_heading: true
+            show_root_toc_entry: true
+            merge_init_into_class: true
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.tabbed:
+      alternate_style: true
+  - attr_list
+  - md_in_html
+  - toc:
+      permalink: true
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/ProRail-DataLab/openspoor
+  version:
+    provider: mike

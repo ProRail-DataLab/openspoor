@@ -46,6 +46,13 @@ dev = [
     "pytest-xdist>=3.6.1,<4",
     "pre-commit>=4.1.0,<5",
 ]
+docs = [
+    "mkdocs>=1.6.0,<2",
+    "mkdocs-material>=9.5.0,<10",
+    "mkdocs-autorefs>=1.0.0,<2",
+    "mkdocstrings>=0.26.0,<1",
+    "mkdocstrings-python>=1.12.0,<2",
+]
 
 [tool.hatch.build.targets.sdist]
 include = ["openspoor"]

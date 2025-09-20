@@ -69,10 +69,26 @@ pre-commit run --all-files
 
 ### Step 6: generating documentation
 
-Openspoor uses `pdoc` to generate documentation. To generate and serve documentation locally:
+Openspoor uses both `pdoc` for API documentation and `MkDocs` for comprehensive user documentation.
+
+#### API Documentation (pdoc)
 ```sh
 pdoc --http : openspoor
 ```
+
+#### User Documentation (MkDocs)
+```sh
+# Install documentation dependencies
+uv sync --group docs
+
+# Serve documentation locally
+mkdocs serve
+
+# Build documentation
+mkdocs build
+```
+
+The comprehensive documentation is available at: https://prorail-datalab.github.io/openspoor/
 
 ## Demonstration Notebook
 

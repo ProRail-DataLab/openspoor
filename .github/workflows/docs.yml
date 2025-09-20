@@ -1,0 +1,76 @@
+name: Deploy Documentation
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  # Build documentation
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        
+      - name: Install uv
+        run: pipx install uv
+        
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+          
+      - name: Load cached dependencies
+        id: cache-venv
+        uses: actions/cache@v4
+        with:
+          path: .venv
+          key: venv-${{ runner.os }}-py3.11-docs-${{ hashFiles('**/uv.lock') }}
+          
+      - name: Install dependencies
+        if: steps.cache-venv.outputs.cache-hit != 'true'
+        run: |
+          uv venv --python=3.11
+          source .venv/bin/activate
+          uv sync --group docs
+          
+      - name: Build documentation
+        run: |
+          source .venv/bin/activate
+          uv run mkdocs build
+          
+      - name: Setup Pages
+        if: github.ref == 'refs/heads/main'
+        uses: actions/configure-pages@v4
+        
+      - name: Upload artifact
+        if: github.ref == 'refs/heads/main'
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./site
+
+  # Deploy to GitHub Pages (only on main branch)
+  deploy:
+    if: github.ref == 'refs/heads/main'
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
