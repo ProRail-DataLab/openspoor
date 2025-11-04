@@ -10,7 +10,7 @@ jobs:
     runs-on: "ubuntu-latest"
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
 
       - name: Install uv
         run: pipx install uv
@@ -20,16 +20,18 @@ jobs:
         uses: actions/cache@v4
         with:
           path: .venv
-          key: venv-${{ runner.os }}-py3.11-${{ hashFiles('**/uv.lock') }}
+          key: venv-${{ runner.os }}-py3.11-${{ hashFiles('**/uv.lock', '**/pyproject.toml') }}
 
       - name: Create virtual environment and install dependencies (if cache is missing)
         if: steps.cache-venv.outputs.cache-hit != 'true'
         run: |
           uv venv --python=3.11
-          source .venv/bin/activate
           uv sync
+
+      - name: Install dependencies (if cache was hit)
+        if: steps.cache-venv.outputs.cache-hit == 'true'
+        run: uv sync
 
       - name: Test with pytest
         run: |
-          source .venv/bin/activate
           uv run pytest --junitxml=junit/test-results.xml --nbmake --nbmake-kernel=python3 -n auto --cov=openspoor --cov-fail-under=50 tests/ demo_notebook/
