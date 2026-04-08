@@ -196,7 +196,12 @@ class MapServicesQuery:
         res = SafeRequest().get_json(
             "GET", input_url + "&returnCountOnly=True"
         )
-        return res["properties"]["count"]
+        if "count" in res:
+            return res["count"]
+        elif "properties" in res and "count" in res["properties"]:
+            return res["properties"]["count"]
+        else:
+            raise ValueError("Count not found in response")
 
     def _retrieve_batch_of_features_to_gdf(
         self, input_url: str, offset: int

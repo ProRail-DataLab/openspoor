@@ -1,5 +1,8 @@
+from unittest.mock import MagicMock, patch
+
 import geopandas as gpd
 import pandas as pd
+import pytest
 from shapely.geometry import LineString, Point, Polygon
 
 from openspoor.mapservices import MapServicesQuery
@@ -100,3 +103,48 @@ class Test:
             ],
         )
         pd.testing.assert_frame_equal(output_data, expected_output)
+
+    @patch("openspoor.mapservices.MapservicesQuery.SafeRequest")
+    def test_retrieve_max_features_count_json_format(self, mock_safe_request):
+        """Test with JSON format response (f=json)"""
+        # Mock the SafeRequest to return JSON format response
+        mock_instance = MagicMock()
+        mock_safe_request.return_value = mock_instance
+        mock_instance.get_json.return_value = {"count": 123}
+
+        result = MapServicesQuery._retrieve_max_features_count("test_url")
+
+        assert result == 123
+        mock_instance.get_json.assert_called_once_with(
+            "GET", "test_url&returnCountOnly=True"
+        )
+
+    @patch("openspoor.mapservices.MapservicesQuery.SafeRequest")
+    def test_retrieve_max_features_count_geojson_format(
+        self, mock_safe_request
+    ):
+        """Test with GeoJSON format response (f=geojson)"""
+        # Mock the SafeRequest to return GeoJSON format response
+        mock_instance = MagicMock()
+        mock_safe_request.return_value = mock_instance
+        mock_instance.get_json.return_value = {"properties": {"count": 456}}
+
+        result = MapServicesQuery._retrieve_max_features_count("test_url")
+
+        assert result == 456
+        mock_instance.get_json.assert_called_once_with(
+            "GET", "test_url&returnCountOnly=True"
+        )
+
+    @patch("openspoor.mapservices.MapservicesQuery.SafeRequest")
+    def test_retrieve_max_features_count_missing_count(
+        self, mock_safe_request
+    ):
+        """Test when count is not found in response"""
+        # Mock the SafeRequest to return response without count
+        mock_instance = MagicMock()
+        mock_safe_request.return_value = mock_instance
+        mock_instance.get_json.return_value = {"some_other_key": "value"}
+
+        with pytest.raises(ValueError, match="Count not found in response"):
+            MapServicesQuery._retrieve_max_features_count("test_url")
