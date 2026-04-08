@@ -136,8 +136,18 @@ class TrackMap(folium.Map):
             maxZoom=30,
             maxNativeZoom=30,
         ).add_to(fg)
+        # Use CartoDB Positron to avoid OSM referer issues
         folium.TileLayer(
-            "openstreetmap", transparent=True, opacity=0.2
+            tiles="https://{s}.basemaps.cartocdn.com"
+            "/light_all/{z}/{x}/{y}{r}.png",
+            attr='&copy; <a href="https://www.openstreetmap.org/copyright">'
+            "OpenStreetMap</a> contributors &copy;"
+            '<a href="https://carto.com/attributions">CARTO</a>',
+            name="CartoDB Light",
+            transparent=True,
+            opacity=0.2,
+            subdomains="abcd",
+            maxZoom=19,
         ).add_to(fg)
         self.add_child(fg)
 
