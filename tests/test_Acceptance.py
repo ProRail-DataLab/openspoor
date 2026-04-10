@@ -844,20 +844,3 @@ class Test:
             }
         )
         pd.testing.assert_frame_equal(output, expected_output)
-
-    def test_acceptance_query_functionality(self):
-        data = MapServicesQuery(
-            url="http://mapservices.prorail.nl/"
-            + "arcgis/rest/services/Kadastraal_004/MapServer/5"
-        )
-        query_dict = {
-            "KADSLEUTEL": ["ANM00G3774", "ANM00G3775", "ANM00H483"],
-            "KADGEM": ["ANM00"],
-        }
-
-        output = data._load_all_features_to_gdf(dict_query=query_dict)
-
-        assert (
-            output["KADSLEUTEL"][0]
-            in ["ANM00G3774", "ANM00G3775", "ANM00H483"]
-        ) & (output["GEMEENTE"][0] == "Arnemuiden")

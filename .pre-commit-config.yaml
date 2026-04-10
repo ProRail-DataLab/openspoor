@@ -52,3 +52,11 @@ repos:
         entry: pytest tests/
         language: system
         pass_filenames: false
+
+  - repo: local
+    hooks:
+      - id: deptry
+        name: deptry
+        entry: deptry .
+        language: system
+        pass_filenames: false
