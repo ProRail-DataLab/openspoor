@@ -57,14 +57,14 @@ uv run pytest --nbmake --nbmake-kernel=python3
 
 ### Step 5: install pre-commit hooks
 
-Openspoor uses pre-commit hooks to enforce code quality. To install them:
+Openspoor uses prek hooks to enforce code quality. To install them:
 ```sh
-pre-commit install
+prek install
 ```
 
 To run hooks manually on all files:
 ```sh
-pre-commit run --all-files
+prek run --all-files
 ```
 
 ### Step 6: generating documentation
