@@ -148,8 +148,8 @@ def test_add_to_trackmap(
     PlottingAreas(areas_geodataframe, popup=["name2"]).add_to(m)
 
     # For the points and areas, 1 child is added for every row in the dataframe
-    # 1 child always exists when the aerial photograph is added
-    aerial_photograph_children = add_aerial
+    # 1 FeatureGroup always exists for map layers
+    base_featuregroup_children = 1
     # Linestrings always add 2 objects; one for the hover,
     # and one for the lines themselves
     linestring_children = 2
@@ -157,8 +157,38 @@ def test_add_to_trackmap(
         len(points_dataframe)
         + linestring_children
         + len(areas_geodataframe)
-        + aerial_photograph_children
+        + base_featuregroup_children
     )
+
+    assert len(m._children) == total_objects, "Invalid number of items added"
+
+    # Check that the FeatureGroup contains the correct number of layers
+    # Find the FeatureGroup and count its tile layers
+    layer_featuregroup = None
+    for child in m._children.values():
+        if isinstance(child, folium.FeatureGroup):
+            layer_featuregroup = child
+            break
+
+    assert layer_featuregroup is not None, "No FeatureGroup found"
+
+    # Count tile layers in the FeatureGroup
+    tile_layers = [
+        child
+        for child in layer_featuregroup._children.values()
+        if isinstance(
+            child,
+            (
+                folium.raster_layers.TileLayer,
+                folium.raster_layers.WmsTileLayer,
+            ),
+        )
+    ]
+
+    expected_layers = 2 if add_aerial else 1  # CartoDB + aerial (if enabled)
+    assert (
+        len(tile_layers) == expected_layers
+    ), f"Expected {expected_layers} tile layers, got {len(tile_layers)}"
 
     assert len(m._children) == total_objects, "Invalid number of items added"
 

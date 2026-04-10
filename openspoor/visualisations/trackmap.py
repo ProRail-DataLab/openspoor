@@ -104,8 +104,7 @@ class TrackMap(folium.Map):
             tiles=None,
             **kwargs,
         )
-        if add_aerial:
-            self._add_aerial_photograph()
+        self._add_layers(add_aerial)
 
         if not isinstance(objects, list):
             self.add(objects)
@@ -117,7 +116,7 @@ class TrackMap(folium.Map):
             ), f"Unable to plot {obj}, not defined as plottable object"
             self.add(obj)
 
-    def _add_aerial_photograph(self) -> None:
+    def _add_layers(self, add_aerial) -> None:
         """
         Add the most recent ProRail aerial photograph to the map.
 
@@ -128,16 +127,27 @@ class TrackMap(folium.Map):
         fg = folium.FeatureGroup(
             name="aerial_photograph", max_zoom=30, max_native_zoom=30
         )
-        folium.WmsTileLayer(
-            url="https://luchtfoto.prorail.nl/erdas-iws/ogc/wms/Luchtfoto",
-            layers="meest_recent",
-            transparent=True,
-            overlay=False,
-            maxZoom=30,
-            maxNativeZoom=30,
-        ).add_to(fg)
+        if add_aerial:
+            folium.WmsTileLayer(
+                url="https://luchtfoto.prorail.nl/erdas-iws/ogc/wms/Luchtfoto",
+                layers="meest_recent",
+                transparent=True,
+                overlay=False,
+                maxZoom=30,
+                maxNativeZoom=30,
+            ).add_to(fg)
+        # Use CartoDB Positron to avoid OSM referer issues
         folium.TileLayer(
-            "openstreetmap", transparent=True, opacity=0.2
+            tiles="https://{s}.basemaps.cartocdn.com"
+            "/light_all/{z}/{x}/{y}{r}.png",
+            attr='&copy; <a href="https://www.openstreetmap.org/copyright">'
+            "OpenStreetMap</a> contributors &copy;"
+            '<a href="https://carto.com/attributions">CARTO</a>',
+            name="CartoDB Light",
+            transparent=True,
+            opacity=0.2,
+            subdomains="abcd",
+            maxZoom=30,
         ).add_to(fg)
         self.add_child(fg)
 

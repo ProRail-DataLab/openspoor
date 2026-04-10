@@ -196,12 +196,12 @@ class MapServicesQuery:
         res = SafeRequest().get_json(
             "GET", input_url + "&returnCountOnly=True"
         )
-        # some layers do not return geojson when asking for the count only
-        # i.e.: 'https://mapservices.prorail.nl/
-        # arcgis/rest/services/Kadastraal_004/MapServer/5'
-        if "properties" not in res.keys():
+        if "count" in res:
             return res["count"]
-        return res["properties"]["count"]
+        elif "properties" in res and "count" in res["properties"]:
+            return res["properties"]["count"]
+        else:
+            raise ValueError("Count not found in response")
 
     def _retrieve_batch_of_features_to_gdf(
         self, input_url: str, offset: int
